@@ -1,0 +1,26 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "CoGa IMC",
+        "Co/SiO2"
+    ],
+    "crystal_phase": {
+        "CoGa IMC": "CoGa IMC (PDF-#49–1727)",
+        "Co": "Fm3m, a = 3.54 Å, JCPDS 15–0806"
+    },
+    "exposed_crystal_plane_indices": {
+        "CoGa IMC": [
+            "(1 0 0)",
+            "(1 1 0)",
+            "(2 0 0)"
+        ],
+        "Co/SiO2": [
+            "(1 1 1)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD"
+    ],
+    "Proof in the paper": "The XRD pattern of CoGa IMC/SiO2 (Fig. 1A) shows characteristic reflections at 2θ = 36.12°, 52.07°, and 76.83°, which are assigned to the (1 0 0), (1 1 0), and (2 0 0) facets of CoGa IMC (PDF-#49–1727), respectively. For comparison, Fig. 1B displays the characteristic reflection of the Co/SiO2 catalyst at 2θ = 52.14°, which is assigned to the (1 1 1) facet of Co (Fm3m, a = 3.54 Å, JCPDS 15–0806).",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0021951721004036"
+}

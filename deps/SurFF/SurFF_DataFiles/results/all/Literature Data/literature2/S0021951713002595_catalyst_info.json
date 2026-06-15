@@ -1,0 +1,22 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "CuAg"
+    ],
+    "crystal_phase": {
+        "CuAg": "Face-centered cubic (fcc) structure"
+    },
+    "Characterization_methods": [
+        "X-ray diffraction (XRD)",
+        "Transmission electron microscopy (TEM)"
+    ],
+    "exposed_crystal_plane_indices": {
+        "CuAg": [
+            "(111)",
+            "(200)",
+            "(220)"
+        ]
+    },
+    "Proof in the paper": "The X-ray diffraction (XRD) patterns for the catalyst samples were obtained, and the TEM images were used to examine the morphologies and structural details of the bimetallic catalysts. The particle diameter distribution showed that the mean particle size of all the samples was approximately 3 nm. High-resolution TEM (HRTEM) indicated the formation of the CuAg alloy after reduction.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0021951713002595"
+}

@@ -1,0 +1,45 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Ni/SiO2",
+        "Ni2In/SiO2",
+        "NiIn/SiO2",
+        "Ni2In3/SiO2"
+    ],
+    "crystal_phase": {
+        "Ni/SiO2": "Ni phyllosilicate (Ni-PS)",
+        "Ni2In/SiO2": "Ni2In intermetallic compound (IMC)",
+        "NiIn/SiO2": "NiIn IMC",
+        "Ni2In3/SiO2": "Ni2In3 IMC"
+    },
+    "exposed_crystal_plane_indices": {
+        "Ni/SiO2": [
+            "(111)"
+        ],
+        "Ni2In/SiO2": [
+            "(110)"
+        ],
+        "NiIn/SiO2": [
+            "(101)",
+            "(110)"
+        ],
+        "Ni2In3/SiO2": [
+            "(100)",
+            "(101)",
+            "(110)",
+            "(012)",
+            "(202)",
+            "(211)",
+            "(113)",
+            "(122)",
+            "(104)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD",
+        "TEM",
+        "XPS"
+    ],
+    "Proof in the paper": "The XRD patterns of the reduced Ni/SiO2 and NiIn(x:y)/SiO2 (Fig. 3) show the presence of metallic Ni in Ni/SiO2, Ni2In IMC in NiIn(2:1)/SiO2 and NiIn(1:1)/SiO2, NiIn IMC in NiIn(1:1.3)/SiO2, and Ni2In3 IMC in NiIn(1:1.6)/SiO2 and NiIn(1:2)/SiO2, as confirmed by the corresponding diffraction peaks. The TEM technique (Fig. 4) further confirms the formation of these phases and their respective crystal structures.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337320307086"
+}

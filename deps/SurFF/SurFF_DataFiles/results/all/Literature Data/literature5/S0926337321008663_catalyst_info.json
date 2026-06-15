@@ -1,0 +1,24 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Pt3Ti"
+    ],
+    "crystal_phase": {
+        "Pt3Ti": "cubic (COD number, 1539263)"
+    },
+    "exposed_crystal_plane_indices": {
+        "Pt3Ti": [
+            "(111)"
+        ]
+    },
+    "Characterization_methods": [
+        "High resolution transmission electron microscopy (HRTEM)",
+        "X-ray photoelectron spectroscopy (XPS)",
+        "X-ray absorption spectroscopy (XAS)",
+        "secondary ion mass spectroscopy (SIMS)",
+        "HRTEM",
+        "FFT diffraction patterns"
+    ],
+    "Proof in the paper": "Fast Fourier transform (FFT) diffraction patterns of the catalysts annealed at different temperatures in H2 also indicates the formation of the Pt3Ti alloy structure at annealing temperatures above 700 °C (Fig. S4).",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337321008663"
+}

@@ -1,0 +1,24 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "CuPd"
+    ],
+    "crystal_phase": {
+        "CuPd": "cubic CuPd alloy (ICDD card No. 48-1551)"
+    },
+    "exposed_crystal_plane_indices": {
+        "CuPd": [
+            "(111)",
+            "(200)",
+            "(220)",
+            "(311)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD",
+        "HRTEM",
+        "SAED"
+    ],
+    "Proof in the paper": "The XRD patterns for the CuPdT-Na-F and CuPdT-Na-W bimetallic catalysts (see the inset plot in Figs. 1 and S1–S2 in the Supplementary Information) evidence the presence of a broad peak centered at 2θ = 40.8°, overlapped with the diffraction peak of rutile (111). It corresponds to the (111) reflection of CuPd, i.e., an alloy, present as small nanoparticles. The formation of a CuPd alloy has been detected on other Cu-Pd systems using EXAFS XPS and XRD. HRTEM and SAED measurements of CuPdT, CuPdT-Na-F and CuPdT-Na-R3 catalysts show that the bimetallic nanoparticles in all catalysts have well-developed crystalline structures with continuous ordered lattice fringes. Based on a digital Fourier transform analysis of the lattice spacing from different areas of the nanoparticles, we determined that the interplanar spacings in the CuPdT catalyst measured 0.218 nm, 0.186 nm and 0.136 nm, and correspond to the (111), (200) and (220) interplanar distances of the cubic CuPd alloy (ICDD card No. 48-1551). In the case of the CuPdT-Na-F sample, we determined that the lattice spacing across three interplanar spacings were 0.186 nm, 0.134 nm and 0.113 nm, which correspond to the (200), (220) and (311) crystal planes of the same cubic CuPd alloy.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337317307427"
+}

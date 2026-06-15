@@ -1,0 +1,22 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Cu",
+        "Ni-Cu"
+    ],
+    "crystal_phase": {
+        "Cu": "Metallic Cu",
+        "Ni-Cu": "Ni-Cu bimetallic catalysts"
+    },
+    "Characterization_methods": [
+        "X-ray powder diffractometer (XRD)",
+        "High-resolution transmission electron microscopy (HRTEM)"
+    ],
+    "exposed_crystal_plane_indices": {
+        "Cu": [
+            "(110)"
+        ]
+    },
+    "Proof in the paper": "The XRD pattern of Cu catalysts was dominated by the diffraction peaks of metallic Cu, revealing that the metallic Cu were synthesized successfully. No diffraction peak could be observed for Ni in Ni-Cu bimetallic catalysts, indicating the small particle size and low contents of Ni. A clear lattice fringe was measured to be 0.21 nm, which was in good agreement with the interplanar distance of the (110) plane of metallic Cu (Fig. 1c).",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337320303805"
+}

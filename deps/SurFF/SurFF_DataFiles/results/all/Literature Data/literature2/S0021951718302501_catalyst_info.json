@@ -1,0 +1,29 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Pt",
+        "Pt3Sn",
+        "PtSn"
+    ],
+    "crystal_phase": {
+        "Pt": "face centered cubic (fcc) structure (ICSD 41525)",
+        "Pt3Sn": "Pt3Sn phase (ICSD 105796)",
+        "PtSn": "PtSn phase (ICSD 42593)"
+    },
+    "exposed_crystal_plane_indices": {
+        "Pt": [
+            "(111)"
+        ],
+        "Pt3Sn": [
+            "(111)"
+        ],
+        "PtSn": [
+            "(111)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD"
+    ],
+    "Proof in the paper": "The XRD patterns of the catalysts are shown in Fig. 2. Metallic Pt with a face centered cubic (fcc) structure (ICSD 41525) was observed in the Pt/SiO2_O2, Pt/SiO2_N2, Pt/SiO2_H2 and Pt–Sn/SiO2_1073 K O2. In the XRD patterns of the Pt–Sn catalysts treated under a reductive atmosphere (Fig. 2(C)), a clear peak was present at 2θ = 39° for Pt3Sn phase (111) (ICSD 105796) and two peaks appeared at 2θ = 42° and 44° for a PtSn phase (ICSD 42593), indicating the Pt–Sn alloying on SiO2.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0021951718302501"
+}

@@ -1,0 +1,21 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Sn-doped Ni5P4",
+        "Ni5P4"
+    ],
+    "Characterization_methods": [
+        "XRD",
+        "HRTEM",
+        "EDS"
+    ],
+    "exposed_crystal_plane_indices": {
+        "Sn-doped Ni5P4": [
+            "(002)",
+            "(011)",
+            "(010)"
+        ]
+    },
+    "Proof in the paper": "The high-resolution transmission electron microscopy (HRTEM) substantiating clearly distinguishable crystal fringes, as reported in Figure 1d. The fast Fourier transformation (FFT) of the marked region in Figure 1d is illustrated in Figure 1e. The highlighted crystal fringes were assigned to (002), (011), and (010) lattice planes. The pattern can be indexed to the Halamishite phase, specifically on the [1,0,0] zone axis.",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.1c00476"
+}

@@ -1,0 +1,23 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": "Au1Pt3",
+    "crystal_phase": {
+        "Au1Pt3": "cubic fluorite-type oxide structure (JCPDS 34-0394, space group Fm3m)"
+    },
+    "Characterization_methods": [
+        "XRD"
+    ],
+    "exposed_crystal_plane_indices": {
+        "Au1Pt3/CeO2-NC": [
+            "(200)"
+        ],
+        "Au1Pt3/CeO2-NR": [
+            "(110)"
+        ],
+        "Au1Pt3/CeO2-NP": [
+            "(111)"
+        ]
+    },
+    "Proof in the paper": "The sample NC has an apparent lattice fringes with the interplanar spacing of 0.27 nm, attributed to the (200) planes. In Fig. 1E, the sample NR possesses a fringe with a lattice spacing of 0.19 nm for the (110) facets. The as-obtained NP has clear (111) lattice edges with interplane spacings of 0.31 and 0.27 nm, respectively.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0021951720300099"
+}

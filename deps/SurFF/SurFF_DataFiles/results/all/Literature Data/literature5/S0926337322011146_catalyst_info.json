@@ -1,0 +1,33 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Pt/Ni-CeO2",
+        "Pt/CeO2",
+        "Pt-Ni/CeO2"
+    ],
+    "crystal_phase": {
+        "Pt/Ni-CeO2": "face-centered cubic fluorite structure of CeO2",
+        "Pt/CeO2": "face-centered cubic fluorite structure of CeO2",
+        "Pt-Ni/CeO2": "face-centered cubic fluorite structure of CeO2"
+    },
+    "Characterization_methods": [
+        "X-ray diffraction (XRD)",
+        "High-resolution transmission electron microscopy (HRTEM)"
+    ],
+    "exposed_crystal_plane_indices": {
+        "Pt/Ni-CeO2": [
+            "(111)",
+            "(220)"
+        ],
+        "Pt/CeO2": [
+            "(111)",
+            "(220)"
+        ],
+        "Pt-Ni/CeO2": [
+            "(111)",
+            "(220)"
+        ]
+    },
+    "Proof in the paper": "The XRD patterns of all samples in Fig. 1a could be indexed to the face-centered cubic fluorite structure of CeO2, and no peaks of Ni-related species and Pt species were observed. However, the peak of (111) facet exhibited an obvious difference. As shown in Fig. 1b, Pt/CeO2 and Pt-Ni/CeO2 samples exhibited the similar (111) peak values with the CeO2 sample, while the peak of (111) facet in Ni-CeO2 and Pt/Ni-CeO2 samples was shifted to a slightly high 2θ value, indicating that Ni was successfully doped into the ceria lattice structure. The HRTEM image of Pt/Ni-CeO2 in Fig. 2c also revealed the (111) and (220) facet of CeO2.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337322011146"
+}

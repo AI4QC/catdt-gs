@@ -1,0 +1,20 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Pd2CoAg"
+    ],
+    "crystal_phase": {
+        "Pd2CoAg": "fcc structure"
+    },
+    "exposed_crystal_plane_indices": {
+        "Pd2CoAg": [
+            "(111)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD",
+        "HAADF STEM"
+    ],
+    "Proof in the paper": "The lattice fringes are continuous through the entire multipod, and the twin planes or stacking faults are clearly observed across the edge-pod junction (Figs. 2c and S3) which may provide more catalytically active sites to enhance their catalytic activity. [20,24] Furthermore, we can observe that abundant vacancies are randomly scattered over the ﬁve-fold twinned surface and interface edge [17]. The corresponding high-angle annular dark-ﬁeld (HAADF) aberration-corrected scanning transmission electron microscopy (Cs-STEM) images in Figs. 2d and e reveal that the defective regions (pointed out by the red arrow) mainly exist on the surface and the interface edge of the v-Pd2CoAg NCs.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337318308968"
+}

@@ -1,0 +1,28 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Ni3Ga1",
+        "Ni5Ga3"
+    ],
+    "crystal_phase": {
+        "Ni3Ga1": "α’-Ni3Ga1",
+        "Ni5Ga3": "δ-Ni5Ga3"
+    },
+    "exposed_crystal_plane_indices": {
+        "Ni3Ga1": [
+            "(110)",
+            "(001)"
+        ],
+        "Ni5Ga3": [
+            "(110)",
+            "(001)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD",
+        "XAS",
+        "XPS"
+    ],
+    "Proof in the paper": "The XRD patterns acquired for the Ni3Ga1 and the Ni5Ga3 samples, and Fig. 3(a,d) compares the corresponding percentage of the individual structural phases deduced from the fits to the data based on a Rietveld refinement. The XRD results for the samples’ phase concentration, lattice parameters and crystalline sizes under activation in H2 correspond to the mean values of the two sets of XRD measurements. The error bars correspond to the respective standard deviation.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0021951721004838"
+}

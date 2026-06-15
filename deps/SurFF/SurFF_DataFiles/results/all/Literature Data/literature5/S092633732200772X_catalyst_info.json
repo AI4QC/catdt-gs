@@ -1,0 +1,24 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "PtCo"
+    ],
+    "crystal_phase": {
+        "PtCo": "face-centered cubic (fcc) polycrystalline Pt and PtCo alloy"
+    },
+    "exposed_crystal_plane_indices": {
+        "PtCo": [
+            "(111)",
+            "(200)",
+            "(220)",
+            "(310)"
+        ]
+    },
+    "Characterization_methods": [
+        "X-ray diffraction (XRD)",
+        "Transmission electron microscopy (TEM)",
+        "High-angle annular dark field scanning transmission electron microscopy (HAADF-STEM)"
+    ],
+    "Proof in the paper": "The X-ray diffraction (XRD) patterns of as-prepared electrocatalysts are investigated via X-ray diffraction (XRD) with commercial Pt/C and carbon substrate for comparison, as can be seen in Fig. 2a. The three representative diffraction patterns at around 42.9°, 51.0° and 71.3° are closed to face-centered cubic (fcc) polycrystalline Pt and PtCo alloy according to the standard cards (PDF#87–0646 and PDF#69–8970). The typical transmission electron microscopy (TEM) images of the as-prepared samples are displayed in Fig. 1a-e. Monodisperse particles, narrow size distributions and high uniformity are observed, suggesting the benefit of DMF on avoiding agglomeration and confining particle size. And the uniform particle size is critical for electrocatalysts’ durability by suppressing Ostwald ripening.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S092633732200772X"
+}

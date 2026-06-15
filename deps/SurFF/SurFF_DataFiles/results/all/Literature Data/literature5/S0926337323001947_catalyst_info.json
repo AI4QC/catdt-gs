@@ -1,0 +1,26 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "CoTe2",
+        "CoP"
+    ],
+    "crystal_phase": {
+        "CoP": "CoP phase (PDF#29–0497)",
+        "CoTe2": "CoTe2 (PDF#89–2091)",
+        "metal Ti": "metal Ti"
+    },
+    "exposed_crystal_plane_indices": {
+        "CoP": [
+            "(020)"
+        ],
+        "CoTe2": [
+            "(121)"
+        ]
+    },
+    "Characterization_methods": [
+        "X-ray diffraction (XRD)",
+        "High-resolution transmission electron microscopy (HRTEM)"
+    ],
+    "Proof in the paper": "The X-ray diffraction (XRD) patterns of CoTe2/CoP on Ti mesh confirm that the characteristic peaks should be indexed to the CoP phase (PDF#29–0497), CoTe2 (PDF#89–2091), and metal Ti, respectively, as shown in Fig. 1b. As shown in Fig. 1f, the high-resolution TEM images demonstrate a contact interface between two distinct kinds of lattices, where the lattice distance of 0.163 nm and 0.223 nm are attributed to the plane of CoP (020) and CoTe2 (121), respectively.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337323001947"
+}

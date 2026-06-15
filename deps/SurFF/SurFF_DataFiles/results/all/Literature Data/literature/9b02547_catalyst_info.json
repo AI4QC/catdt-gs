@@ -1,0 +1,15 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": "CuPt",
+    "Characterization_methods": [
+        "Transmission electron microscopy (TEM)",
+        "X-ray photoelectron spectroscopy (XPS)",
+        "Energy-dispersive X-ray spectroscopy (EDS)",
+        "Ultrahigh vacuum (UHV) apparatus with XPS instrumentation",
+        "Temperature-programmed desorption (TPD)"
+    ],
+    "exposed_crystal_plane_indices": {
+        "CuPt": "(110)"
+    },
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.9b02547"
+}

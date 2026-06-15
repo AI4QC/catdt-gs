@@ -1,0 +1,21 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "RuIr"
+    ],
+    "crystal_phase": {
+        "RuIr": "Atomic-step enriched nanocrystals"
+    },
+    "Characterization_methods": [
+        "HAADF STEM",
+        "in situ heating experiments in TEM mode"
+    ],
+    "exposed_crystal_plane_indices": {
+        "RuIr": [
+            "(110)",
+            "(120)"
+        ]
+    },
+    "Proof in the paper": "The characterization of the RuIr nanocrystals was performed using various methods including XRD, XPS, SEM, TEM, STEM, and elemental mapping. The atomic-step enriched nature of the nanocrystals was revealed through these techniques, and the specific crystal plane indices were determined using HAADF STEM and in situ heating experiments in TEM mode.",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.0c04117"
+}

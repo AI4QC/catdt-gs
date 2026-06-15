@@ -1,0 +1,21 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "PtCo"
+    ],
+    "crystal_phase": {
+        "PtCo": "face-centred cubic (fcc) structure"
+    },
+    "Characterization_methods": [
+        "XRD",
+        "HRTEM",
+        "HAADF-STEM"
+    ],
+    "exposed_crystal_plane_indices": {
+        "PtCo": [
+            "(2 0 0)"
+        ]
+    },
+    "Proof in the paper": "The HRTEM images of the PtCo nanocubes display a lattice fringe of 0.18 nm, which is ascribed to the (2 0 0) facet and slightly smaller than 0.196 nm of Pt (2 0 0) facet (Fig. S1b–d). The corresponding fast Fourier transform (FFT) pattern of the PtCo nanocube (inset in Fig. S1d) shows a representative fcc structure viewed along the [0 0 1] zone axis.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S002195171830126X"
+}

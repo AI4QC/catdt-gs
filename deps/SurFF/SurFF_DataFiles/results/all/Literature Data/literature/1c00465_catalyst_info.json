@@ -1,0 +1,29 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Sr2Co2–xFexO6−δ",
+        "Sr2Co1.75Fe0.25O6−δ",
+        "Sr2Co1.5Fe0.5O6−δ",
+        "Sr2Co1.25Fe0.75O6−δ",
+        "SrCo0.5Fe0.5O3−δ",
+        "SrCo0.375Fe0.625O3−δ",
+        "SrCo0.25Fe0.75O3−δ",
+        "SrCo0.125Fe0.875O3−δ",
+        "SrFeO3−δ"
+    ],
+    "crystal_phase": [
+        "tetragonal",
+        "cubic"
+    ],
+    "Characterization_methods": [
+        "Transmission electron microscopy (TEM)",
+        "Electron diffraction (ED)"
+    ],
+    "exposed_crystal_plane_indices": {
+        "Sr2Co1.5Fe0.5O6−δ": [
+            "[100]"
+        ]
+    },
+    "Proof in the paper": "TEM observation shows that the synthesized samples are composed of nanoparticles, with an average size of ∼80 nm. The nanoparticles are sintered to form particles in ∼μm’s during annealing at 1050 °C in the last step of the synthesis. This annealing ensured that single phases were obtained. As shown in Figure 1c, along the [100] orientation, 90°-twinning domains in 20–30 nm are observed, as evidenced from double-spacing lattice fringes. The domain without the double-spacing fringes is [001]-oriented, which is also at 90° with the [100] orientation. These twins may add further oxygen defect sites compared with cubic perovskites without twins. An ED pattern is inserted, showing 90° twins. A magnified HRTEM image is shown in Figure 1d, where atomic layers are revealed. A Fourier transform (FT) pattern is inserted, with the same geometry of the ED pattern. With image simulation, the cationic layers could be identified, as shown in Figure 1e (a simulated image is also inserted in Figure 1d for comparison). The simulated ED pattern in Figure 1f is consistent with the observed ED pattern.",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.1c00465"
+}

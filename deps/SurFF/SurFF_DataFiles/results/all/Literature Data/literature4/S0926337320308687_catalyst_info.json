@@ -1,0 +1,20 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "CoCe"
+    ],
+    "crystal_phase": {
+        "CoCe": "CeO2 fluorite, Co3O4 spinel phases"
+    },
+    "Characterization_methods": [
+        "High-Resolution Transmission Electron Microscopy (HRTEM)"
+    ],
+    "exposed_crystal_plane_indices": {
+        "Co10Ce10@MCM-48": [
+            "(111) of CeO2 with an interplanar spacing of 0.31 nm",
+            "(311) and (111) of Co3O4 with spacings of 0.243 nm and 0.469 nm respectively"
+        ]
+    },
+    "Proof in the paper": "In Fig. 1 (b1-b3), HRTEM image of Co10Ce10@MCM-48 exhibited the existence of (111) lattice fringes of CeO2 with the interplanar spacing of 0.31 nm. The lattice fringes of Co with a spacing of 0.243 and 0.469 nm were respectively Co3O4 (311) and (111) planes.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337320308687"
+}

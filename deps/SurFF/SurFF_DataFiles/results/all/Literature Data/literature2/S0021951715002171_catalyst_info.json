@@ -1,0 +1,29 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "NiZn",
+        "PdZn",
+        "PtZn"
+    ],
+    "crystal_phase": {
+        "NiZn": "L10 (AuCu-type) structure",
+        "PdZn": "L10 (AuCu-type) structure",
+        "PtZn": "L10 (AuCu-type) structure"
+    },
+    "exposed_crystal_plane_indices": {
+        "NiZn": [
+            "(1 1 1)"
+        ],
+        "PdZn": [
+            "(1 1 1)"
+        ],
+        "PtZn": [
+            "(1 1 1)"
+        ]
+    },
+    "Characterization_methods": [
+        "DFT calculations"
+    ],
+    "Proof in the paper": "The intermetallic compounds NiZn, PdZn and PtZn crystallize in the body-centered tetragonal (bct) L10 (AuCu-type) structure, Pearson symbol tP4. The space group is P4/mmm (No 123). The L10 structure can be understood as a tetragonally deformed cubic B2 (CsCl) structure. It is well known that the bct lattice can be described alternatively as a face-centered tetragonal (fct) lattice. Hence the L10 structure can also be considered as a tetragonally deformed cubic B1 (NaCl) structure, see Fig. 2 in Ref. . The relation between the lattice parameters of both descriptions is simple: afct=abct2, cfct=cbct=c. The tetragonal deformation can be expressed by the c/abct parameter. The L10 structure is identical to B2 for c/abct=1. The calculated lattice parameters of all three compounds together with their experimental values are presented in Table 1. Although the fct lattice is not a Bravais lattice, the description in terms of fct Miller indices is most frequently used in the literature. Therefore here we also adopt this convention.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0021951715002171"
+}

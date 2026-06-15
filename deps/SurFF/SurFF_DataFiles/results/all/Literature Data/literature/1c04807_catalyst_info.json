@@ -1,0 +1,19 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Co-Fe"
+    ],
+    "crystal_phase": {
+        "Co0.95Fe0.05": "Co0.95Fe0.05 alloy"
+    },
+    "characterization_methods": [
+        "HRTEM"
+    ],
+    "exposed_crystal_plane_indices": {
+        "Co0.95Fe0.05": [
+            "(101)"
+        ]
+    },
+    "Proof in the paper": "The crystal plane distance of Co-Fe nanoparticles was measured as 0.202 nm (Figure 3g), agreeing with the (101) plane of the Co0.95Fe0.05 alloy.",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.1c04807"
+}

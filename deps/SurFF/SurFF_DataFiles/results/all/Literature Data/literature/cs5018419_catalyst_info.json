@@ -1,0 +1,26 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Pt–Pd–Rh"
+    ],
+    "crystal_phase": {
+        "Pt–Pd–Rh": "fcc-structured metals"
+    },
+    "Characterization_methods": [
+        "PXRD",
+        "HRTEM"
+    ],
+    "exposed_crystal_plane_indices": {
+        "Pt–Pd–Rh NCs": [
+            "(100)"
+        ],
+        "Pt–Pd–Rh NTOs": [
+            "(111)"
+        ]
+    },
+    "Proof in the paper": {
+        "Pt–Pd–Rh NCs": "HRTEM images (Figure 1c, Figure S4b in SI) viewed along the ⟨001⟩ zone axis showed that the single-crystalline Pt–Pd–Rh NCs were enclosed with six (100) planes.",
+        "Pt–Pd–Rh NTOs": "The HRTEM image (Figure 1d) illustrated that the single-crystalline nanocrystals were bounded with eight (111) planes dominantly."
+    },
+    "url": "https://pubs.acs.org/doi/10.1021/cs5018419"
+}

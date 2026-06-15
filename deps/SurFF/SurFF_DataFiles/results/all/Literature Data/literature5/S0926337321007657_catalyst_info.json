@@ -1,0 +1,32 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "PtTe2",
+        "Pt/PtTex"
+    ],
+    "crystal_phase": {
+        "PtTe2": "JCPDS No. 18-0977",
+        "Pt/PtTex": [
+            "Pt (111)",
+            "PtTe2 (101)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD",
+        "HRTEM"
+    ],
+    "exposed_crystal_plane_indices": {
+        "PtTe2": [
+            "(101)"
+        ],
+        "Pt/PtTex": [
+            "Pt (111)",
+            "PtTe2 (101)"
+        ]
+    },
+    "Proof in the paper": {
+        "PtTe2": "The lattice spacing of 0.290 nm can be ascribed to the (101) planes of PtTe2 [14,16].",
+        "Pt/PtTex": "HRTEM image of Pt/PtTex NRs exhibits distinct lattice fringes of Pt and the PtTe2, where the lattice spacing of 0.227 and 0.289 nm were ascribed to that of Pt (111) plane and PtTe2 (101) plane, respectively [16,19]."
+    },
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337321007657"
+}

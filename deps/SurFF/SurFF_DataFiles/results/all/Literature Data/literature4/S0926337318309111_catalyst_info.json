@@ -1,0 +1,23 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "CoNiSe2",
+        "CoNi-LDHs"
+    ],
+    "crystal_phase": {
+        "CoNiSe2": "ICDD No. 01-070-2851",
+        "Ni(OH)2·0.75H2O": "ICDD No. 01-038-0715"
+    },
+    "exposed_crystal_plane_indices": {
+        "CoNiSe2": [
+            "(101)",
+            "(102)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD",
+        "TEM"
+    ],
+    "Proof in the paper": "The characteristic lattice fringers of CoNiSe2(101) and (102) are clearly observed (Fig. 1b).",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337318309111"
+}

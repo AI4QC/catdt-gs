@@ -1,0 +1,23 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Ni0.9Mo0.1"
+    ],
+    "crystal_phase": {
+        "Ni0.9Mo0.1": "fcc Ni–Mo alloy"
+    },
+    "characterization_methods": [
+        "XRD",
+        "SAED",
+        "HAADF-STEM"
+    ],
+    "exposed_crystal_plane_indices": {
+        "Ni0.9Mo0.1": [
+            "(111)",
+            "(200)",
+            "(220)"
+        ]
+    },
+    "Proof in the paper": "The XRD showed peaks corresponding to unreduced NiMoO4 and comparatively broad features at 2θ = 44, 52, and 76, which were assigned to a Ni-rich fcc NixMo1-x alloy (Section). The lattice constant of 3.56 ± 0.01 Å was extracted from these peaks (Section). Electron diffraction indicated that the particles showed the Ni fcc crystal structure (Discussion). The major diffraction peaks present in the SAED pattern corresponding to the dominant phases observed by XRD have been indicated (Discussion).",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.0c02264"
+}

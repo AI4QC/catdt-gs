@@ -1,0 +1,21 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "PtNi"
+    ],
+    "crystal_phase": {
+        "PtNi": "face-centered cubic (fcc)"
+    },
+    "exposed_crystal_plane_indices": {
+        "PtNi": [
+            "(111)"
+        ]
+    },
+    "Characterization_methods": [
+        "X-ray diffraction (XRD)",
+        "high-resolution transmission electron microscopy (HR-TEM)",
+        "synchrotron X-ray diffraction"
+    ],
+    "Proof in the paper": "The interplanar distance measured for different crystallites was on average 2.18 ± 0.06 Å, suggesting (111) planes in a face-centered cubic (fcc) PtNi structure (Figure 3d,e).",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.6b01106"
+}

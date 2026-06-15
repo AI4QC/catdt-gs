@@ -1,0 +1,21 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Pt–Ni"
+    ],
+    "crystal_phase": {
+        "Pt–Ni": [
+            "alloys with Pt3Ni, PtNi, and PtNi3"
+        ]
+    },
+    "exposed_crystal_plane_indices": {
+        "Pt–Ni": [
+            "(111)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD"
+    ],
+    "Proof in the paper": "The XRD patterns of the Pt–Ni thin films with peaks between the known 2θ values for the (111) reflections for pure Pt and Ni phases (39.9° and 44.5°, respectively), indicating that the deposited films are indeed alloys. The peaks are also primarily symmetrical, which indicates homogeneity in the alloy composition.",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.6b00454"
+}

@@ -1,0 +1,28 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Rh13Ag87",
+        "Pt28Au72",
+        "Rh46Au54",
+        "Ir18Ag82",
+        "Ir10Au90",
+        "Pt8Au92",
+        "Pt42Au58"
+    ],
+    "exposed_crystal_plane_indices": {
+        "Rh13Ag87": "(111)",
+        "Pt28Au72": "(111)",
+        "Rh46Au54": "(111)",
+        "Ir18Ag82": "(111)",
+        "Ir10Au90": "(111)",
+        "Pt8Au92": "(111)",
+        "Pt42Au58": "(111)"
+    },
+    "Characterization_methods": [
+        "TEM",
+        "XRD",
+        "EDS"
+    ],
+    "Proof in the paper": "The TEM images and XRD spectra reveal that the synthesized NPs are all spherical-shaped and the (111) surface is the most stable for face-centered cubic (FCC) metals (Rh, Ir, Pt, Ag, Au, and Pd). The (111) surfaces were modeled by a supercell slab that consisted of a 3 × 3 surface unit cell with four single layers. The top two layers and the reactant molecules were fully relaxed until the maximum Hellmann–Feynman forces were <0.05 eV Å–1.",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.9b00451"
+}

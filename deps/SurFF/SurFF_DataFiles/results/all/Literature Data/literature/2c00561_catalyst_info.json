@@ -1,0 +1,21 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "PdxCuy/SiO2",
+        "PdxAgy/SiO2"
+    ],
+    "exposed_crystal_plane_indices": {
+        "PdxCuy/SiO2": [
+            "(111)"
+        ]
+    },
+    "Characterization_methods": [
+        "TEM",
+        "X-ray absorption (XAS)",
+        "EXAFS",
+        "XANES",
+        "DFT calculations"
+    ],
+    "Proof in the paper": "We modeled the (111) surfaces of L12 type alloys as four-layer slabs, with the top two layers fully relaxed and the bottom two layers fixed to the bulk truncated positions. (Discussion section)",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.2c00561"
+}

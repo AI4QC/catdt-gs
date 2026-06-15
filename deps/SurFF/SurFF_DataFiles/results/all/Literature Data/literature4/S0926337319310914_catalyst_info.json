@@ -1,0 +1,25 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "PtRu"
+    ],
+    "crystal_phase": {
+        "PtRu": "face-centered cubic (fcc) structure"
+    },
+    "exposed_crystal_plane_indices": {
+        "PtRu": [
+            "(111)",
+            "(200)",
+            "(220)",
+            "(311)",
+            "(222)"
+        ]
+    },
+    "Characterization_methods": [
+        "X-ray diffraction (XRD)",
+        "Transmission electron microscopy (TEM)",
+        "high-resolution TEM (HR-TEM)"
+    ],
+    "Proof in the paper": "The XRD patterns of PtRu/PC and Pt/PC nanocatalysts (Fig. 1A) show the five dominant peaks at 2θ = 39.7°, 46.2°, 67.5°, 81.2° and 85.7° corresponding to the (111), (200), (220), (311) and (222) planes of Pt face-centered cubic (fcc) structure. The TEM images and the corresponding size distribution histograms (Fig. 2) of PtRu/PC–H, PtRu/PC-L, and Pt/PC samples further confirm the crystal plane indices and the characterization methods used.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337319310914"
+}

@@ -1,0 +1,14 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": "Pd-on-Au",
+    "Characterization_methods": [
+        "DFT calculations"
+    ],
+    "exposed_crystal_plane_indices": {
+        "Pd-on-Au": [
+            "(111)"
+        ]
+    },
+    "Proof in the paper": "only the (111) surfaces were modeled in this study and TEM images of NPs were obtained using a JEOL 2010 transmission electron microscope operating at an accelerating voltage of 200 kV and All calculations were performed using the VASP code.",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.9b02182"
+}

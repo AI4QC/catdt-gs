@@ -1,0 +1,22 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Co–N/CNFs"
+    ],
+    "Characterization_methods": [
+        "TEM",
+        "XRD",
+        "HAADF-STEM",
+        "XANES",
+        "EXAFS",
+        "XPS"
+    ],
+    "exposed_crystal_plane_indices": {
+        "Co–N/CNFs": [
+            "(110)",
+            "(001)"
+        ]
+    },
+    "Proof in the paper": "The transmission electron microscopy (TEM) was performed on FEI Tecnai 30F. The high-angle annular dark field scanning TEM (HAADF-STEM) images were obtained by the Titan Cubed Themis G2 300. The Bruker AXS D8 ADVANCE powder X-ray diffractometer with a Cu Kα (λ = 1.5418 Å) radiation source was used to collect the X-ray diffraction (XRD) patterns of the samples. X-ray photoelectron spectroscopy (XPS) was carried out on a Kratos AXIS UltraDLD with Al Kα radiation, referenced to C 1s binding energy (BE) of 284.45 eV. The X-ray absorption near-edge structure (XANES) and extended X-ray absorption fine structure (EXAFS) spectra were conducted on BL14W1 beamline of Shanghai Synchrotron Radiation Facility (SSRF) and analyzed with Ifeffit Athena software.",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.7b02326"
+}

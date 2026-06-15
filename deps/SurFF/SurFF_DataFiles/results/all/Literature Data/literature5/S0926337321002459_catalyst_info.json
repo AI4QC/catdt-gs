@@ -1,0 +1,21 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Cu6.26Sn5"
+    ],
+    "crystal_phase": {
+        "Cu6.26Sn5": "hexagonal (JCPDS No. 47-1575)"
+    },
+    "exposed_crystal_plane_indices": {
+        "Cu6.26Sn5": [
+            "(110)",
+            "(101)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD",
+        "HR-TEM"
+    ],
+    "Proof in the paper": "The X-ray diffraction (XRD) pattern in Fig. 3a corresponds to the hexagonal Cu6.26Sn5 [JCPDS No. 47-1575]. HR-TEM image (Fig. 2e) reveals lattice fringe distances of 0.210 and 0.296 nm, corresponding to the crystal plane (110) and (101) of Cu6.26Sn5.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337321002459"
+}

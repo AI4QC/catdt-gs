@@ -1,0 +1,23 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "PdNi/C",
+        "Pd3Ni/C",
+        "PdMn/C"
+    ],
+    "crystal_phase": {
+        "PdNi/C": "fcc (face-centered cubic)",
+        "Pd3Ni/C": "fcc (face-centered cubic)",
+        "PdMn/C": "body-centered tetragonal"
+    },
+    "Characterization_methods": [
+        "Scanning transmission electron microscopy (STEM)"
+    ],
+    "exposed_crystal_plane_indices": {
+        "PdNi/C": [
+            "(200)"
+        ]
+    },
+    "Proof in the paper": "The lattice constant of PdNi/C was determined to be 3.774 Å from the peak diffraction angles and the Bragg equation. A d-spacing of 0.19 nm was determined from the Fourier transform, and is, within error, the same as the value calculated from the (200) peak in the XRD.",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.9b05499"
+}

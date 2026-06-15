@@ -1,0 +1,19 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": "NiSe",
+    "crystal_phase": {
+        "NiSe": "PDF No.18–0887"
+    },
+    "Characterization_methods": [
+        "HRTEM",
+        "SAED"
+    ],
+    "exposed_crystal_plane_indices": {
+        "NiSe": [
+            "(300)",
+            "(101)"
+        ]
+    },
+    "Proof in the paper": "The peaks belonging to NiSe (PDF No.18–0887) were characterized by XRD (Fig. S1). The interplanar distances of 2.85 and 3.01 Å can be identified as (300) and (101) planes of NiSe, respectively, as shown in the High-resolution TEM (HRTEM) image (Fig. 1f). The selected-area electron-diffraction (SAED) pattern displays discrete spots corresponding to the (300), (021) planes of the NiSe (Fig. 1g).",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337322011961"
+}

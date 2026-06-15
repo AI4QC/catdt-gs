@@ -1,0 +1,23 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Au–Pd"
+    ],
+    "crystal_phase": {
+        "Au–Pd": "alloy NPs"
+    },
+    "Characterization_methods": [
+        "XRD",
+        "UV–vis",
+        "XPS",
+        "HRTEM"
+    ],
+    "exposed_crystal_plane_indices": {
+        "Au–Pd": [
+            "(111)",
+            "(200)"
+        ]
+    },
+    "Proof in the paper": "The crystalline structure of NPs treated under different atmospheres were studied by HRTEM. Fig. 2g and 2 h present the Au26Pd74/MCF-H2 and Au26Pd74/MCF-O2 catalysts, respectively. Metal NPs with a lattice spacing of 0.227–0.231 nm were observed, which is between the values of Au (1 1 1) (0.235 nm in JCPDS card 04–0784) and Pd (1 1 1) (0.225 nm in JCPDS card 65-2867). This suggests the alloying of Au and Pd NPs in sample Au26Pd74/MCF-H2, obtained under H2 reduction, while in sample Au26Pd74/MCF-O2, a high portion of metal NPs with a lattice spacing of 0.213–0.214 nm is found, indicating the formation of PdO (0.212 nm) with (2 0 0) plane of (JCPDS card 02-1432).",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0021951719302106"
+}

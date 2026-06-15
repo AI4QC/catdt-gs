@@ -1,0 +1,16 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Pd0.02Au0.98",
+        "Pd0.04Au0.96",
+        "Pd0.09Au0.91"
+    ],
+    "Characterization_methods": [
+        "XPS"
+    ],
+    "exposed_crystal_plane_indices": {
+        "Pd0.04Au0.96": "(111)"
+    },
+    "Proof in the paper": "The Pd3d5/2 binding energies measured after calcination of Pd0.04Au0.96 and Pd0.09Au0.91 RCT-SiO2 are 334.8 and 334.9 ± 0.1 eV, respectively, which is consistent with metallic Pd. For comparison, Pd3d5/2 spectra are similar for clean Pd(111) (Figure S4).",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.9b04243"
+}

@@ -1,0 +1,20 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Pd86Sn14/C",
+        "Pd75Sn25/C",
+        "Pd47Sn53/C"
+    ],
+    "characterization_methods": [
+        "XRD"
+    ],
+    "exposed_crystal_plane_indices": {
+        "Pd86Sn14/C": [
+            "(111)",
+            "(200)",
+            "(220)"
+        ]
+    },
+    "Proof in the paper": "The X-ray diffraction (XRD) patterns of Pd47Sn53/C, Pd75Sn25/C, Pd86Sn14/C, and our own synthesized Pd/C are shown in Figure 3. In general, Pd75Sn25/C, Pd86Sn14/C, and Pd/C showed a typical fcc structure with distinct diffraction peaks attributed to (111), (200), and (220) planes.",
+    "url": "https://pubs.acs.org/doi/10.1021/cs2005955"
+}

@@ -1,0 +1,30 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Pt3Co0.6Ti0.4",
+        "Pt3Co"
+    ],
+    "crystal_phase": {
+        "Pt3Co0.6Ti0.4": "fcc structure (JCPDS-29-0499)"
+    },
+    "exposed_crystal_plane_indices": {
+        "Pt3Co0.6Ti0.4": [
+            "(111)",
+            "(200)",
+            "(220)",
+            "(311)",
+            "(222)",
+            "(100)",
+            "(110)",
+            "(210)",
+            "(211)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD",
+        "TEM",
+        "HAADF-STEM"
+    ],
+    "Proof in the paper": "The XRD patterns of Pt3Co0.6Ti0.4/DMC and Pt3Co/DMC are shown in Figure 1a. Both samples show five main characteristic peaks of the fcc structure at 40.5, 47.1, 68.8, 83.0, and 87.6° corresponding to (111), (200), (220), (311), and (222) planes, as well as the superlattice peaks at 23.1, 32.8, 53.1, and 58.6°, which correspond to (100), (110), (210), and (211) planes of ordering reflections of Pt3Co (Pm3̅m, JCPDS-29-0499). The observation of superlattice reflections identifies the formation of the desired intermetallic. In addition, the peaks of Pt3Co0.6Ti0.4/DMC are slightly shifted toward the lower angle with respect to Pt3Co/DMC due to the increase in lattice constant caused by the substitution of Co by larger-radius Ti. TEM image in Figure S1 (Supporting Information) shows that ZIF-8-derived carbon support has a well-defined dodecahedron morphology and mesoporous structure. Nitrogen physisorption measurements (Figure S2 of Supporting Information) indicate that the BET surface area of DMC is 1619 m2g–1. The electronic conductivity of DMC support measured by a four-point probe method is 8.7 S cm–1 at 15 bar, which is higher than that of carbon black (4 S cm–1).",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.2c00554"
+}

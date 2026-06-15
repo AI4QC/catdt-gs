@@ -1,0 +1,28 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Ni",
+        "Ni4Zn",
+        "NiZn",
+        "Ni5Zn21"
+    ],
+    "crystal_phase": {
+        "Ni": "face-centered cubic",
+        "Ni4Zn": "substitutional solid solution",
+        "NiZn": "tetragonal L10",
+        "Ni5Zn21": "cubic γ-brass"
+    },
+    "Characterization_methods": [
+        "DFT calculations"
+    ],
+    "exposed_crystal_plane_indices": {
+        "Ni": [
+            "(1 1 1)"
+        ],
+        "NiZn": [
+            "(1 0 0)"
+        ]
+    },
+    "Proof in the paper": "The DFT calculated reaction energy diagram for the hydrogenation of acetylene is shown in Fig. 7 and structures of extrema along the reaction coordinate are shown in Figs. S3 and S4. The reaction begins with the adsorption of acetylene, adsorption of hydrogen, and reaction to form C2H3* (vinyl). C2H3* reacts with a second adsorbed hydrogen atom to form C2H4 (ethylene). Adsorbed ethylene may either desorb to form gas-phase ethylene, or it may react further to form ethane. A primary difference between Ni and NiZn is the relative adsorption energy of acetylene and ethylene. The adsorption energy of acetylene on Ni is −2.37 eV, compared to −1.36 eV on NiZn. The adsorption energies of ethylene on Ni and NiZn are −0.73 eV and −0.40 eV, respectively. The addition of zinc to nickel significantly reduces the ability of acetylene to bind strongly to the surface. This result is consistent with an experimentally observed decrease in turnover frequency and increase in the apparent reaction order in acetylene with increasing zinc content.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0021951714001286"
+}

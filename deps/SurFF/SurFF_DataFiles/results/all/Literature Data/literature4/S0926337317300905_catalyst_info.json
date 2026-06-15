@@ -1,0 +1,16 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": "Pd3Au@Pt/C",
+    "crystal_phase": "face-centered cubic (fcc) structure",
+    "Characterization_methods": [
+        "X-ray diffraction (XRD)",
+        "High-resolution synchrotron powder X-ray diffraction (HR-PXRD)"
+    ],
+    "exposed_crystal_plane_indices": {
+        "Pd3Au@Pt/C": [
+            "(220)"
+        ]
+    },
+    "Proof in the paper": "The core (220) reflection peaks before and after heat-treatment were found at 65.10°, 65.12°, 65.18°, 65.52°, 65.60°, and 65.72° for core/C OA 1, core/C OA 1.5, core/C OA 2, core/C OA 1 A 0.5, core/C OA 1 A 1, and core/C OA 1 A 1.5, respectively. The peak positions of all the core samples before heat-treatment were similar. With increase in the heat-treatment duration, the peak positions shifted in the positive direction as a result of the increase in crystallinity. In addition, all the XRD patterns were shifted in the negative direction owing to carbon contamination of Pd. The crystallite size and lattice parameters of the cores with and without heat-treatment were calculated from the (220) diffraction peaks using the Debye-Scherrer equation (Table S1).",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337317300905"
+}

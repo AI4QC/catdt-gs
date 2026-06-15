@@ -1,0 +1,31 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "PtAuSn/W2C",
+        "PtAuSn/C"
+    ],
+    "crystal_phase": {
+        "PtAuSn/W2C": "W2C (hexagonal W2C; JPCDS 01-076-7103), Au(111), Pt(111), Au(200), Pt(200), PtSn4 (JPCDS 01-073-7264)",
+        "PtAuSn/C": "Au(111), Pt(111), Au(200), Pt(200), PtSn4 (JPCDS 01-073-7264)"
+    },
+    "exposed_crystal_plane_indices": {
+        "PtAuSn/W2C": [
+            "(110)",
+            "(002)",
+            "(-1-11)",
+            "(300)"
+        ],
+        "PtAuSn/C": [
+            "Au(111)",
+            "Pt(111)",
+            "Au(200)",
+            "Pt(200)",
+            "PtSn4 (15.3, 23.08)"
+        ]
+    },
+    "Characterization_methods": [
+        "X-ray powder diffractometry (XRD)"
+    ],
+    "Proof in the paper": "The X-ray powder diffractograms of both catalyst materials are shown in Figure 1. The W2C-based catalyst appears to have the higher crystallinity, which is visible through the higher intensity of the signals in the PtAuSn/W2C diffractogram. The main intense diffraction peaks of PtAuSn/W2C are located at 2θ = 15.7, 17.2, 17.9, and 27.3°; they are assigned to the (110), (002), (-1-11), and (300) crystallographic planes of W2C (hexagonal W2C; JPCDS 01-076-7103). The diffraction peaks related to small amounts of Pt, Au, and Sn are visible for both catalysts but mostly covered by the peaks of the W2C support. The most intense diffraction peaks at 2θ = 17.3 and 18° can be identified as Au(111) and Pt(111), respectively, for both catalysts. The second intense peaks of Au(200) at 2θ = 20° and of Pt(200) at 20.8° are less visible for PtAuSn/W2C. Possible formation of a platinum tin alloy at 2θ = 15.3 and 23.08° (PtSn4; JPCDS 01-073-7264) cannot be excluded.",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.9b04348"
+}

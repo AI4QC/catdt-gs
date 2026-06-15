@@ -1,0 +1,24 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Pt-Sn-Co",
+        "Pt-Sn",
+        "Pt"
+    ],
+    "crystal_phase": {
+        "Pt-Sn-Co": "face-centered cubic (fcc) Pt (alloy) phases, hexagonal PtSn alloy"
+    },
+    "Characterization_methods": [
+        "X-ray diffraction (XRD)",
+        "Rietveld refinement",
+        "High resolution TEM (HRTEM)",
+        "fast Fourier transform (FFT) analysis"
+    ],
+    "exposed_crystal_plane_indices": {
+        "Pt-Sn-Co": [
+            "{1 0 0}"
+        ]
+    },
+    "Proof in the paper": "The TEM particle size values for Pt and Pt-Sn samples have been extracted from our previous work. The XRD crystallite size and the lattice parameter were determined using Rietveld refinement for the main fcc Pt alloy phase reflecting the nanocube core. High resolution TEM (HRTEM) images combined with fast Fourier transform (FFT) analysis display clear (2 0 0) and (2 2 0) lattice fringes with the interplanar spacings of 0.196 and 0.232 nm, respectively, implying that the Pt-Sn-Co nanocubes are in fact enclosed by {1 0 0} planes.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0021951720304632"
+}

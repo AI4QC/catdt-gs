@@ -1,0 +1,18 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Pt-Fe-N-C",
+        "PtFe",
+        "PtFex (1 < x < 3)"
+    ],
+    "characterization_methods": [
+        "HAADF-STEM",
+        "XRD"
+    ],
+    "exposed_crystal_plane_indices": {
+        "PtFe": "(001)",
+        "PtFex (1 < x < 3)": "(111)"
+    },
+    "proof_in_the_paper": "The set of peaks from intermetallic PtFe was well-assigned in the X-ray diffraction pattern of Pt-Fe-N-C (Supplementary Fig. 4). An additional peak at 42.5° could be attributed to disordered PtFex (1 < x < 3) based on Vegard’s law13,14,15. The characterized alternating bright and dim atomic column as well as the lattice distance of 3.78 Å (001) revealed an ordered structure (Fig. 1c) for the smaller nanoparticle in Fig. 1b, which is consistent with the atomic model and simulated STEM image of a face-centred-tetragonal PtFe structure. It is worth noting that the ordered structure can be clearly identified in almost all the small nanoparticles (the characteristically alternating bright and dim lattice is also observed in Supplementary Fig. 3), which indicates the high order degree of the nanoparticles16. No superlattice atom contrast was observed for the bigger nanoparticle (Supplementary Fig. 5), which indicates its disordered structure. Its lattice distance of 2.13 Å (111) is similar to that of PtFex (1 < x < 3) calculated from the X-ray diffraction pattern on the basis of Bragg’s law. Thus, the Pt-Fe-N-C catalyst mainly consists of small intermetallic PtFe nanoparticles and a small number of PtFex (1 < x < 3) bigger disordered nanoparticles.",
+    "url": "https://www.nature.com/articles/s41929-022-00796-1"
+}

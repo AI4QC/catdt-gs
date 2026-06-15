@@ -1,0 +1,25 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Ru1–Pt3Cu",
+        "Ru1–PtCu",
+        "Ru1–PtCu3",
+        "PtRu NPs",
+        "PtCu NPs"
+    ],
+    "characterization_methods": [
+        "HAADF–STEM",
+        "XRD"
+    ],
+    "exposed_crystal_plane_indices": {
+        "Ru1–Pt3Cu": [
+            "{111}",
+            "{200}"
+        ]
+    },
+    "characterization_methods_ru1_pt3cu": [
+        "HAADF–STEM"
+    ],
+    "proof_in_the_paper": "In d and h, red and yellow dashed lines represent {111} facets and blue dashed lines represent the {200} facet.",
+    "url": "https://www.nature.com/articles/s41929-019-0246-2"
+}

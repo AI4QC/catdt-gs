@@ -1,0 +1,25 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "RuP",
+        "Ru2P"
+    ],
+    "crystal_phase": {
+        "RuP": "MnP structure type",
+        "Ru2P": "anti-PbCl2 structure type"
+    },
+    "Characterization_methods": [
+        "HR-STEM"
+    ],
+    "exposed_crystal_plane_indices": {
+        "Ru2P": [
+            "(210)"
+        ],
+        "RuP": [
+            "(111)",
+            "(112)"
+        ]
+    },
+    "Proof in the paper": "The HR-STEM images are shown in Figure 5, where the Ru-P/SiO2-15 sample shows a lattice spacing of 0.236 nm consistent with the Ru2P (210) crystallographic orientation (JCPDS 65-2382). Figure 5b,c depicts lattice fringes with lattice spacing of 0.251 and 0.204 nm, corresponding to (111) and (112) crystal planes of RuP.",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.0c01667"
+}

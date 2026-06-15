@@ -1,0 +1,21 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "CuPd"
+    ],
+    "crystal_phase": {
+        "CuPd": "body-centred cubic (B2) phase (ICSD 181913)"
+    },
+    "exposed_crystal_plane_indices": {
+        "CuPd": [
+            "(110)",
+            "(001)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD",
+        "HAADF STEM"
+    ],
+    "Proof in the paper": "The X-ray diffraction (XRD; Fig. 1a) pattern of CuPd exhibited an ordered, body-centred cubic (B2) phase (ICSD 181913)16,17. This confirmed that the HAADF STEM images obtained were the projection along the [1‒10] direction that consisted of (110) and (001) planes of CuPd (Fig. 1c)",
+    "url": "https://www.nature.com/articles/s41929-022-00757-8"
+}

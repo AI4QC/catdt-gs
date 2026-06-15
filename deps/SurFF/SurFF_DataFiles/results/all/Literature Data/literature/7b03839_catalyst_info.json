@@ -1,0 +1,19 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "PdxAuy"
+    ],
+    "crystal_phase": {
+        "PdxAuy": "PdxAuy alloy"
+    },
+    "characterization_methods": [
+        "XRD"
+    ],
+    "exposed_crystal_plane_indices": {
+        "PdxAuy": [
+            "Pd(111)"
+        ]
+    },
+    "Proof in the paper": "The elemental maps of Au and Pd (Figure 1c) show that the distributions of Pd and Au are mostly spatially coincident, demonstrating the homogeneous dispersion of Au and Pd or the formation of alloy particles. (33, 35, 36) The elemental maps also show some highly dispersive Pd on the support surface. XRD patterns (Figure 1d) confirm the formation of a PdxAuy alloy for the 5 wt % Pd0.97Au/TiO2. (37) A weak Pd(111) peak is observed for the Pd6.8Au/TiO2 and Pd14.5Au/TiO2.",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.7b03839"
+}

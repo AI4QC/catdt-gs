@@ -1,0 +1,21 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": "Ni3B",
+    "crystal_phase": {
+        "Ni3B": "Ni3B (JCPD NO.82-1699)"
+    },
+    "exposed_crystal_plane_indices": {
+        "Ni3B": [
+            "(031)",
+            "(220)",
+            "(201)",
+            "(102)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD",
+        "High-resolution TEM (HRTEM)"
+    ],
+    "Proof in the paper": "The lattice distance of 0.197 nm, 0.206 nm, 0.224 nm, and 0.199 nm in the high-resolution TEM (HRTEM) image (Fig. 1d) are well consistent with the interplanar spacing of the (031), (220), (201), and (102) crystallographic planes of Ni3B.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337320307864"
+}

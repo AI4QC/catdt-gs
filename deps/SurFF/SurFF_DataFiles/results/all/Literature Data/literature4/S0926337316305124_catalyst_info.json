@@ -1,0 +1,38 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Ag_Pt",
+        "Ag_Au",
+        "Au_Pd",
+        "Au_Pt"
+    ],
+    "crystal_phase": "anatase TiO2",
+    "Characterization_methods": [
+        "X-ray diffraction (XRD)",
+        "diffuse reflectance spectroscopy (DRS)",
+        "transmission electron microscopy (TEM) with energy-dispersive X-ray (EDX) spectroscopy",
+        "scanning electron microscopy (SEM)",
+        "inductively coupled plasma-mass spectrometry (ICP-MS)",
+        "X-ray photoelectron spectroscopy (XPS)"
+    ],
+    "exposed_crystal_plane_indices": {
+        "Ag_Pt": [
+            "{001}",
+            "{101}"
+        ],
+        "Ag_Au": [
+            "{001}",
+            "{101}"
+        ],
+        "Au_Pd": [
+            "{001}",
+            "{101}"
+        ],
+        "Au_Pt": [
+            "{001}",
+            "{101}"
+        ]
+    },
+    "Proof in the paper": "According to the crystallographic symmetry of anatase TiO2, the truncated bipyramid-shaped TiO2 nanocrystals are bound by eight {101} facets and two parallel {001} facets (the inset in Fig. 1B). The inset in Fig 1C shows a typical SAED image taken from an individual Pt_Ag_TiO2_PD_seq sample. The fringe spacing, which is the interplanar separation between the growth direction planes of the nanocrystal, could be estimated as 0.235 nm, so the SAED pattern confirms that the obtained products exhibit single-crystal characteristics and indicates that the top and bottom surfaces of the single crystals are the {001} facets.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337316305124"
+}

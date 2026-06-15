@@ -1,0 +1,25 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "NiSe2",
+        "FeSe2"
+    ],
+    "crystal_phase": {
+        "NiSe2": "pyrite-type cubic (PDF # 41–1495)",
+        "FeSe2": "pyrite-type cubic (PDF # 48–1881)"
+    },
+    "exposed_crystal_plane_indices": {
+        "NiSe2": [
+            "(220)"
+        ],
+        "FeSe2": [
+            "(210)"
+        ]
+    },
+    "Characterization_methods": [
+        "X-ray powder diffraction (XRD)",
+        "High-resolution transmission electron microscopy (HRTEM)"
+    ],
+    "Proof in the paper": "The XRD pattern (Fig. S4a) reveals two separate phases in NiSe2/FeSe2-NC, the pyrite-type cubic NiSe2 (PDF # 41–1495) and FeSe2 (PDF # 48–1881), indicating the formation of heterostructure. The related SAED pattern shown in Fig. 1d illustrates the semicoherent phase boundary of NiSe2 and FeSe2 in detail, and provides a deep insight into the heterostructure. The interface length is typically around 20 nm and the elemental mapping in Fig. 1e shows Ni, Fe, Se, C and N are homogeneously dispersed in the NiSe2/FeSe2-NC.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337323002436"
+}

@@ -1,0 +1,26 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Pt",
+        "Pt-Pd"
+    ],
+    "crystal_phase": {
+        "Pt": "FCC metallic phase",
+        "Pt-Pd": "FCC metallic phase",
+        "PdO": "PdO"
+    },
+    "Characterization_methods": [
+        "HRTEM",
+        "HAADF-STEM"
+    ],
+    "exposed_crystal_plane_indices": {
+        "Pt-Pd": [
+            "(111)"
+        ],
+        "PdO": [
+            "(101)"
+        ]
+    },
+    "Proof in the paper": "The inter-planar spacings of Pt-Pd nanoparticles in the model catalysts were measured under high-resolution TEM (HRTEM) mode. The composition of Pt-Pd nanoparticles in the model catalysts was studied with single-particle EDS using a 1 nm probe diameter in the analysis mode in the HAADF-STEM. (Section 2. Experimental) Lattice spacing analysis via HRTEM after aging for 1 h revealed that PdO grew forming a coherent interface with Pt-Pd (Fig. 3b). PdO (101) grew epitaxially with Pt-Pd (111) as previously seen by Kan and Weaver with Pd (111). (Section 3. Results)",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337317306367"
+}

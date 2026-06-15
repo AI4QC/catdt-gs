@@ -1,0 +1,20 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Pd-Au"
+    ],
+    "crystal_phase": {
+        "Pd-Au": "face-centred cubic (fcc) structure"
+    },
+    "Characterization_methods": [
+        "X-ray diffraction (XRD)",
+        "High-resolution transmission electron microscopy (HRTEM)"
+    ],
+    "exposed_crystal_plane_indices": {
+        "Pd-Au": [
+            "(111)"
+        ]
+    },
+    "Proof in the paper": "The powder X-ray diffraction (XRD) pattern of the bimetallic catalyst showed clear diffraction peaks at 38°, 44°, and 64°, which were assigned to the fcc structure of metallic gold. According to Scherrer equation, the particle size of the metallic gold was calculated to be approximately 3.6 nm. A weak diffraction peak of the fcc structure of Pd at about 40.1° can be also observed in the XRD pattern, indicating the formation of metallic palladium particles. Moreover, no peaks for the alloyed PdAu phase can be found in the XRD pattern. The Au and Pd mass content of the catalyst were determined to be 1.4 wt% and 1.9 wt% by the inductively coupled plasma-optical emission spectrometry (ICP-AES, Table 1). The broad diffraction peaks observed in XRD pattern were due to the relatively small size of nanoparticles and the low metal concentration in the carbon nanosphere. High resolution transmission electron microscopy (HRTEM) was also used to analyze the detailed structure of the metal particles. Fig. 1F represents the HRTEM micrograph of the bimetallic catalyst with two particles. The main surface of the particles is the (111) lattice plane. Two different lattice spacings roughly determined to be 2.33 ± 0.01 Å and 2.24 ± 0.01 Å were observed for these two particles, which is in good agreement with the (111) lattice spacings of metallic Au and Pd, respectively.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337321002770"
+}

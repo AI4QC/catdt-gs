@@ -1,0 +1,39 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Ni",
+        "Ni–Zn alloy"
+    ],
+    "crystal_phase": {
+        "wurtzite ZnO": "wurtzite ZnO",
+        "Ni(111)": "Ni(111)",
+        "Ni–Zn alloy": [
+            "α-NiZn",
+            "β1-NiZn alloys"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD",
+        "HRTEM"
+    ],
+    "exposed_crystal_plane_indices": {
+        "ZnO": [
+            "(100)",
+            "(002)",
+            "(101)"
+        ],
+        "Ni–Zn alloy": [
+            "(1300)",
+            "(1120)",
+            "(604)"
+        ]
+    },
+    "Proof in the paper": [
+        "The XRD patterns (Figure 2a) show characteristic reflections of wurtzite ZnO, Ni(111) plane, and Ni–Zn alloy.",
+        "A gradual shift of Ni(111) diffraction toward lower 2θ angles was observed at higher Ni content (Figure 2b), indicating the incorporation of Zn atoms into the lattice of metallic Ni.",
+        "The surface structure analysis by Raman spectroscopy (Figure 2c,d) demonstrates the disruption of the ordered crystalline arrangement of surface ZnO due to the potential fluctuations of the Ni–Zn alloy disorder.",
+        "The morphology analysis by SEM (Figure S3) and HRTEM analysis indicate the formation of Ni and Ni–Zn alloy particles (Figure S4b–d).",
+        "The lattice spacing (0.194 nm) in the inset of the NiZn (110) plane was measured using a fast Fourier transform (Figure 3d), which accords well with the XRD results."
+    ],
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.1c05582"
+}

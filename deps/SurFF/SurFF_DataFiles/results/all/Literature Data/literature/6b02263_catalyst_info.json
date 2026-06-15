@@ -1,0 +1,19 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Pd@CoP"
+    ],
+    "Characterization_methods": [
+        "XRD",
+        "TEM",
+        "HRTEM",
+        "SAED"
+    ],
+    "exposed_crystal_plane_indices": {
+        "CoP": [
+            "(002)"
+        ]
+    },
+    "Proof in the paper": "The HRTEM image given in Figure 1d indicates that the lattice space is 2.76 Å, which is identical with the lattice spacing of CoP(002) (PDF 29-0497). The SAED pattern in Figure 1e also demonstrates the polycrystalline structure of CoP nanosheets.",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.6b02263"
+}

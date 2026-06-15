@@ -1,0 +1,17 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Ba2RuH6"
+    ],
+    "exposed_crystal_plane_indices": [
+        "(110)",
+        "(100)",
+        "(111)"
+    ],
+    "Characterization_methods": [
+        "X-ray diffraction (XRD)",
+        "Density functional theory (DFT) calculations"
+    ],
+    "Proof in the paper": "Based on the XRD pattern of Ba2RuH6 (Figure 2b), three low-Miller-index surfaces including (111), (100), and (110) are cleaved from the primitive cell to explore the active surface of the Ba2RuH6 catalyst, as shown in Figures 2c,d and S5.",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.2c00180"
+}

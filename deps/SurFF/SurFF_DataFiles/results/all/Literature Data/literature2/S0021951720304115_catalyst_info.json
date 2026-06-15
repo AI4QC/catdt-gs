@@ -1,0 +1,24 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Cu–Ce–La/SSZ-13",
+        "Cu–Ce–La/SSZ-13@ZSM-5"
+    ],
+    "crystal_phase": {
+        "Cu–Ce–La/SSZ-13": "CHA structure",
+        "Cu–Ce–La/SSZ-13@ZSM-5": "MFI structure"
+    },
+    "exposed_crystal_plane_indices": {
+        "Cu–Ce–La/SSZ-13": [
+            "(0 2 1)",
+            "(2 1 1)",
+            "(3 1 2)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD",
+        "HAADF-STEM"
+    ],
+    "Proof in the paper": "The XRD diffraction peaks at 2θ = 9.5°, 14.0°, 16.1°, 17.8°, 20.7°, 24.8°, and 30.7° illustrate that Cu–Ce–La/SSZ-13 displays typical patterns of the CHA structure (Fig. 3A). After it is coated with a ZSM-5 shell, it is clearly observed that the particles of CS1 become larger and grow into spheres with rough surfaces, which are covered with small crystal grains; the thickness of the shell is about 50 nm (Fig. 2C–D and Fig. S5). The XRD detection results of CS1 show that, in addition to the CHA characteristic structure peaks, the new diffraction peaks at 2θ = 7.9°, 8.8°, 23.0°, 23.3°, 23.7°, 23.9°, and 24.3° are attributed to the ZSM-5 shell with MFI structure. In addition, with the increase of shell coating, the intensity of the XRD diffraction peaks of the MFI structure is enhanced (Fig. S6). It should be noted that the XRD diffraction peaks of the SSZ-13 phase (core phase) in the core–shell CS1 change significantly from those of Cu–Ce–La/SSZ-13. The intensity of the diffraction peak at 9.6° is increased, while the intensity of diffraction peaks at 16.1°, 20.7°, and 30.7° is significantly weakened, especially at 20.7°. Therefore, we infer that it should be accompanied by partial dissolution and recrystallization of the core phase during the growth of the shell phase (secondary crystallization), and the crystal planes in the (0 2 1), (2 1 1), and (3 1 2) directions are more easily dissolved and recrystallized. The regrowth of the CHA zeolite (core phase) has a phenomenon of shrinking intercrystalline distance, which induces the diffraction peaks of the core phase to shift to a high angle (Fig. 3B; note that the diffraction peaks of the shell phase are not shifted, so the overall diffraction peak shift due to errors is excluded). Moreover, part of the active ions entered into the reaction solution with the dissolution could be introduced into the shell phase during the secondary crystallization process, which facilitated the functionalization of the shell phase. The migration of metal ions will be further revealed by XPS, UV–vis DRS, H2-TPR, and EPR (see Section 3.3).",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0021951720304115"
+}

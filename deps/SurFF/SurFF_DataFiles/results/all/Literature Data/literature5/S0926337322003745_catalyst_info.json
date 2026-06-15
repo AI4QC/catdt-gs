@@ -1,0 +1,26 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "PtCu3",
+        "PtCo/rGO",
+        "PtCoNiCu/rGO"
+    ],
+    "crystal_phase": {
+        "PtCu3": "Ordered intermetallic structure",
+        "PtCo/rGO": "L10 ordered structure",
+        "PtCoNiCu/rGO": "L12 ordered structure"
+    },
+    "characterization_methods": [
+        "XRD",
+        "HRTEM",
+        "FFT patterns"
+    ],
+    "exposed_crystal_plane_indices": {
+        "PtCu3": [
+            "(111)",
+            "(200)"
+        ]
+    },
+    "proof_in_the_paper": "The XRD patterns (Fig. 1a and Fig. S4) exhibit the intermetallic characteristic of PtCu3 NPs. The two other obvious broad peaks at 42.9 and 49.6°, produced by the ultra-small PtCu3 NPs, are signed to (111) and (200) planes. The HRTEM image (Fig. 2c) and corresponding Fast Fourier transforms (FFT) patterns (Fig. 2d) of O-PtCu3/rGO-8NH4OH catalyst display superlattice reflections of (100) and (110), verifying the L12 ordered structure of PtCu3 NPs.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337322003745"
+}

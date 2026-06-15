@@ -1,0 +1,24 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "PdAu"
+    ],
+    "crystal_phase": {
+        "PdAu": "cubic lattice (Pd/Au alloy phase)"
+    },
+    "exposed_crystal_plane_indices": {
+        "PdAu": [
+            "(200)",
+            "(111)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD",
+        "TEM/EDX",
+        "XPS",
+        "ICP-OES",
+        "FTIR spectroscopy"
+    ],
+    "Proof in the paper": "The XRD measurements were performed with as-received KOac-containing samples for deriving the percentage of the crystalline Pd/Au phase, the Pd/Au alloy composition as well as the mean Pd/Au crystallite size using the procedures described in the experimental part. The powder patterns of all samples show, as expected, identical intensities and positions for the silicon peak at 47.5° but differences in intensity and less pronounced, also in the peak position for the Pd/Au alloy peaks at 39.0° and 45.5°. This suggests that the mean crystallite size in the three catalysts differs more than the Pd/Au alloy composition (Fig. 1). Lattice constants and Pd/Au alloy compositions, obtained by fitting all four observable Pd/Au peaks at 39.0°, 45.3°, 66.0° and 78.9°, are listed in Table 1. For the single components and for a 1:1 alloy the following cubic lattice constants are available from data bases (ICSD, ICDD): Au (Åa=4.080Å), Pd (Åa=3.890Å), Au1Pd1 (Åa=3.980Å). By comparing these values with those in Table 1, it is obvious that the Pd/Au alloy ratio in the catalysts is very close to unity. This is much lower than expected, when considering the total Pd/Au ratio derived from chemical analysis which is 4.6. It suggests that there might be a considerable percentage of Pd which is not accessible by XRD. (Fig. 1, Table 1)",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0021951709000116"
+}

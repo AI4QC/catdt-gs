@@ -1,0 +1,21 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "PdAu"
+    ],
+    "crystal_phase": {
+        "PdAu": "face-centered cubic (fcc)"
+    },
+    "Characterization_methods": [
+        "X-ray diffraction (XRD)",
+        "High-resolution transmission electron microscopy (HRTEM)"
+    ],
+    "exposed_crystal_plane_indices": {
+        "PdAu": [
+            "(220)",
+            "(311)"
+        ]
+    },
+    "Proof in the paper": "The high-resolution transmission electron microscopy (HRTEM) images taken from an individual nanospheres further confirm the edges of HSs contain abundant HIFs (Fig. 1b and Fig. S6). By analysis of the fast Fourier transform (FFT) pattern, the HIFs were found to be dominated by the (220) and (311) facets.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337319310446"
+}

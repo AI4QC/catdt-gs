@@ -1,0 +1,23 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Pt0.72Ru0.28"
+    ],
+    "crystal_phase": {
+        "Pt0.72Ru0.28": "cubic-Pt0.72Ru0.28 phase (JCPDS: 04-011-9038)"
+    },
+    "exposed_crystal_plane_indices": {
+        "Pt0.72Ru0.28": [
+            "(111)",
+            "(200)",
+            "(220)",
+            "(311)",
+            "(222)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD"
+    ],
+    "Proof in the paper": "The characteristic XRD peaks at 40.2, 46.8, 68.3, 82.4, and 86.9° correspond to reflections from (111), (200), (220), (311), and (222) that closely match with those of the cubic-Pt0.72Ru0.28 phase (JCPDS: 04-011-9038).",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.0c03973"
+}

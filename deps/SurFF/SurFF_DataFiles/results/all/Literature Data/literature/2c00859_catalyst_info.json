@@ -1,0 +1,21 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Pd44Pt30Ir26"
+    ],
+    "crystal_phase": {
+        "Pd44Pt30Ir26": "face-centered cubic metallic phase"
+    },
+    "exposed_crystal_plane_indices": {
+        "Pd44Pt30Ir26": [
+            "(111)",
+            "(100)"
+        ]
+    },
+    "Characterization_methods": [
+        "X-ray diffraction (XRD)",
+        "High-resolution TEM (HRTEM)"
+    ],
+    "Proof in the paper": "The X-ray diffraction (XRD) pattern (Figure 1g) can be indexed to the {111} and {100} planes of the face-centered cubic metallic phase, respectively. The HRTEM images (Figure 1c,d) along the side projection present a set of lattice spacings, that is, 0.224 and 0.199 nm.",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.2c00859"
+}

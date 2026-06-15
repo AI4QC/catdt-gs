@@ -1,0 +1,21 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Pd2Ga"
+    ],
+    "crystal_phase": {
+        "Pd2Ga": "Intermetallic compound"
+    },
+    "exposed_crystal_plane_indices": {
+        "Pd2Ga": [
+            "(2 0 3)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD",
+        "XPS",
+        "HR-TEM"
+    ],
+    "Proof in the paper": "The absence of any additional phases was verified by powder X-ray diffraction. The positions of the reflections do not significantly change and within the detection limit of this method other crystalline phases are absent. The reason for the broadening is visible in TEM images.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0021951713003400"
+}

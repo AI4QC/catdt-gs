@@ -1,0 +1,21 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "CaAl",
+        "MgAl"
+    ],
+    "crystal_phase": {
+        "CaAl": "Layered double hydroxides (LDHs)"
+    },
+    "Characterization_methods": [
+        "XRD"
+    ],
+    "exposed_crystal_plane_indices": {
+        "CaAl": [
+            "(003)",
+            "(110)"
+        ]
+    },
+    "Proof in the paper": "The XRD patterns (Figure 1A) show a series of diffraction peaks at 2θ of 10.5°, 20.8°, 31.4°, 37.8°, and 55.6°, which can be indexed to a characteristic feature of the layered CaxAl-NO3––LDH phase. Moreover, the cell parameters of re-CaxAl-LDH (listed in Table 1) are calculated based on (003) and (110) reflection as c = ∼22.50 Å and a = ∼3.30 Å, respectively, which are in accordance with the characteristics of OH– intercalated CaxAl-LDH.",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.7b03022"
+}

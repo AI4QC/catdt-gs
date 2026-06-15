@@ -1,0 +1,23 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": "PdZn",
+    "crystal_phase": {
+        "PdZn": [
+            "α-phase alloy",
+            "β-phase alloy"
+        ]
+    },
+    "Characterization_methods": [
+        "TEM",
+        "FTIR",
+        "XPS"
+    ],
+    "exposed_crystal_plane_indices": {
+        "PdZn": [
+            "(100)",
+            "(111)"
+        ]
+    },
+    "Proof in the paper": "The Pd-ZnO-t sample presents prominent shoulders at 3568 and 3670 cm–1. These signals above 3500 cm–1 are associated with a more basic character and could be related to nonpolar (101̅0) surfaces. Furthermore, this sample shows higher absorption than the others in the region under 3100 cm–1, which is also assigned to OH species on those (101̅0) facets. On the other hand, the sample Pd-ZnO-b presents a higher proportion of bands around 3150 and 3300 cm–1 assigned to (112̅0) surfaces.",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.6b03009"
+}

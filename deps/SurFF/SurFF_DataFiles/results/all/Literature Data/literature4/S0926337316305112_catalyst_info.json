@@ -1,0 +1,20 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": "Ni-Pd/CB",
+    "crystal_phase": {
+        "Ni-Pd/CB": "face-centered-cubic (fcc) structure of nickel nanoparticles, face-centered-cubic (fcc) Pd"
+    },
+    "Characterization_methods": [
+        "X-ray diffraction (XRD)",
+        "High-resolution transmission electron microscopy (HRTEM)"
+    ],
+    "exposed_crystal_plane_indices": {
+        "Ni-Pd/CB": [
+            "(111)",
+            "(200)",
+            "(220)"
+        ]
+    },
+    "Proof in the paper": "The X-ray diffraction (XRD) patterns of CB, Ni/CB and Ni0.20Pd0.05/CB catalysts. The peaks at 44.5°, 51.8° and 76.4° can be indexed as the (111), (200) and (220) planes of Ni, respectively, indicating the face-centered-cubic (fcc) structure of nickel nanoparticles with good crystallinity. After the replacement of Ni with Pd on the surface of Ni NPs, three additional peaks appeared at around 40.2°, 46.5° and 68.0° corresponding to the (111), (200) and (220) crystal planes of face-centered-cubic (fcc) Pd, suggesting the reduction of Pd2+ to Pd0.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337316305112"
+}

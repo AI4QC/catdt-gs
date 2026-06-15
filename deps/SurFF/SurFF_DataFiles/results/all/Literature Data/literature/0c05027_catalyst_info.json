@@ -1,0 +1,21 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "CoRu"
+    ],
+    "crystal_phase": {
+        "CoRu": "Face-centered cubic (fcc)"
+    },
+    "exposed_crystal_plane_indices": {
+        "CoRu": [
+            "(111)",
+            "(211)"
+        ]
+    },
+    "Characterization_methods": [
+        "XPS",
+        "HAADF STEM"
+    ],
+    "Proof in the paper": "The XPS and HAADF STEM results indicated that the predominant polymorph in all catalysts, both unpromoted and oxide-promoted, after activation via reduction in hydrogen flow was face-centered cubic (fcc) Co0 (Figure S24). The HAADF STEM images provided insights into the surface topology, including both extended terraces and step-edge topological motifs present on the surface of fcc cobalt nanoparticles.",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.0c05027"
+}

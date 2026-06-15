@@ -1,0 +1,20 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Fe8Ce2"
+    ],
+    "crystal_phase": {
+        "Fe8Ce2": "fluorite structure"
+    },
+    "exposed_crystal_plane_indices": {
+        "Fe8Ce2": [
+            "(2 0 0)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD",
+        "HRTEM"
+    ],
+    "Proof in the paper": "The crystalline with 0.27 nm lattice fringes is ascribed to (2 0 0) plane of fluorite structure CeO2 (by HRTEM) as shown in green box in Fig. 2.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S002195171930034X"
+}

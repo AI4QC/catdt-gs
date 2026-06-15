@@ -1,0 +1,24 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "PdCu",
+        "PdCu3"
+    ],
+    "crystal_phase": {
+        "PdCu": "body-centered structure (BCC)",
+        "PdCu3": "face-centered structure (FCC)"
+    },
+    "Characterization_methods": [
+        "X-ray diffraction (XRD)"
+    ],
+    "exposed_crystal_plane_indices": {
+        "PdCu": [
+            "(111)"
+        ],
+        "PdCu3": [
+            "(111)"
+        ]
+    },
+    "Proof in the paper": "The diffraction peaks, emerged between Pd(111) and Cu(111) within the range of 40.5–43.2 °, correspond to alloy phases PdCu(111) (2θ = 41.5°) with body-centered structure (BCC) and PdCu3(111) (2θ = 42.6°) with face-centered structure (FCC).",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0021951718303853"
+}

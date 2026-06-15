@@ -1,0 +1,21 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Pd3Pb"
+    ],
+    "crystal_phase": {
+        "Pd3Pb": "intermetallic L10 Pd3Pb phase (ICDD 00-050-1631)"
+    },
+    "Characterization_methods": [
+        "XRD",
+        "TEM",
+        "HRTEM"
+    ],
+    "exposed_crystal_plane_indices": {
+        "Pd3Pb": [
+            "(200)"
+        ]
+    },
+    "Proof in the paper": "High-resolution TEM (HRTEM) images revealed the single-crystalline character of the NCs with a lattice spacing of 0.199 nm, which is in good agreement with a L10 Pd3Pb phase (0.202 nm for (200)) (Figure 1D and Figure S1B).",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.0c03561"
+}

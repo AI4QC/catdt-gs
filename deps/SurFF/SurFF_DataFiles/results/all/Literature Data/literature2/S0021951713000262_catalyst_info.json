@@ -1,0 +1,20 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Pd–Ag"
+    ],
+    "crystal_phase": {
+        "Pd–Ag": "Pd–Ag alloy phase"
+    },
+    "Characterization_methods": [
+        "XRD",
+        "TEM"
+    ],
+    "exposed_crystal_plane_indices": {
+        "Pd–Ag": [
+            "(1 1 1)"
+        ]
+    },
+    "Proof in the paper": "The Pd–Ag/SiO2 (Ag/Pd = 0.5, 1, and 2) after reduction exhibited broad peaks located between the corresponding lines of pure Ag and Pd, which indicate the presence of Pd–Ag alloy phase (Fig. 2b–d). The TEM images of Pd/SiO2, Ag/SiO2, and Pd–Ag/SiO2 after the reduction were shown in Fig. 3. The average sizes of the particles were 5–6 nm for Pd/SiO2 and Ag/SiO2 (Table 4), while this average sizes agreed well with that from XRD patterns. Pd–Ag/SiO2 (Ag/Pd = 0.5 and 1) exhibited a similar size distribution, while the average size of particles was 5–6 nm. In Pd–Ag/SiO2 (Ag/Pd = 2) (Fig. 3f), the average size of particles was 12 nm. This size distribution was caused by the coexistence of the Pd–Ag alloy phase and the unalloyed silver in Pd–Ag/SiO2 (Ag/Pd = 2). The mean sizes of Pd–Ag alloy particles were slightly larger than that from XRD patterns. These differences may be due to a distribution of composition. The higher magnification TEM images of Pd–Ag/SiO2 (Ag/Pd = 1) (Fig. 3e) were used to resolve the d-spacing. The d-spacing was around 0.231 nm, corresponding to the (1 1 1) planes of the crystallite.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0021951713000262"
+}

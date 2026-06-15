@@ -1,0 +1,30 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Pd",
+        "Pd-Fe"
+    ],
+    "crystal_phase": {
+        "Pd": "face-centered cubic (FCC)",
+        "Pd-Fe": "face-centered tetragonal (FCT)"
+    },
+    "exposed_crystal_plane_indices": {
+        "Pd": [
+            "(1 1 1)"
+        ],
+        "Pd3-Fe1": [
+            "(1 1 1)"
+        ],
+        "Pd2-Fe2": [
+            "(1 1 1)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD",
+        "XPS",
+        "TEM",
+        "HRTEM"
+    ],
+    "Proof in the paper": "The characteristic diffraction peaks at 2θ = 40.1° and 46.8° corresponding to Pd(1 1 1) and (2 0 0) crystal faces are clearly observed in the XRD pattern of Pd/SiO2. The two Pd3-Fe1 and Pd2-Fe2 crystal structures, shown in Fig. 1 along with those of pure Pd, were used to model the Pd-Fe alloy herein. Their structures were optimized and the lattice constants were calculated with a = b = c = 3.94 Å for the Pd, a = b = c = 3.88 Å for the Pd3-Fe1 alloy and a = b = 3.83 Å & c = 3.78 Å for the Pd2-Fe2 alloy. The closed packed 4 × 4 Pd(1 1 1), Pd3-Fe1(1 1 1) and Pd2-Fe2(1 1 1) surfaces were modeled by a four-layer slab with the bottom two layers fixed in their bulk positions while the top layers were allowed to relax.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0021951717300933"
+}

@@ -1,0 +1,37 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "RuCo/C",
+        "RuNi/C",
+        "RuFe/C"
+    ],
+    "crystal_phase": {
+        "RuCo/C": "hexagonal close-packed (hcp) structure",
+        "RuNi/C": "hexagonal close-packed (hcp) structure",
+        "RuFe/C": "hexagonal close-packed (hcp) structure"
+    },
+    "exposed_crystal_plane_indices": {
+        "RuCo/C": [
+            "(110)",
+            "(001)"
+        ],
+        "RuNi/C": [
+            "(110)",
+            "(001)"
+        ],
+        "RuFe/C": [
+            "(110)",
+            "(001)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD",
+        "EDX",
+        "TEM",
+        "STEM",
+        "EELS elemental mapping",
+        "HAADF STEM"
+    ],
+    "Proof in the paper": "The X-ray diffraction data of a series of carbon-supported Ru1–xCox (0.05 ≤ x ≤ 0.5) nanoparticles are presented in Figure 1a. The broad peak at ca. 25° is ascribed to the carbon support. All studied Ru1–xCox/C catalysts exhibited the same hexagonal close-packed (hcp) structure as Ru/C, indicated by the fact that the diffraction peaks of all samples matched the standard Ru diffraction peaks. As the Co content increased, the diffraction peaks of Ru1–xCox/C (0 ≤ x ≤ 0.5) shifted toward higher angles (Figure 1a, inset), suggesting that the Co atoms are incorporated into the Ru lattice. This is consistent with the fact that Co atoms are about 8% smaller than Ru atoms. As the annealing temperature increased, the XRD peaks became narrower, indicating that the mean size of the nanoparticles increased (Figure S1, SI). X-ray diffraction patterns for Ru1–xNix/C (0.05 ≤ x ≤ 0.5) and Ru1–xFex/C (0.05 ≤ x ≤ 0.5) nanoparticles were quite similar to that of Ru1–xCox/C (0 ≤ x ≤ 0.5), and they are shown in Figures S2–S5 (SI). The lattice parameters were calculated from XRD data and are presented in Tables 1 and S1 (SI). Due to low solubility of Ni in Ru, only low-Ni-containing Ru1–xNix/C (0 ≤ x ≤ 0.3) catalysts could be synthesized. If the nominal Ni content increased to 50% in the Ru0.5Ni0.5/C catalyst, the actual phases in the Ru0.5Ni0.5/C catalyst were a mixture of Ru0.7Ni0.3/C and NiO, as indicated by the fact that the XRD diffraction peak position of the nominal Ru0.5Ni0.5/C catalyst was similar to that of Ru0.7Ni0.3/C and that NiO diffraction peaks were present. The mean crystallite sizes were estimated from an analysis of the width of the diffraction peaks using the Scherrer equation [d = λ/(β cos θ), where λ = 1.540 18 Å, β is the full width at half-maximum intensity, and θ is the Bragg angle]. The values are presented in Tables 1 and S1. A representative TEM image of Ru0.95Co0.05/C (reduction and annealing temperatures were 300 and 475 °C, respectively) and a nanoparticle distribution histogram are presented in Figure 1b. Representative TEM images of Ru0.95Ni0.05/C and Ru0.95Fe0.05/C (reduction and annealing temperatures were 300 and 475 °C, respectively) and particle size distribution histograms are shown in Figures S6 and S7 (SI). The nanoparticles were well-dispersed on the carbon support and exhibited mostly spherical shape. The mean nanoparticle sizes of Ru0.95Co0.05/C, Ru0.95Ni0.05/C, and Ru0.95Fe0.05/C were about 2.5–2.7 nm, which is a bit smaller than the values determined from the XRD line-broadening analysis, since large nanoparticles contribute to the XRD signals more than small nanoparticles. The atomic ratio of Ru:Co in the Ru0.95Co0.05/C catalyst was determined using EDX spectroscopy to be 94.35:5.65, which is in good agreement with the nominal atomic ratio of 95:5 (Figure 1c). The metal atomic ratios in the Ru0.95Ni0.05/C and Ru0.95Fe0.05/C catalysts were also determined by EDX spectroscopy and are shown in Figures S8 and S9 (SI). They are also in good agreement with the nominal atomic ratios. The crystal structure and the chemical composition of Ru0.95Co0.05/C nanoparticles were further investigated using atomic-scale high-angle annular dark-field (HAADF) scanning transmission electron microscopy (STEM) equipped with electron energy loss spectroscopy (EELS) operated at 300 keV. Parts a and b of Figure 2 present a Ru0.95Co0.05 nanoparticle and a magnified region, at the atomic scale, respectively. Figure 2c shows the corresponding crystal model projected on the [110] zone axis with the typical hexagonal symmetry of hcp Ru metal. Figure 2d–f provides the elemental distribution information on Ru0.95Co0.05/C with EELS maps, which were extracted from the sharp Ru M3 edge and Co L3 edge in the respective spectra (Figure S10, SI). The composite EELS elemental maps of Ru and Co (Figure 2f) suggest that Ru and Co are well-distributed in the nanoparticles, and no surface preferential distribution enrichment is observed.",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.9b05621"
+}

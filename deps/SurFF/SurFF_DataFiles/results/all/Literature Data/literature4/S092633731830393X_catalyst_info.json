@@ -1,0 +1,19 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Pt-Cu"
+    ],
+    "crystal_phase": {
+        "Pt-Cu": "fcc (face-centred cubic)"
+    },
+    "exposed_crystal_plane_indices": {
+        "Pt-Cu": [
+            "(111)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD"
+    ],
+    "Proof in the paper": "The three Pt-Cu as deposited catalysts show profiles characteristic of the fcc crystal structure as well as the two reference Cu samples. The Pt-Cu (111) reflections are lying between those of pure Pt (111) and pure Cu (111). (Section 3. Results and discussion)",
+    "url": "https://www.sciencedirect.com/science/article/pii/S092633731830393X"
+}

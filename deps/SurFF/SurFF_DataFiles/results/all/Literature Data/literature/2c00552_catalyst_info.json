@@ -1,0 +1,21 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "PdZn"
+    ],
+    "crystal_phase": {
+        "PdZn": "β-PdZn 1:1 alloy"
+    },
+    "exposed_crystal_plane_indices": {
+        "PdZn": [
+            "[0–10]"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD",
+        "STEM-EDX",
+        "HAADF STEM"
+    ],
+    "Proof in the paper": "Figure 2 shows that the β-PdZn alloy has formed by reduction using XRD. The alloy has shifted diffraction peaks at 41.2° and ∼44° compared with monometallic Pd at ∼40°. Further, energy-dispersive X-ray (EDX) mapping in a scanning transmission electron microscope (STEM) (Figure 3 and Figure S2) quite clearly shows the formation of the alloy on catalyst 1, whereas prior to reduction, STEM-EDX shows that the catalyst comprises of PdO particles on ZnO (Figure S3). Using HAADF STEM, the lattice can be resolved, Figure 4 and Figure S2, and is the same as that reported by Nowicka et al., who obtained atomic resolution images of the lattice showing the good order in the particle lattice; (26) the lattice projection of the [0–10] plane is shown in the figure.",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.2c00552"
+}

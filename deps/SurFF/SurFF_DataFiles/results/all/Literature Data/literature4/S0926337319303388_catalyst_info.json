@@ -1,0 +1,22 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Pt3Mn",
+        "Pt3Mn–Ru",
+        "Pt3Mn@Ru"
+    ],
+    "crystal_phase": {
+        "Pt3Mn": "fcc (face-centred cubic)"
+    },
+    "Characterization_methods": [
+        "TEM",
+        "HRTEM"
+    ],
+    "exposed_crystal_plane_indices": {
+        "Pt3Mn": [
+            "{2 0 0}"
+        ]
+    },
+    "Proof in the paper": "The lattice spacing is ca. 0.197 nm, which is the typical {2 0 0} lattice fringes of Pt. The Pt3Mn CNCs were prepared according to our previous report and the corresponding transmission electron microscopy (TEM) images are shown in Figs. S1–S3. The as-obtained Pt3Mn particles yield above 95% selectivity of concave nanocubic structure and exhibit perfectly high-indexed facets.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337319303388"
+}

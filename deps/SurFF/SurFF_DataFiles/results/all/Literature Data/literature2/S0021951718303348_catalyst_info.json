@@ -1,0 +1,23 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Ni1.8Fe1.5",
+        "Ni3Fe"
+    ],
+    "crystal_phase": {
+        "Ni3Fe": "cubic Ni3Fe intermetallic compound (PDF#88-1715)"
+    },
+    "exposed_crystal_plane_indices": {
+        "Ni3Fe": [
+            "(111)",
+            "(200)",
+            "(220)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD",
+        "HRTEM"
+    ],
+    "Proof in the paper": "The XRD patterns of the catalysts with different Ni/Fe ratios were showed in Figs. 2 and S7. The Ni1.8 catalyst showed reflections of the metallic Ni at 2θ of 44.5°, 51.7° and 76.3°, which were attributed to (110), (200) and (220) planes, respectively (PDF# 04-0850). In the XRD patterns of the bimetallic NixFey catalysts, when Fe was introduced into Ni, diffraction peaks of the (111) and (200) planes gradually shifted to smaller angles upon increasing the Fe/Ni ratio. In the Ni1.8Fe1.5 sample, three sharp symmetrical peaks appeared at 2θ of 44.2°, 51.5° and 75.8°, which were typically assigned to (111), (200) and (220) planes of the cubic Ni3Fe, respectively (PDF#88-1715).",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0021951718303348"
+}

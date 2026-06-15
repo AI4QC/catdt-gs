@@ -1,0 +1,27 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Ni12P5",
+        "Ni2P"
+    ],
+    "crystal_phase": {
+        "Ni12P5": "tetragonal system, I4/m, No. 87",
+        "Ni2P": "hexagonal system, P321, No. 150"
+    },
+    "exposed_crystal_plane_indices": {
+        "Ni12P5": [
+            "(400)",
+            "(310)",
+            "(101)"
+        ],
+        "Ni2P": [
+            "(111)"
+        ]
+    },
+    "Characterization_methods": [
+        "Powder X-ray diffraction (PXRD)",
+        "Fast Fourier transform (FFT) patterns from transmission electron microscopy (TEM)"
+    ],
+    "Proof in the paper": "The FFT of the crystalline core suggested that a partial oxidation of Ni12P5 and Ni2P occurred which probably transforms some of the cores of the phosphide particles to phosphite, Ni(HPO3)(H2O), under electrochemical conditions. In addition, the filtered FFT images revealed the presence of a multiphase weakly disordered structure (Figures S12 and S13).",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.6b02666"
+}

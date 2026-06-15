@@ -1,0 +1,21 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "NiCoAl-LDH",
+        "α-Fe2O3"
+    ],
+    "crystal_phase": {
+        "NiCoAl-LDH": "layered double hydroxide structure",
+        "α-Fe2O3": "tetragonal SnO2 structure"
+    },
+    "exposed_crystal_plane_indices": {
+        "NiCoAl-LDH": [
+            "(012)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD"
+    ],
+    "Proof in the paper": "The characteristic peak with 2θ at 34.3° matches well with (012) plane of the typical hydrotalcite-like structure, suggested LDHs structure of the species on α-Fe2O3. No other impurity peak was observed, indicating LDHs were of pure phases and the deposition of LDHs did not change the crystalline structure of α-Fe2O3. (Fig. 1a)",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0021951718300277"
+}

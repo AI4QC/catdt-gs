@@ -1,0 +1,21 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "NiW"
+    ],
+    "crystal_phase": {
+        "NiW": "AFI structure and γ-Al2O3"
+    },
+    "exposed_crystal_plane_indices": {
+        "NiW": [
+            "(110)",
+            "(001)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD",
+        "TEM"
+    ],
+    "Proof in the paper": "The XRD profiles of five oxide catalysts are displayed in Figure 5. The characteristic diffraction peaks of the AFI structure and γ-Al2O3 are marked in the four molecular-sieve-modified catalysts. The catalyst NiW/EPA has only the peaks of γ-Al2O3. There are no additional peaks of any NiO and WO3 species, indicating that the metal oxide crystallites are too small to be identified or that the species of tungsten and nickel are evenly distributed on the hybrid supports. (10) The molecular sieves only account for a small part of the corresponding catalyst (20.7 wt %); therefore, the difference in crystallinity can be negligible, suggesting that the effect of crystallinity on the catalytic performance can be also negligible for four catalysts modified by molecular sieves.",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.9b01668"
+}

@@ -1,0 +1,27 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "NiPdPt/C",
+        "PdPt/C",
+        "NiPt/C"
+    ],
+    "crystal_phase": {
+        "NiPdPt/C": "fcc structure",
+        "PdPt/C": "fcc structure",
+        "NiPt/C": "fcc structure"
+    },
+    "exposed_crystal_plane_indices": {
+        "NiPdPt/C": [
+            "(111)",
+            "(200)",
+            "(220)",
+            "(311)",
+            "(222)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD"
+    ],
+    "Proof in the paper": "The diffraction peaks can be indexed as (111), (200), (220), (311), and (222) reflections of the fcc structure. The crystalline structure and the lattice properties of the catalysts were determined by means of X-ray diffraction analysis. Fig.1a shows characteristic XRD patterns for Pt/C, Pd55Pt45/C, Ni41Pt59/C, and Ni29Pd34Pt37/C catalysts.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337319305934"
+}

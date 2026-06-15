@@ -1,0 +1,22 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "(Pt0.9Pd0.1)3Fe/C",
+        "Pt3Fe/C",
+        "Pt0.9Pd0.1/C",
+        "Pd/C",
+        "Pt/C"
+    ],
+    "Characterization_methods": [
+        "XRD",
+        "TEM",
+        "STEM"
+    ],
+    "exposed_crystal_plane_indices": {
+        "(Pt0.9Pd0.1)3Fe/C": [
+            "(110)"
+        ]
+    },
+    "Proof in the paper": "The XRD patterns of the series catalysts display similar characteristics except (Pt0.9Pd0.1)3Fe/C. For (Pt0.9Pd0.1)3Fe/C, extra super-lattice diffraction peaks appear in the XRD pattern, such as the peaks located at 32.68, 52.82, and 58.33°, indicating the formation of the L12 intermetallic structure. Especially the pronounced diffraction peak at 32.68°, corresponding to the (110) plane of (Pt0.9Pd0.1)3Fe/C, matches well with the standard card (JCPDS: Pt3Fe # 01-089-2050). The microstructure of the (Pt0.9Pd0.1)3Fe/C catalyst was characterized by TEM and STEM. An atomic resolution image (Figure 1i) of (Pt0.9Pd0.1)3Fe/C along the [100] zone axis clearly exhibits a standard ordered fcc structure, apparent characteristics of the ordered atom arrangement.",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.0c03938"
+}

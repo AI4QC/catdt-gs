@@ -1,0 +1,29 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "NiSe2",
+        "FeSe2"
+    ],
+    "crystal_phase": {
+        "NiSe2": "cubic phases (JCPDS No.41-1495)",
+        "FeSe2": "orthorhombic phases (JCPDS No.21-0423)"
+    },
+    "exposed_crystal_plane_indices": {
+        "NiSe2": [
+            "(210)",
+            "(221)",
+            "(311)"
+        ],
+        "FeSe2": [
+            "(110)",
+            "(210)",
+            "(121)",
+            "(220)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD"
+    ],
+    "Proof in the paper": "The XRD patterns of NiFe LDHs/PNFF which all meet the hexagonal phases of Ni LDH (JCPDS No. 14-0117; a = b =3.126 Å, c =4.605 Å, α = β = 90°, and γ = 120°) and Fe LDH (JCPDS No. 13-0089; a = b =3.258 Å, c =4.605 Å, α = β = 90°, and γ = 120°) nanosheets, many new peaks occur in the XRD curve of NiSe2-FeSe2/PNFF, indicating most of NiFe LDH compounds are successfully transformed to NiFe diselenides. It should be noted the diffraction peaks at 33.2°, 45.1° and 50.7° are assigned to (210), (221) and (311) planes of cubic phases of NiSe2 (JCPDS No.41-1495) [19], as well as the peaks at 23.8°, 40.6°, 44.2° and 50.5° corresponding to (110), (210), (121) and (220) planes of orthorhombic phases of FeSe2 (JCPDS No.21-0423).",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337320306354"
+}

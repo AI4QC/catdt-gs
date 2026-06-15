@@ -1,0 +1,23 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Pt3Fe",
+        "Pt3(Fe0.75Zn0.25)"
+    ],
+    "exposed_crystal_plane_indices": {
+        "Pt3Fe": [
+            "(110)"
+        ],
+        "Pt3(Fe0.75Zn0.25)": [
+            "(100)",
+            "(111)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD",
+        "HAADF-STEM",
+        "synchrotron XRD"
+    ],
+    "Proof in the paper": "The 110 diffraction could be observed at 32.7° for Pt3Fe/SiO2 when the catalyst was annealed at 900 °C (Figure S3). The HAADF-STEM images of a single nanoparticle showed lattice fringes with a spacing of 3.91 Å, which is consistent with the interplanar distance of Pt3(Fe0.75Zn0.25)(100) planes (3.88 Å). Moreover, the observed atomic arrangement closely matched the corresponding crystal structure viewed along the [111] direction (Figure 3d,e). The synchrotron XRD (λ = 0.496 Å) analysis for Pt3(Fe0.75Zn0.25)/SiO2 showed superlattice diffractions were clearly observed (100 and 110 at 7.3 and 10.4°, respectively), which is strong evidence of the formation of the L12 structure (Figure 3f).",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.0c00151"
+}

@@ -1,0 +1,22 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "PdAg"
+    ],
+    "crystal_phase": {
+        "PdAg": "face-centered cubic (fcc) structure"
+    },
+    "Characterization_methods": [
+        "XRD",
+        "HRTEM"
+    ],
+    "exposed_crystal_plane_indices": {
+        "PdAg": [
+            "(1 1 1)",
+            "(2 0 0)",
+            "(2 2 0)"
+        ]
+    },
+    "Proof in the paper": "The XRD pattern of a PdAg thin film obtained by drying the colloidal sols exhibits three peaks, which can be indexed to diffraction from the (1 1 1), (2 0 0), and (2 2 0) planes of a face-centered cubic (fcc) structure (Fig. 2).",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0021951715002146"
+}

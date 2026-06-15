@@ -1,0 +1,25 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "CoFeCr LDH",
+        "CoFe LDH",
+        "CoCo LDH"
+    ],
+    "crystal_phase": {
+        "LDH": "JCPDS No. 46-0605"
+    },
+    "characterization_methods": [
+        "X-ray powder diffraction (XRD)"
+    ],
+    "exposed_crystal_plane_indices": {
+        "CoFeCr LDH": [
+            "(003)",
+            "(006)",
+            "(100)",
+            "(105)",
+            "(110)"
+        ]
+    },
+    "Proof in the paper": "The X-ray diffraction measurement (XRD) was performed. As presented in Fig. 1a, two typical strong diffraction peaks located at 44.5°, and 51.8° are attributed to the diffraction peaks from the NF. And the remaining characteristic diffraction peaks centered at 11.54°, 23.21°, 34.47°, 38.96°, and 61.16° represent lattice planes of (003), (006), (100), (105) and (110) in LDH (JCPDS No. 46-0605), respectively.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S092633732030374X"
+}

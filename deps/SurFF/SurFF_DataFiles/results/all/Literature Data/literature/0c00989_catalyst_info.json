@@ -1,0 +1,20 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "NiFe"
+    ],
+    "crystal_phase": {
+        "NiFe": "Metal-Organic Framework (MOF)"
+    },
+    "Characterization_methods": [
+        "X-ray diffraction (XRD)",
+        "High-Resolution Transmission Electron Microscopy (HRTEM)"
+    ],
+    "exposed_crystal_plane_indices": {
+        "NiFe-MOF": [
+            "(200)"
+        ]
+    },
+    "Proof in the paper": "The HRTEM image in Figure 1e shows a fringe lattice parameter of 10.0 Å in the NiFe-MOF nanosheets, corresponding to the interlayer spacing of (200) planes.",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.0c00989"
+}

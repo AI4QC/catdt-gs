@@ -1,0 +1,25 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "NiMo"
+    ],
+    "crystal_phase": {
+        "NiMo": [
+            "Na2Ti3O7 (JCPDS No. 31-1329)",
+            "H2Ti3O7 (JCPDS No. 41-192)"
+        ]
+    },
+    "exposed_crystal_plane_indices": {
+        "NiMo/TNT(7.1)": [
+            "(0 0 1)",
+            "(2 0 1)",
+            "(1 1 1)",
+            "(0 2 0)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD"
+    ],
+    "Proof in the paper": "The XRD patterns of the synthesized nanotubular supports are shown in Fig. 3A. In the case of the TNT(x) materials with high sodium content (7.1, 5.4, and 3.2 wt.% Na), four main diffraction peaks can be observed at 10.5°, 24.3°, 28.4°, and 48.1° (2θ), which are typical of monoclinic layered sodium trititanate (JCPDS card 31-1329) and correspond to its (0 0 1), (2 0 1), (1 1 1), and (0 2 0) crystal planes, respectively.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0021951715001438"
+}

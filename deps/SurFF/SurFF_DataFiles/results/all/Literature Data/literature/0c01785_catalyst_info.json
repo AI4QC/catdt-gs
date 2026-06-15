@@ -1,0 +1,15 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": "Sn1Pb3",
+    "crystal_phase": "face-centered cubic (fcc)",
+    "exposed_crystal_plane_indices": {
+        "Sn1Pb3": [
+            "(100)"
+        ]
+    },
+    "Characterization_methods": [
+        "X-ray diffraction (XRD)"
+    ],
+    "Proof in the paper": "The X-ray diffraction (XRD) pattern of Pb deposit exhibits only one series of diffraction peaks that are assigned to face-centered cubic (fcc) polycrystalline Pb... The main diffraction peaks of the SnPb deposits can also be indexed to an fcc phase... In the following, we will therefore refer to these deposits as dendritic Sn1Pb3 alloy films.",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.0c01785"
+}

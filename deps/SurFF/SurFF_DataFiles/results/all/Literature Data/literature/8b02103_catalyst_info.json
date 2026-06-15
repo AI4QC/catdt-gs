@@ -1,0 +1,21 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Ag–Ir"
+    ],
+    "crystal_phase": {
+        "Ag–Ir": "face-centered cubic (FCC) lattice arrangement"
+    },
+    "Characterization_methods": [
+        "powder X-ray diffraction (PXRD)"
+    ],
+    "exposed_crystal_plane_indices": {
+        "Ag–Ir": [
+            "(111)",
+            "(200)",
+            "(220)"
+        ]
+    },
+    "Proof in the paper": "The PXRD patterns for the AgxIr(100–x)NPs confirmed that Ag and Ir had become intrinsically alloyed into an FCC lattice arrangement, in all instances. The major (111), (200), and (220) reflections shifted as a function of changing Ag:Ir composition (Figure 1A).",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.8b02103"
+}

@@ -1,0 +1,26 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Pd0.75Cu0.25",
+        "Pd3Si"
+    ],
+    "crystal_phase": {
+        "Pd0.75Cu0.25": "fcc, bcc (B2)",
+        "Pd3Si": "Pd3Si"
+    },
+    "exposed_crystal_plane_indices": {
+        "Pd0.75Cu0.25": [
+            "(110)",
+            "(001)"
+        ],
+        "Pd3Si": "2Θ range 33–52°"
+    },
+    "Characterization_methods": [
+        "XRD"
+    ],
+    "Proof in the paper": [
+        "The XRD spectra of the Pd0.75Cu0.25/SiO2 catalyst showed changes in the crystallographic structure from fcc to bcc (B2) after reduction in hydrogen at 500 and 600°C (Fig. 1, traces c and d).",
+        "The XRD reflections characteristic for Pd3Si appeared in the 2Θ range 33–52° after reduction at 500 and 600°C (Fig. 1, traces c and d)."
+    ],
+    "url": "https://www.sciencedirect.com/science/article/pii/S0021951713000572"
+}

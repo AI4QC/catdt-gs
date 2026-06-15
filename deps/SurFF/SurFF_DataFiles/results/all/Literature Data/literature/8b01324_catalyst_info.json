@@ -1,0 +1,21 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Au–Ag"
+    ],
+    "exposed_crystal_plane_indices": {
+        "Au–Ag": [
+            "(111)",
+            "(100)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD",
+        "HAADF-STEM",
+        "UV–vis",
+        "XPS",
+        "ICP-AES"
+    ],
+    "Proof in the paper": "In our previous reports, (9,15) we also observed the representative Au shape of a truncated octahedron with top facets of (111) and (100). The adsorption of O2 on Au and Au–Ag nanoparticles is investigated, and the results are shown in Figure 6. On the Au (111) surface, we consider O2 adsorption at four different sites (top, fcc, hcp, and bridge). The detailed configurations and adsorption energy at each site are shown in Figure S2. It is found that the O2 adsorption at the bridge site is much more favorable (Eads = 0.51 eV) than at the top, fcc, and hcp sites for Au (111). As for Au (111), we also calculate the O2 adsorption energy on Au (100), Au–Ag (111), and Au–Ag (100) at different sites (Figures S3–S5), and the stable configurations are shown in Figure 6.",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.8b01324"
+}

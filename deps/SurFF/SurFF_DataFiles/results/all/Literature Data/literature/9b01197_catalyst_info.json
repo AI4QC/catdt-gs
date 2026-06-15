@@ -1,0 +1,20 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Pd–Au–Y"
+    ],
+    "exposed_crystal_plane_indices": {
+        "Pd–Au–Y": [
+            "(111)",
+            "(200)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD",
+        "TEM",
+        "SEM EDS/EDX",
+        "XPS"
+    ],
+    "Proof in the paper": "The appearance of the peaks at 2θ values of 38.2° and 44.3° in the XRD pattern (Figure 1a, red), corresponding to the (111) and (200) planes of bimetallic Pd–Au, clearly indicated the formation of a Pd–Au nanoalloy at the crystallite of zeolite-Y. (47,48)",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.9b01197"
+}

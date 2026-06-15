@@ -1,0 +1,22 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "(NixFe1–x)2P"
+    ],
+    "crystal_phase": {
+        "(NixFe1–x)2P": "hexagonal Fe2P structure"
+    },
+    "Characterization_methods": [
+        "XRD",
+        "HRTEM"
+    ],
+    "exposed_crystal_plane_indices": {
+        "(NixFe1–x)2P": [
+            "(111)",
+            "(200)",
+            "(001)"
+        ]
+    },
+    "Proof in the paper": "The nanosheets consist of ultrasmall, crystalline nanodomains (marked region 1; Figure 3h) as the major constituent and amorphous nanodomains (marked region 2; Figure 3i) as the minor constituent. The crystalline nanodomains show well-resolved lattice fringes with interplanar spacings of 0.23, 0.17, and 0.33 nm corresponding to the (111), (200), and (001) planes of (NixFe1–x)2P, respectively.",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.0c01273"
+}

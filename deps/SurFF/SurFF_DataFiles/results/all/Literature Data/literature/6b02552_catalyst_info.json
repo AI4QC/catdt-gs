@@ -1,0 +1,29 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": "Fe–Ni",
+    "crystal_phase": {
+        "Fe–Ni": [
+            "α-Ni(OH)2",
+            "β-NiOOH",
+            "metallic Fe",
+            "Fe(OH)3",
+            "Fe2O3",
+            "Fe3O4"
+        ]
+    },
+    "exposed_crystal_plane_indices": {
+        "Fe–Ni": [
+            "(110)",
+            "(001)"
+        ]
+    },
+    "Characterization_methods": [
+        "High-resolution transmission electron microscopy (HRTEM)",
+        "X-ray absorption fine-structure spectroscopy (XAFS)",
+        "high-energy X-ray diffraction (HE-XRD) coupled to atomic pair distribution function (PDF) analysis",
+        "X-ray photoelectron spectroscopy (XPS)",
+        "energy-dispersive X-ray spectroscopy (EDS)"
+    ],
+    "Proof in the paper": "The HRTEM images and EDS mapping reveal the core–shell structure of the Fe–Ni nanoparticles, with nanocrystalline regions and a thin oxide layer. The XPS and XAFS results indicate the presence of α-Ni(OH)2, β-NiOOH, metallic Fe, Fe(OH)3, Fe2O3, and Fe3O4 phases. The HE-XRD and PDF analysis provide further structural information, showing limited long-range order and suggesting significant structural disorder in the nanoparticles.",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.6b02552"
+}

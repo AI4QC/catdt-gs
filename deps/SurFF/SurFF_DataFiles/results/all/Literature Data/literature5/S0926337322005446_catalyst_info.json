@@ -1,0 +1,20 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "AuPt"
+    ],
+    "crystal_phase": {
+        "AuPt": "face-centered cubic structures"
+    },
+    "exposed_crystal_plane_indices": {
+        "AuPt": [
+            "(111)",
+            "(200)"
+        ]
+    },
+    "Characterization_methods": [
+        "X-ray diffraction (XRD)"
+    ],
+    "Proof in the paper": "The XRD patterns of AuPt alloys were evaluated, and the observed diffraction peaks for all AuPt alloy compositions were located between two standard monometallic peaks – Au (JCPDS file # 04–0784, 2θ peaks at 38.19° and 44.39°) and Pt (JCPDS file: 70–2057, 2θ peaks at 39.77° and 46.25°). The observed two main diffraction peaks of Au8Pt1 at 38.55° and 44.79° were indexed as the crystal faces of (111) and (200) planes for face-centered cubic structures of AuPt alloys.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337322005446"
+}

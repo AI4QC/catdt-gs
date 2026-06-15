@@ -1,0 +1,18 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "NixCu1–x-NTMO",
+        "BCZYYb"
+    ],
+    "Characterization_methods": [
+        "Scanning electron microscopy (SEM)",
+        "High-resolution transmission electron microscopy (HRTEM)"
+    ],
+    "exposed_crystal_plane_indices": {
+        "NixCu1–x-NTMO": [
+            "(110)"
+        ]
+    },
+    "Proof in the paper": "Figure 2c gives the microstructure of Ni0.5Cu0.5-NTMO after reduction, showing the metal particles uniformly embedding on the oxide surface. The metal particles distribute in a very narrow range with a mean size of ∼33 nm. Figure 2d presents the in situ grown Ni0.5Cu0.5-NTMO interface with metal particles deeply anchoring on NTMO backbone, which indicates a strong interaction at the exsolved interfaces.",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.9b05409"
+}

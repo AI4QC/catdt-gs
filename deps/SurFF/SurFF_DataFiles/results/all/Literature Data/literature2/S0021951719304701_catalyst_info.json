@@ -1,0 +1,39 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Cu11In9",
+        "In2O3"
+    ],
+    "crystal_phase": {
+        "Cu11In9": "monoclinic (JCPDS 65-4963)",
+        "In2O3": "cubic (JCPDS 65-3170)"
+    },
+    "exposed_crystal_plane_indices": {
+        "Cu11In9": [
+            "(402)",
+            "(310)",
+            "(020)",
+            "(511)"
+        ],
+        "In2O3": [
+            "(211)",
+            "(222)",
+            "(400)",
+            "(411)",
+            "(332)",
+            "(431)",
+            "(125)",
+            "(440)",
+            "(611)",
+            "(622)",
+            "(136)",
+            "(444)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD",
+        "HRTEM"
+    ],
+    "Proof in the paper": "The XRD patterns of the calcined and six reduced catalysts are presented in Fig. 1a. It can be seen that all obtained samples are well crystallized. A small diffraction peak appearing at 38.7° in the calcined CuO-In2O3 catalyst corresponds to the (111) facet of CuO (JCPDS 45–0937). Moreover, CuO-In2O3 exhibits the diffraction peaks of (211), (222), (400), (411), (332), (431), (125), (440), (611), (622), (136), (444) at 2θ = 21.5°, 30.6°, 35.5°, 37.8°, 42.0°, 45.7°, 49.3°, 51.2°, 56.1°, 60.7°, 62.4° and 63.6°, respectively. These are in good agreement with the peaks of cubic In2O3 phase (JCPDS 65–3170). After 250°C reduction, the CuO phase disappears and a characteristic diffraction peak of Cu0 metal phase is disclosed at 43.3° in CuIn-250. However, the In2O3 phase of CuIn-250 remains consistent with the In2O3 phase of the calcined CuO-In2O3 catalyst, indicating that In2O3 has not been reduced at 250°C. When the reduction temperature is increased to 300°C, the peak of Cu0 metal phase disappears and a new phase emerges. The characteristic peaks at 29.5°, 32.9°, 41.3° and 42.2° are assigned to the (402), (310), (020) and (511) facets of a Cu11In9 intermetallic compound, respectively, which matches well with the standard data of a monoclinic phase (JCPDS 65-4963). Moreover, the In2O3 phase still exists in CuIn-300, though the peak at 42° ascribed to the (332) facet of In2O3 is not observed due to the overlap of adjacent peaks. With further increase of reduction temperature, the intensity of In2O3 peaks decreases gradually. This suggests that compared with 300°C, much more In2O3 is reduced at 350°C. According to a previous report on the phase diagram of Cu-In phase the In content in the Cu11In9 phase region can significantly chance. However, metallic In cannot be found after 350°C reduction in this work, thus showing that the reduced In species are all converted to form more Cu11In9 phase. Furthermore, it also reveals that a certain amount of highly-dispersed, finely-grained Cu0 metal phase still exists in CuIn-300 despite its diffraction peak’s disappearance. When reduction temperature reaches or exceeds 400°C, the diffraction peaks of metallic In appear due to further reduction of In2O3. Fig. 1b shows the XRD patterns of the six used catalysts. After 12h reaction (240°C for CuIn-250, and 280°C for the others), the position and type of the characteristic peaks in all the used catalysts have no obvious change. This indicates that no phase changes happen and no new species are generated during the reaction process. In Table 1, Cu11In9 crystal sizes of the reduced and used catalysts are estimated and listed. It can be found that Cu11In9 crystal size of the reduced catalysts increases (from 33.5 to 45.1 nm) with the increase of reduction temperature, indicating that the conspicuous aggregation occurs during high-temperature reduction treatments. In addition, after reaction, only slight increases appear in the Cu11In9 crystal sizes, implying the excellent thermal stability of all the Cu-In intermetallic catalysts.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0021951719304701"
+}

@@ -1,0 +1,13 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": "Pd3Ru",
+    "Characterization_methods": [
+        "HAADF-STEM",
+        "XRD"
+    ],
+    "exposed_crystal_plane_indices": {
+        "Pd3Ru": "(111)"
+    },
+    "Proof in the paper": "The in situ XRD patterns were taken during the annealing of Pd/C + RuCl3 from 50 to 600 °C, and shown in Figure 1e. The shifting of diffraction angles to lower values at relatively low temperatures (≤340 °C) indicates that the lattice constant of Pd becomes larger because of alloying with Ru atoms. The HAADF-STEM image (Figure 1a) and EDS elemental mappings (Figure 1b–d) of a single particle shows that the surface is enriched with Ru either being adatoms or tiny clusters.",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.9b01744"
+}

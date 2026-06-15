@@ -1,0 +1,20 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "CoSe"
+    ],
+    "crystal_phase": {
+        "CoSe": "hexagonal phase (JCPDS No. 052–1008)"
+    },
+    "Characterization_methods": [
+        "Transmission electron microscopy (TEM)",
+        "selected area electron diffraction (SAED)"
+    ],
+    "exposed_crystal_plane_indices": {
+        "CoSe": [
+            "(101)"
+        ]
+    },
+    "Proof in the paper": "The observed lattice fringes of 0.26 nm in Fig. 5e can be assigned to the (101) plane of hexagonal CoSe. The results of diffraction spots and diffraction rings (inset in Fig. 5d), EDS mapping (Fig. 5f) and XRD patterns (Fig. S11b) suggest that CoSe NPs are successfully loaded onto CdSSe NWs.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337323001467"
+}

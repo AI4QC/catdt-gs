@@ -1,0 +1,28 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "PtSn",
+        "Pt3Sn",
+        "PtZn",
+        "PtPb"
+    ],
+    "crystal_phase": {
+        "PtSn": "NiAs-type IMC with hexagonal hP4 cells",
+        "Pt3Sn": "Cu3Au-type structure (cP4 cells) with face-centered cubic (fcc) packing",
+        "PtZn": "tP2 unit cell",
+        "PtPb": "hP4 unit cell"
+    },
+    "Characterization_methods": [
+        "HRTEM",
+        "HAADF-STEM"
+    ],
+    "exposed_crystal_plane_indices": {
+        "PtSn": [
+            "(112¯0)",
+            "(0001)",
+            "(112¯1)"
+        ]
+    },
+    "Proof in the paper": "The measured lattice distances correspond well with specific crystal facets associated with the corresponding intermetallic phases. We also acquired PXRD patterns to confirm the formation of the desired intermetallic phases for all iNPs (Fig. S2). The exact ratios of Pt to the secondary metal M are in good agreement with the theoretical values measured via ICP-MS (Table S1). Fig. 1. HRTEM and HAADF-STEM images of (a–c) PtSn@mSiO2, and (f–h) Pt3Sn@mSiO2; insets in (c) and (h) are, respectively, fast Fourier transform (FTT) patterns from [0001] direction for PtSn@mSiO2 and [110] direction for Pt3Sn@mSiO2; and elemental mappings of (d and e) PtSn@mSiO2, and (i and j) Pt3Sn@mSiO2.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0021951717303627"
+}

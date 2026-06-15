@@ -1,0 +1,30 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Pt18Ni6",
+        "Pt12Ni12",
+        "Pt10Ni14"
+    ],
+    "crystal_phase": {
+        "Pt18Ni6": "face-centered cubic (FCC) structure",
+        "Pt12Ni12": "face-centered cubic (FCC) structure",
+        "Pt10Ni14": "face-centered cubic (FCC) structure"
+    },
+    "exposed_crystal_plane_indices": {
+        "Pt18Ni6": [
+            "(1 1 1)"
+        ],
+        "Pt12Ni12": [
+            "(1 1 1)"
+        ],
+        "Pt10Ni14": [
+            "(1 1 1)"
+        ]
+    },
+    "Characterization_methods": [
+        "HR-TEM",
+        "PXRD"
+    ],
+    "Proof in the paper": "The lattice fringes correspond to a spacing distance of 0.21–0.22 nm, which is close to the lattice distance of the (1 1 1) facet of PtNi alloys. The scans of powder X-ray diffraction (PXRD), as shown in Fig. 2, display the characteristic peaks for the (1 1 1) and (2 0 0) facets. The associated patterns reveal that PtNi octahedra, being independent of the alloy compositions, are in a face-centered cubic (FCC) structure.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0021951713003308"
+}

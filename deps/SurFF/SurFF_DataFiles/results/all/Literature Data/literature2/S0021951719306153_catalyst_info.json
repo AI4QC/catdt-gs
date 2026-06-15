@@ -1,0 +1,31 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "PdZn_Disordered",
+        "PdZn_Ordered",
+        "Pd@Zn_Core-shell"
+    ],
+    "crystal_phase": {
+        "PdZn_Disordered": "Amorphous PdZn",
+        "PdZn_Ordered": "Ordered PdZn",
+        "Pd@Zn_Core-shell": "Ordered Pd-core with disordered Zn-shell"
+    },
+    "characterization_methods": [
+        "HR-TEM"
+    ],
+    "exposed_crystal_plane_indices": {
+        "PdZn_Ordered": [
+            "(3 1 1)",
+            "(2 0 0)",
+            "(1 1 1)",
+            "(1 1 0)"
+        ],
+        "Pd@Zn_Core-shell": [
+            "(2 2 0)",
+            "(2 0 0)",
+            "(1 1 1)"
+        ]
+    },
+    "Proof in the paper": "For PdZn_Ordered, the lattice fringes with interplanar distances of 0.121 nm, 0.205 nm, 0.219 nm, and 0.290 nm are in good agreement with PdZn(3 1 1), PdZn(2 0 0), PdZn(1 1 1), and PdZn(1 1 0) crystal planes. For Pd@Zn_Core-shell, the interplanar distances of 0.138 nm, 0.195 nm, and 0.225 nm correspond well with Pd(2 2 0), Pd(2 0 0), and Pd(1 1 1) crystal planes, respectively.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0021951719306153"
+}

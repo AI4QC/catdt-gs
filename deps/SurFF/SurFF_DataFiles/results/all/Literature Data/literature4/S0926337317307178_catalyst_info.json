@@ -1,0 +1,33 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Pd(0)",
+        "In2O3",
+        "PdIn"
+    ],
+    "crystal_phase": {
+        "PdIn": "cubic CsCl structure"
+    },
+    "exposed_crystal_plane_indices": {
+        "Pd(0)": [
+            "(111)"
+        ],
+        "In2O3": [
+            "(440)"
+        ],
+        "PdIn": [
+            "(110)",
+            "(200)",
+            "(211)",
+            "(220)",
+            "(310)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD",
+        "HR-TEM",
+        "ADF-STEM"
+    ],
+    "Proof in the paper": "The XRD of the resulting black suspension, sample PdIn1:1N2, revealed only the presence of Pd(0) crystallites, with a cubic F structure and an average diameter of 3.8 nm, whereas no diffraction peaks for In-containing phases are observed (Fig. 1, Table 1). HR-TEM (Fig. 2) identified spherical NPs with an average size of 10.1 ± 0.8 (2.8) nm (Table 1). Lattice spacing analysis of the NPs (both in Fig. 2), and the Pd:In composition determined by EDX (Table 1) were also consistent with the formation of the PdIn intermetallic alloy.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337317307178"
+}

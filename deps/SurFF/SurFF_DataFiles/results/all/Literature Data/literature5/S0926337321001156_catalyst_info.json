@@ -1,0 +1,20 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Ru-Ag"
+    ],
+    "crystal_phase": {
+        "Ru-Ag": "Anatase structure (PDF card No. 00-001-0562)"
+    },
+    "Characterization_methods": [
+        "XRD",
+        "TEM"
+    ],
+    "exposed_crystal_plane_indices": {
+        "Ru-Ag": [
+            "(101)"
+        ]
+    },
+    "Proof in the paper": "The typical anatase structure (PDF card No. 00-001-0562) is exhibited by the both of pristine and H2-reduced P25, but H2-P25 owns sharper diffraction peaks than P25 due to the higher crystallinity of H2-P25. The crystallite size of TiO2 particle is calculated by using Scherrer equation. As shown in Table S1, the crystal particle of H2-P25 (22.5 nm) is larger than pristine one (14.7 nm). After supporting metal/bimetals, the anatase structure is maintained (in Fig. S4(a)) and the calculation values of TiO2 crystallite size are about 22 nm (in Table S1). Meanwhile, the disappearance of Ru characteristic peaks is attributed to high dispersion, but when Ag content is more than 50 % the appearance of Ag2O block leads to sharp peaks. To define nanostructure, TEM and EDS mapping are utilized. As depicted by Fig. 2(a) and (c), numerous Ru nanoparticles with a mean size of 1.8 nm is supported on P25, but mono-metallic Ag particles are measured as up to 15.7 nm.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337321001156"
+}

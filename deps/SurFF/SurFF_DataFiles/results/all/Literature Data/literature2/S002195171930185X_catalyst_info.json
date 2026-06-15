@@ -1,0 +1,24 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Ni9Pd",
+        "Ni",
+        "Pd"
+    ],
+    "crystal_phase": {
+        "Ni9Pd": "face-centered cubic (fcc) structure"
+    },
+    "Characterization_methods": [
+        "X-ray diffraction (XRD)",
+        "HAADF STEM"
+    ],
+    "exposed_crystal_plane_indices": {
+        "Ni9Pd": [
+            "(111)",
+            "(200)",
+            "(220)"
+        ]
+    },
+    "Proof in the paper": "The XRD patterns of the as-prepared Ni9Pd and mono-metallic Ni and Pd NPs catalysts are shown in Fig. 1. Both Pd and Ni have face-centered cubic (fcc) structure with characteristic diffraction peaks: (111), (200) and (220). In Ni9Pd pattern, the (111) reflection peak of Pd appears at 40.5 °2θ while that of Ni (111) at 44.4 °2θ. When compared to mono-metallic diffractograms, the (111) peaks of Pd and Ni are slightly shifted towards each other, i.e., Pd (111) is shifted to higher and Ni (111) is shifted to lower 2θ suggesting formation of bi-phase structure between the two metals. Furthermore, Pd and Ni (200) and (220) crystallite peaks are shifted in the same manner. The summary of the 2θ peak position and full width at half maximum (β1/2) is shown in Table 1. Using the background at 55 °2θ and the FWHM of the corresponding (111) fcc peak, the crystallite size of Pd, in the bi-metallic Ni9Pd, was found at 4 nm while that of Ni was 5 nm showing equivalent crystallite sizes of the two metals. The crystallite sizes of mono-metallic Pd and Ni were 8 and 30 nm, respectively.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S002195171930185X"
+}

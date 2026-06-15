@@ -1,0 +1,24 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Fe–Ni",
+        "Fe–Ni–Pd"
+    ],
+    "crystal_phase": {
+        "Fe–Ni": "Fe–Ni alloy",
+        "Fe–Ni–Pd": "trimetallic Fe–Ni–Pd alloy"
+    },
+    "exposed_crystal_plane_indices": {
+        "Fe–Ni–Pd": [
+            "(111)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD",
+        "HRTEM",
+        "EDX",
+        "DFT calculations"
+    ],
+    "Proof in the paper": "The XRD pattern following the CO2-TPO (Fig. 1A) showed the decomposition of the trimetallic alloy phase to Fe3O4 and Ni-Pd alloy. The DFT calculations indicate that the segregation behavior of Fe is a strong function of the adsorbate layer present, and the presence of Pd in a Fe–Ni alloy reduces the tendency of Fe to segregate to the surface for coverages that are relevant to DRM conditions (see Table 2 in the Discussion section)",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337317302291"
+}

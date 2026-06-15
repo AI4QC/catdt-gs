@@ -1,0 +1,27 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "CoP@NC"
+    ],
+    "exposed_crystal_plane_indices": {
+        "CoP@NC": [
+            "(111)",
+            "(200)",
+            "(011)",
+            "(111)",
+            "(112)",
+            "(211)",
+            "(103)",
+            "(301)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD",
+        "TEM",
+        "HRTEM",
+        "STEM",
+        "EDX"
+    ],
+    "Proof in the paper": "The powder X-ray diffraction (XRD) pattern (Figure S2 in the Supporting Information) showed two strong diffraction peaks at 44.3 and 51.6°, identical with the (111) and (200) planes of metallic Co (JCPDS-15-0806). The XRD pattern of CoP@NC indicates a successful transition from metallic Co to CoP without other changes of the phases (Figure S2 in the Supporting Information). The obvious diffraction peaks at 31.6, 36.4, 46.2, 48.2, 52.3, and 56.8° correspond to the (011), (111), (112), (211), (103), and (301) planes of the CoP phase (JCPDS-29-0497), respectively. The morphology of the hybrids was characterized by transmission electron microscopy (TEM) (Figure 1b), and high-resolution TEM (HRTEM) images in Figure 1c and the inset reveal that the lattice spacings on the nanoparticle and graphitized carbon layer are about 0.20 and 0.34 nm, corresponding to the (111) plane of Co and the (002) plane of graphitized carbon, respectively. Figure S4a in the Supporting Information exhibits the scanning TEM (STEM) and the corresponding energy dispersive X-ray spectroscopy (EDX) line scanning images, which further confirm that the nanoparticles are constituted by Co and P and wrapped in N-doped carbon layers.",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.7b00587"
+}

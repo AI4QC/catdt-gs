@@ -1,0 +1,27 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Ni",
+        "NiSb",
+        "NiBi"
+    ],
+    "crystal_phase": {
+        "Ni": "Ni-PDF#04-0850",
+        "NiSb": "NiSb-PDF#41-1439",
+        "NiBi": "NiBi-PDF#03-1169"
+    },
+    "exposed_crystal_plane_indices": {
+        "Ni": [
+            "(111)"
+        ],
+        "NiBi": [
+            "(101)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD",
+        "HAADF STEM"
+    ],
+    "Proof in the paper": "The monometallic Ni at center of nanoparticle (Fig. 2D1) is featured by bright area (Ni column), with the atomic plane distance of 0.204 nm, which is in accordance with the lattice spacing of Ni (111). In contrast, the NiBi structure at the center of nanoparticle (Fig. 2E1) is characterized by alternating smaller (Ni column) and bigger (Bi column) contrast, due to the huge difference in atomic radius between Ni and Bi atoms. The atomic plane distance is measured as 0.297 nm, in good agreement with the lattice spacing of intermetallic NiBi (101).",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337320306883"
+}

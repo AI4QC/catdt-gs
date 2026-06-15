@@ -1,0 +1,19 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "RP-LaSr3(Co0.5Fe0.5)3O10−δ",
+        "BSCF",
+        "CP-LSCF"
+    ],
+    "Characterization_methods": [
+        "X-ray diffraction (XRD)"
+    ],
+    "exposed_crystal_plane_indices": {
+        "RP-LaSr3(Co0.5Fe0.5)3O10−δ": [
+            "(107)",
+            "(110)"
+        ]
+    },
+    "Proof in the paper": "The diffraction peaks of the as-synthesized RP-LaSr3ComFe3–mO10−δ coincide well with the standard XRD pattern (i.e., PDF #81-1234) and accurately point to a layered structure with a space group of I4/mmm after incorporating various Co contents. However, the selected enlarged main peaks [region of (107) and (110) in Figure 1b] of RP-LaSr3ComFe3–mO10−δ (m = 1.0, 1.5, and 2.0) were observed to gradually shift to a higher angle upon increasing Co-substitution relative to those of the pristine RP-LaSr3Fe3O10−δ, suggesting the unit cell shrinkage due to the partial substitution of larger Fe cations (0.645 Å) by smaller Co cations (0.615 Å) at the B-site.",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.0c02838"
+}

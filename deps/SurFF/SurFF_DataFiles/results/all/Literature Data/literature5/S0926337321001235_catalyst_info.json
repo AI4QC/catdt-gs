@@ -1,0 +1,54 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Fe/CB",
+        "Ni/CB",
+        "Fe3Ni/CB",
+        "FeNi/CB",
+        "FeNi3/CB"
+    ],
+    "crystal_phase": {
+        "Fe/CB": "body centered cubic (bcc)",
+        "Ni/CB": "face centered cubic (fcc)",
+        "Fe3Ni/CB": "bcc and fcc phases coexisted",
+        "FeNi/CB": "fcc",
+        "FeNi3/CB": "fcc"
+    },
+    "exposed_crystal_plane_indices": {
+        "Fe/CB": [
+            "(110)",
+            "(200)"
+        ],
+        "Ni/CB": [
+            "(111)",
+            "(200)",
+            "(220)"
+        ],
+        "Fe3Ni/CB": [
+            "(110)",
+            "(200)"
+        ],
+        "FeNi/CB": [
+            "(111)",
+            "(200)",
+            "(220)"
+        ],
+        "FeNi3/CB": [
+            "(111)",
+            "(200)",
+            "(220)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD",
+        "P-XRD"
+    ],
+    "Proof in the paper": {
+        "Fe/CB": "The peaks at 2θ = 44.75° and 65.05° for Fe/CB corresponded to the (110) and (200) planes of crystalline body centered cubic (bcc) iron structure, respectively.",
+        "Ni/CB": "The peaks at 2θ values of 44.51°, 51.83°, 76.37° corresponded to the (111), (200) and (220) crystal planes of crystalline face centered cubic (fcc) nickel in the Ni/CB catalyst, respectively.",
+        "Fe3Ni/CB": "For Fe3Ni/CB, the bcc and fcc phases coexisted in the alloy particles. The peaks at 2θ = 44.64°, 65.15° corresponded to the (110) and (200) planes of crystalline bcc Fe-Ni alloy structure (JCPDS37-0474), respectively.",
+        "FeNi/CB": "For bimetallic FeNi/CB catalyst with atomic ratio 1:1, the peaks at 2θ = 43.79°, 51.01°, 75.05° corresponded to the (111), (200) and (220) crystal planes of crystalline fcc FeNi alloy (JCPDS 12-0736).",
+        "FeNi3/CB": "For FeNi3/CB, the peaks at 2θ values of 44.16°, 51.44°, 75.71° corresponded to the (111), (200) and (220) crystal planes of crystalline fcc Fe-Ni alloy structure (JCPDS38-0419), respectively."
+    },
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337321001235"
+}

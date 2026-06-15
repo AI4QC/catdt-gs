@@ -1,0 +1,16 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": "Ni5Ga3",
+    "crystal_phase": "Orthorhombic unit cell with Cmmm space group",
+    "Characterization_methods": "Powder X-ray diffraction (PXRD)",
+    "exposed_crystal_plane_indices": [
+        "(221)",
+        "(002)",
+        "(040)",
+        "(402)",
+        "(440)",
+        "(223)"
+    ],
+    "Proof in the paper": "The PXRD patterns of the reduced samples of HTlc precursors above are shown in Fig. 4. All the Ni–Ga metal alloys exhibited clear major diffraction peaks positioned at 2θ = 43.2°, 48.4°, 54.5°, 72.5°, 75.2° and 86.5°, which corresponded to the Ni5Ga3 crystal planes (221), (002), (040), (402), (440) and (223) respectively [29,30,32], and there were no obvious impurity peaks, suggesting high purity of Ni5Ga3 metal alloys was achieved in crystallization.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337320304823"
+}

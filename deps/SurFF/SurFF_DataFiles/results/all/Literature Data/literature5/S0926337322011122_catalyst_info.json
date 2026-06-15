@@ -1,0 +1,22 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "FeNi",
+        "NiFe-LDH"
+    ],
+    "crystal_phase": {
+        "FeNi": "FCC austenite structure (JCPDS no. 047–1405)",
+        "NiFe-LDH": "JCPDS no. 040–0215"
+    },
+    "exposed_crystal_plane_indices": {
+        "FeNi": [
+            "(220)"
+        ]
+    },
+    "Characterization_methods": [
+        "SEM",
+        "XRD"
+    ],
+    "Proof in the paper": "The peaks of BFN at 43.9°, 50.9° and 74.8° are assigned to Fe0.64Ni0.36, a single phase FCC austenite structure (JCPDS no. 047–1405). The patterns of DFN-n (n=1–5) with the similar peak position imply that the samples exhibit the same phase with same crystal structure. X-ray photoelectron spectroscopy (XPS) spectra show that there is a higher concentration of hydroxide species and defect sites in the DFN-4 (Fig. S10-S12, see the Supporting Information for details), but below the detection limit of XRD, implying better OER performance of DFN-4, compared with the BFN. In order to further quantify the preferred orientation of DFN-4 formed by etching, the relative texture coefficient (RTC) was calculated (see the Supporting Information for details). The results reveal that the RTC of (220) facets increased from 29 of the BFN to 88 of the DFN-4, as shown in Fig. 2c, indicating the main preferred orientation in the porous layer of DFN-4 is (220) facets, which are more likely to be exposed to the basal surface, which conforms with our strategy.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337322011122"
+}

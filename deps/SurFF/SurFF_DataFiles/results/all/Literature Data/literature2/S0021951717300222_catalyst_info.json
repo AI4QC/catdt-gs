@@ -1,0 +1,23 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Cu",
+        "Cu3Zn",
+        "Cu0.9Zn0.1"
+    ],
+    "crystal_phase": {
+        "Cu": "metallic Cu",
+        "Cu3Zn": "Cu3Zn alloy",
+        "Cu0.9Zn0.1": "intermediate Cu-Zn alloy"
+    },
+    "Characterization_methods": [
+        "XRD"
+    ],
+    "exposed_crystal_plane_indices": {
+        "Cu": "(111)",
+        "Cu3Zn": "(200)",
+        "Cu0.9Zn0.1": "(200)"
+    },
+    "Proof in the paper": "The X-ray diffraction patterns of the DPU and DP8 samples calcined and then reduced at 350°C are presented in Fig. 4. Metallic copper (JCPDS 70-3038) is detected in the monometallic DPU Cu/TiO2 sample, indicating that Cu0 was not fully reoxidized in air. The formation of a Cu3Zn alloy (JCPDS 65-6567) is revealed in the DPU CuZn 1:1/TiO2 sample (Fig. 4A). For the DPU CuZn 3:1/TiO2 sample, a peak located between metallic Cu and Cu3Zn alloy (Fig. 4A) is clearly observed. From the crystal lattice (i.e. 3.6403 Å) calculated using the Bragg’s law, the composition of this “intermediate” Cu-Zn alloy (i.e. Cu0.9Zn0.1) could be estimated according to the Vegard’s law.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0021951717300222"
+}

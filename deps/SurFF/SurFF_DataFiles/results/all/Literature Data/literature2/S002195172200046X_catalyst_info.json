@@ -1,0 +1,8 @@
+{
+"is_metal_catalyst": "Yes",
+"chemical_composition": ["CuMgAl"],
+"crystal_phase": {"CuMgAl": "hydrotalcite structure"},
+"exposed_crystal_plane_indices": {"CuMgAl": ["(003)", "(006)", "(012)", "(015)", "(115)"]},
+"Characterization_methods": ["XRD"],
+"Proof in the paper": "CuMgAl-NO3-LDH and CuMgAl-NO3-LDH/SDSO presented five reflection peaks at 10.52°, 20.54°, 35.96°, 39.20° and 62.01°, which can be indexed to the (003), (006), (012), (015) and (115) planes in hydrotalcite structure" (from the XRD patterns section).
+}

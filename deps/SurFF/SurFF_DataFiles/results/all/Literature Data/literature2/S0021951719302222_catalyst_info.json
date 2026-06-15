@@ -1,0 +1,22 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "NiMo"
+    ],
+    "crystal_phase": {
+        "NiMo": "NiMoS phase"
+    },
+    "Characterization_methods": [
+        "XRD",
+        "HRTEM",
+        "XPS"
+    ],
+    "exposed_crystal_plane_indices": {
+        "NiMoS": [
+            "(310)",
+            "(220)"
+        ]
+    },
+    "Proof in the paper": "The HRTEM images of the sulfide catalysts were taken to assess the effect of the Modification of Y zeolite by Ga on the structures of the NiMoS phases (Fig. 6). The statistical results obtained from no less than 400 MoS2 slabs were analyzed to calculate both the average length for MoS2 slabs and the average stacking number for MoS2 slabs (Table 3).",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0021951719302222"
+}

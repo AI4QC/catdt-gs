@@ -1,0 +1,21 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "PdAg"
+    ],
+    "exposed_crystal_plane_indices": {
+        "PdAg": [
+            "(110)",
+            "(001)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD",
+        "STEM",
+        "XPS",
+        "XAFS",
+        "HAADF-STEM"
+    ],
+    "Proof in the paper": "The high-angle annular dark-field scanning transmission electron microscopy (HAADF-STEM) image together with Pd and Ag energy dispersive X-ray spectroscopy (EDX) maps of the PdAg/amine-MSC (Figure 1) showed that PdAg NPs were well dispersed and had a narrow size distribution, with an average diameter of 1.2 nm. The elemental distribution along a single NP provides evidence for the formation of a bimetallic alloy structure with homogeneous distribution of the Pd and Ag. EDX analysis also confirmed that the average Pd:Ag molar ratio in a single NP was approximately 85:15 (Table S3). TEM analysis further indicated that the average NP diameters in the other catalyst specimens were similar to that in the PdAg/amine-MSC (Pd/MSC 2.6 nm, Pd/amine-MSC 1.8 nm, and PdAg/MSC 2.3 nm; Figures S4–S6). The high-angle X-ray diffraction (XRD) pattern of the PdAg/amine-MSC exhibits a broad, intense peak at a 2θ value of approximately 26°, corresponding to amorphous MSC. No significant changes in this pattern were observed after functionalization with the amine or deposition of the metals (Figure S2). The presence of Pd or PdAg peaks could not be confirmed as these peaks were very weak.",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.7b04099"
+}

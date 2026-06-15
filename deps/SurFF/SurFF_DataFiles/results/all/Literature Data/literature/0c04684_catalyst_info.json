@@ -1,0 +1,34 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Rh",
+        "Rh2P",
+        "Rh3P2"
+    ],
+    "crystal_phase": {
+        "Rh": "FCC",
+        "Rh2P": "Unknown",
+        "Rh3P2": "Unknown"
+    },
+    "exposed_crystal_plane_indices": {
+        "Rh": [
+            "(111)"
+        ],
+        "Rh2P": [
+            "(111)",
+            "(200)",
+            "(220)"
+        ],
+        "Rh3P2": [
+            "Unknown"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD",
+        "TEM",
+        "HRTEM",
+        "HAADF-STEM"
+    ],
+    "Proof in the paper": "The X-ray diffraction (XRD) patterns of the Rh/SiO2 and Rh-xP/SiO2 catalysts are shown in Figure 3. The Rh/SiO2 catalyst had two board peaks at 41.1° and 47.8°, which were attributed to Rh(111) and Rh(200), respectively (PDF no. 87-0714). The Rh-0.5P/SiO2 catalyst displayed only two peaks at 32.8° and 46.9°, corresponding to Rh2P(200) and Rh2P(220), respectively (PDF no. 77-0300). The TEM images and particle size distributions are shown in Figure 4. The HRTEM and HAADF-STEM images of the Rh-0.5P/SiO2 catalyst showed explicit crystal structures (Figure 4e). The d-spacing of labeled lattice fringes were 3.2, 2.8, and 1.9 Å, which corresponded to Rh2P(111), (200), and (220), respectively.",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.0c04684"
+}

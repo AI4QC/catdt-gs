@@ -1,0 +1,25 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "PdZn",
+        "Pd2Ga",
+        "Pd"
+    ],
+    "crystal_phase": {
+        "PdZn": "ICDD 6-620",
+        "Pd2Ga": "ICDD 65-1511",
+        "Pd": "ICDD 46-1043"
+    },
+    "exposed_crystal_plane_indices": {
+        "PdZn": [
+            "(11¯1)",
+            "(1 1 1)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD",
+        "HRTEM"
+    ],
+    "Proof in the paper": "The crystal planes (11¯1) and (1 1 1) of PdZn (ICDD 6-620) were identified with the characteristic acute angle of 65° along the [1¯01] zone axis (Fig. 8B and C).",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0021951712001601"
+}

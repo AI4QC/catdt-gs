@@ -1,0 +1,31 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "NiSe2",
+        "FeSe2",
+        "CoSe2",
+        "NiSe2/FeSe2",
+        "NiSe2/CoSe2"
+    ],
+    "crystal_phase": {
+        "NiSe2": "JCPDF #88-1711",
+        "FeSe2": "JCPDF #74-0247",
+        "CoSe2": "JCPDF #65-3327"
+    },
+    "Characterization_methods": [
+        "TEM"
+    ],
+    "exposed_crystal_plane_indices": {
+        "NiSe2": [
+            "(210)"
+        ],
+        "FeSe2": [
+            "(012)"
+        ],
+        "CoSe2": [
+            "(210)"
+        ]
+    },
+    "Proof in the paper": "The TEM images further show the interplanar distance of 0.266 nm, which can be indexed to the (210) plane of NiSe2 [34], and the interplanar distance of 0.248 nm can be attributed to the (012) plane of FeSe2 [35], which confirms the successful construction of NiSe2/FeSe2 heterojunction. Moreover, the interlayer distance of 0.261 nm should be indexed into the (210) plane of CoSe2 [37] (Fig. S4d–f).",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337321007633"
+}

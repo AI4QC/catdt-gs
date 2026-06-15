@@ -1,0 +1,17 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": "Au-Ni",
+    "crystal_phase": {
+        "Au-Ni": "surface alloy (Au/Ni(111))"
+    },
+    "exposed_crystal_plane_indices": {
+        "Au-Ni": "Au/Ni(111)"
+    },
+    "Characterization_methods": [
+        "infrared reflection absorption spectroscopy",
+        "temperature-programmed desorption/reaction",
+        "density functional theory calculations"
+    ],
+    "Proof in the paper": "The Au/Ni(111) surface alloy was prepared and investigated using infrared reflection absorption spectroscopy (IRAS), temperature-programmed desorption/reaction (TPD/TPR), and density functional theory (DFT) calculations. The surface was formed by depositing mass-selected Au+ ions onto the Ni(111) surface at 300 K, and the total coverage of the deposited Au was determined from the integrated Au+ neutralization current on the sample. The surface alloy with Au atoms substituted into the topmost surface layer of the Ni substrate was used to investigate the NO-CO reaction steps.",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.6b02714"
+}

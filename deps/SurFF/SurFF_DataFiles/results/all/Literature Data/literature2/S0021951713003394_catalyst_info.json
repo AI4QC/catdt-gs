@@ -1,0 +1,21 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": "Pd–Ga/MgO–Al2O3",
+    "crystal_phase": {
+        "Pd–Ga/MgO–Al2O3": {
+            "Pd": "JCPDS 46-1043",
+            "Pd2Ga": "JCPDS 65-1511",
+            "PdGa5": "JCPDS 15-0577"
+        }
+    },
+    "exposed_crystal_plane_indices": {
+        "Pd": "(1 1 1)",
+        "Pd2Ga": "(0 1 3)",
+        "PdGa5": "(2 1 3)"
+    },
+    "Characterization_methods": [
+        "HRTEM"
+    ],
+    "Proof in the paper": "HRTEM images of Pd/MgO–Al2O3 and Pd–Ga/MgO–Al2O3 catalysts (Fig. 7) show that the metal nanoparticles uniformly distribute on the surface of the support. The lattice structure of the monometallic Pd, bimetallic Pd–Ga(2:1), and Pd–Ga(1:5) is discerned with 0.222 nm, 0.219 nm, and 0.218 nm, which are close to the lattice spacing measured for Pd(1 1 1) (JCPDS 46-1043), Pd2Ga(0 1 3) (JCPDS 65-1511), and PdGa5(2 1 3) facet (JCPDS 15-0577).",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0021951713003394"
+}

@@ -1,0 +1,26 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": "NiSn",
+    "crystal_phase": {
+        "NiSn": [
+            "orthorhombic Ni3Sn2",
+            "monoclinic Ni3Sn4"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD",
+        "TEM",
+        "HRTEM",
+        "STEM-HAADF",
+        "EELS"
+    ],
+    "exposed_crystal_plane_indices": {
+        "Ni3Sn2": [
+            "(2-20)",
+            "(-1-12)",
+            "(004)"
+        ]
+    },
+    "Proof in the paper": "Fig. 2a shows HRTEM micrographs of the NiSn (2:1) NPs and detail of the yellow squared region with its corresponding power spectrum. Ni3Sn2 lattice fringe distances measured were 0.210 nm (2-20), 0.296 nm (-1-12) at 46° vs (2-20) and 0.204 nm (004) at 90° vs (2-20), which matched with the orthorhombic Ni3Sn2 phase visualized along its [110] zone axis. (STEM-HAADF micrographs and EELS elemental maps of several NiSn (2:1) NPs showing a Ni and Sn radial gradient are also provided in Fig. 2b.)",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337318303436"
+}

@@ -1,0 +1,25 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "CuAu@0LCS",
+        "CuAu@2LCS",
+        "CuAu@4LCS"
+    ],
+    "crystal_phase": {
+        "CuAu@0LCS": "face-centered cubic (fcc) phase",
+        "CuAu@2LCS": "face-centered cubic (fcc) phase",
+        "CuAu@4LCS": "face-centered cubic (fcc) phase"
+    },
+    "Characterization_methods": [
+        "HAADF-STEM",
+        "FFT"
+    ],
+    "exposed_crystal_plane_indices": {
+        "CuAu@2LCS": [
+            "(111)",
+            "(220)"
+        ]
+    },
+    "Proof in the paper": "The atomic-resolution HAADF-STEM image (Fig. 2d) and the corresponding fast Fourier transform pattern (FFT, Fig. 2e) suggested that CuAu@2LCS was in a typical fcc phase (in accordance with the XRD results), and the lattice spacing of (111) and (220) was clearly observed.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337321001259"
+}

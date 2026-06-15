@@ -1,0 +1,20 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Ni/Ce0.83Zr0.17O2"
+    ],
+    "Characterization_methods": [
+        "X-ray diffraction (XRD)",
+        "X-ray photoelectron spectroscopy (XPS)",
+        "X-ray adsorption spectroscopy (XAS)",
+        "temperature-programmed reduction (TPR)",
+        "CO chemisorption"
+    ],
+    "exposed_crystal_plane_indices": {
+        "Ni/Ce0.83Zr0.17O2": [
+            "Ni(111)"
+        ]
+    },
+    "Proof in the paper": "The X-ray diffractograms of all spent catalysts contained a characteristic peak for Ni(111) at 44.6 (Figure 6).",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.0c02426"
+}

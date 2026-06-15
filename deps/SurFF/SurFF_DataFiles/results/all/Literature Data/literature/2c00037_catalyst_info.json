@@ -1,0 +1,25 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Cs2CuBr4",
+        "CsPbBr3"
+    ],
+    "crystal_phase": {
+        "Cs2CuBr4": "JCPDS No. 71-1462",
+        "CsPbBr3": "JCPDS No. 18-0364"
+    },
+    "exposed_crystal_plane_indices": {
+        "Cs2CuBr4": [
+            "(d203)"
+        ],
+        "CsPbBr3": [
+            "(d110)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD",
+        "High-resolution TEM (HRTEM)"
+    ],
+    "Proof in the paper": "High-resolution TEM (HRTEM) revealed that the lattice fringes of 0.32 and 0.41 nm were consistent with the characteristic spacings of d203 and d110 in Cs2CuBr4 and CsPbBr3, respectively.",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.2c00037"
+}

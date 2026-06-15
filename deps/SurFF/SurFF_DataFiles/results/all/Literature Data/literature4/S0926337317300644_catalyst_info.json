@@ -1,0 +1,24 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": "CoxNi4-xS4 (where x varies from 1 to 3)",
+    "crystal_phase": "MIL-101 (CoxNi4-xS4@MIL-101)",
+    "Characterization_methods": [
+        "XRD",
+        "XPS",
+        "TEM",
+        "HRTEM",
+        "HAADF-STEM",
+        "FTIR",
+        "UV–vis absorption spectra",
+        "BET method"
+    ],
+    "exposed_crystal_plane_indices": {
+        "CoxNi4-xS4@MIL-101": [
+            "(220)",
+            "(440)",
+            "(110)"
+        ]
+    },
+    "Proof in the paper": "The XRD peaks of (220) facet of CoxNi4-xS4 shifted from 26.27° to 26.53° when Co/Ni ratio varied from 3 to 1, while other facet XRD peak location did not change, indicating surface structure of (220) facet was adjusted and could be artificially controlled. The strongest diffraction intensity of (220) facet indicated that (220) facet is the most probable exposed facet for the H+ adsorption and hydrogen generation over CoxNi4-xS4 co-catalyst. (220) facet peak shift to small angles reflects such a change resulting from Co content increases. Because the (220), (440) and (110) are the equivalent crystal facet, it is reasonable to suppose that the state of chemisorbed H on (220) facet could be discussed on (110) facet over CoxNi4-xS4 co-catalyst.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337317300644"
+}

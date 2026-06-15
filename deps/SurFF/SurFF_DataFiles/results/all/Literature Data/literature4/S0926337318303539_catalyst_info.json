@@ -1,0 +1,20 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "PdZn"
+    ],
+    "crystal_phase": {
+        "PdZn alloy": "Pd1Zn1, PDF #06-0620"
+    },
+    "Characterization_methods": [
+        "XRD",
+        "HRTEM"
+    ],
+    "exposed_crystal_plane_indices": {
+        "PdZn alloy": [
+            "(111)"
+        ]
+    },
+    "Proof in the paper": "The diffraction peaks for metallic Pd and PdO disappear. Instead, there emerge two new peaks at 2θ = 41.2° and 44.1°, which are assigned to the (111) and (200) diffractions of PdZn alloy (Pd1Zn1, PDF #06-0620). This indicates that Pd and PdO convert into PdZn alloy phase with neighboring ZnO after H2 reduction. The formation of PdZn alloy can be further confirmed by high-resolution TEM analysis. As seen in Fig. 5, a lattice spacing of 0.219 nm is assigned to the characteristic (111) facet of PdZn alloy for three reduced PZ8-T samples.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337318303539"
+}

@@ -1,0 +1,32 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "La0.9Sr0.1NiO3",
+        "La0.9Sr0.1Ni0.5Fe0.5O3"
+    ],
+    "crystal_phase": {
+        "La0.9Sr0.1NiO3": "perovskite phase",
+        "La0.9Sr0.1Ni0.5Fe0.5O3": "perovskite phase"
+    },
+    "exposed_crystal_plane_indices": {
+        "La0.9Sr0.1NiO3": [
+            23.3,
+            33,
+            41.3,
+            47.4,
+            58.7,
+            68.8,
+            69.8,
+            78.7
+        ],
+        "La0.9Sr0.1Ni0.5Fe0.5O3": [
+            32.2,
+            57.4
+        ]
+    },
+    "Characterization_methods": [
+        "XRD"
+    ],
+    "Proof in the paper": "The calcined La0.9Sr0.1NiO3 sample showed LaNiO3 perovskite as the dominant phase with the main diffraction peaks at 2θ = 23.3, 33, 41.3, 47.4, 58.7, 68.8, 69.8, 78.7°. The calcined La0.9Sr0.1Ni0.5Fe0.5O3 sample showed diffraction peaks only for a pure perovskite phase. The XRD peaks at 2θ = 32.2 and 57.4° can be attributed to LaxSr1–xFeO3.",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.0c01229"
+}

@@ -1,0 +1,30 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Pt-Sn"
+    ],
+    "crystal_phase": {
+        "Pt-Sn": "Monoclinic θ-Al2O3 (JCPDS No. 23-1009)"
+    },
+    "exposed_crystal_plane_indices": {
+        "Pt-Sn": [
+            "(401)",
+            "(002)",
+            "(-111)",
+            "(111)",
+            "(401)",
+            "(202)",
+            "(-112)",
+            "(600)",
+            "(313)",
+            "(113)",
+            "(020)",
+            "(403)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD"
+    ],
+    "Proof in the paper": "The obvious peaks located at 31.2, 32.8, 35.1, 36.8, 39.0, 39.9, 45.0, 47.6, 60.1, 62.5, 64.1 and 67.4° are observable, which correspond to the crystalline planes of (401), (002), (-111), (111), (401), (202), (-112), (600), (313), (113), (020) and (403) in monoclinic θ-Al2O3 crystal structure (JCPDS No. 23-1009).",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0021951719301976"
+}

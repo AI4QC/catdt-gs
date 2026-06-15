@@ -1,0 +1,26 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "NiP2",
+        "NiSe2"
+    ],
+    "crystal_phase": {
+        "NiP2": "pyrite structure",
+        "NiSe2": "pyrite structure"
+    },
+    "exposed_crystal_plane_indices": {
+        "NiP2": [
+            "(210)"
+        ],
+        "NiSe2": [
+            "(200)"
+        ]
+    },
+    "Characterization_methods": [
+        "X-ray diffraction (XRD)",
+        "Raman spectra",
+        "High-resolution transmission electron microscopy (HRTEM)"
+    ],
+    "Proof in the paper": "As the high-resolution TEM (HRTEM) images show in Fig. 2d and Fig. S11, it is broadly apparent to observe the lattice interface in the red line separating the whole lattice area, where the lattice fringes with the interplanar distance of 0.244 nm and 0.296 nm belong to the (210) planes of NiP2 and (200) planes of NiSe2, respectively.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337320309991"
+}

@@ -1,0 +1,24 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "PdAg"
+    ],
+    "crystal_phase": {
+        "PdAg": "PdAg alloy phase"
+    },
+    "exposed_crystal_plane_indices": {
+        "PdAg": [
+            "(111)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD",
+        "XPS",
+        "TEM",
+        "STEM",
+        "UV-vis",
+        "HRTEM"
+    ],
+    "Proof in the paper": "For samples with both Pd and Ag loadings (Pd:Ag molar ratio at 1:0.25, 1:0.5, and 1:1), it was clear that only one weak diffraction peak at 2θ between ∼38° and ∼40° could be observed in their XRD diffraction patterns, and their peak position gradually shifted from ∼39.5° to ∼39° with the increase of Pd:Ag molar ratio from 1:0.25 to 1:1. This observation suggested that PdAg alloy was formed during the controlled surface reaction process to load Ag onto Pd/SiO2-NH2 catalyst (XRD). The insert HRTEM image in Fig. 1d shows one PdAg alloy nanoparticle, which verified its highly crystallized structure. One set of lattice planes could be clearly observed with the d-spacing at ∼0.23 nm, while the d-spacings of the (111) planes of fcc Pd phase and fcc Ag phase were 0.22 nm and 0.24 nm, respectively. Thus, the HRTEM observation provided another evidence that PdAg alloy was formed on SiO2-NH2 catalyst support and the observed set of lattice planes should be corresponded to the (111) plane of PdAg alloy phase (HRTEM).",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337316308128"
+}

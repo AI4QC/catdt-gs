@@ -1,0 +1,24 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Pt-Ag DSNCs"
+    ],
+    "crystal_phase": {
+        "Pt-Ag DSNCs": "face-centered cubic (fcc)"
+    },
+    "exposed_crystal_plane_indices": {
+        "Pt-Ag DSNCs": [
+            "(111)",
+            "(200)",
+            "(220)",
+            "(311)"
+        ]
+    },
+    "Characterization_methods": [
+        "X-ray diffraction (XRD)",
+        "Transmission electron microscopy (TEM)",
+        "High-resolution TEM (HRTEM)"
+    ],
+    "Proof in the paper": "The XRD patterns of the Pt-Ag DSNCs show they have a face-centered-cubic (fcc) crystal structure with the diffraction peaks corresponding to the (111), (200), (220) and (311) planes of the fcc lattice (Fig. 1b).",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337320310109"
+}

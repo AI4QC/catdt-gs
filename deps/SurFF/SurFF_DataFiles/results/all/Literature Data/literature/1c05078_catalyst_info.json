@@ -1,0 +1,21 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Fe–Co alloy"
+    ],
+    "crystal_phase": {
+        "Fe–Co alloy": "bcc"
+    },
+    "exposed_crystal_plane_indices": {
+        "Fe–Co alloy": [
+            "(110)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD",
+        "HAADF-STEM",
+        "EDX"
+    ],
+    "Proof in the paper": "The powder XRD pattern of the bimetallic catalysts showed a sharp peak centered at a 2θ value of 44.3–44.8° (Figure 4A,B), which lies between the fcc peak of Co(111) (JCPDS # 15-0806) and bcc peak of Fe(110) (JCPDS # 65-4899), which can be assigned to the (110) planes of a bcc crystal of 6K–FePc(100–x)CoPcx catalysts. The small shift in the diffraction peaks’ position relative to the original iron peaks comes from the lattice strain obtained upon the substitution of Fe by Co. Moreover, no signal corresponding to the single metallic or metal oxide phases was observed. All characteristic peaks could be ascribed to graphite and metallic Fe–Co alloy phases in the bimetallic 6K–FePc(100–x)CoPcx catalysts.",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.1c05078"
+}

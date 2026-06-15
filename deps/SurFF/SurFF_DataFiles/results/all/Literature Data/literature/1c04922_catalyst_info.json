@@ -1,0 +1,27 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "PdZnβ",
+        "PdZnα"
+    ],
+    "crystal_phase": {
+        "PdZnβ": "PdZnβ alloy phase",
+        "PdZnα": "Pd-rich phase (Pd4.05Zn0.95)"
+    },
+    "Characterization_methods": [
+        "XRD",
+        "HRTEM",
+        "HAADF-STEM"
+    ],
+    "exposed_crystal_plane_indices": {
+        "PdZnβ": [
+            "(111)",
+            "(200)"
+        ],
+        "PdZnα": [
+            "(111)"
+        ]
+    },
+    "Proof in the paper": "The XRD peaks appearing at 41.2° are attributed to the (111) facet of the PdZnβ alloy phase, while the peak at 40.4° is characteristic of the Pd-rich phase (Pd4.05Zn0.95), namely, the PdZnα phase (PdxZny, x > y). The PdZnβ alloy should show another peak at 44.1° corresponding to its (200) facets, which cannot be distinguished due to the overlap with the ZnAl2O4 (400) facet at 44.8°. HRTEM with the area-indexed images of Fourier transform analysis was then performed to further identify the presence of the PdZnβ phase with the emphasis on the samples with low Pd loadings such as 0.5 and 0.1 wt %. As can be seen in Figure 2, the reduced sample with 0.5 wt % Pd/ZnAl2O4 shows the characteristic lattice spacings of 0.206 and 0.219 nm, corresponding to the (111) and (200) planes of the PdZnβ alloy phase.",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.1c04922"
+}

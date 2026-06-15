@@ -1,0 +1,24 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": "PtFe@PtRuFe",
+    "crystal_phase": {
+        "PtFe@PtRuFe": "ordered intermetallic face-centered tetragonal (fct) PtFe alloy (PDF:43-1359)"
+    },
+    "exposed_crystal_plane_indices": {
+        "PtFe@PtRuFe": [
+            "(110)",
+            "(201)",
+            "(112)",
+            "(202)",
+            "(221)",
+            "(130)",
+            "(113)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD",
+        "HAADF-STEM"
+    ],
+    "Proof in the paper": "The X-ray diffraction (XRD) patterns of PtFe@PtRuFe sample exhibit a set of additional sharp super lattice peaks at 2θ of 32.85 for (110), 53.61 for (201), 60.30 for (112), 70.42 for (202), 74.12 for (221), 78.50 for (130), and 86.4 for (113), indicating the formation of ordered intermetallic face-centered tetragonal (fct) PtFe alloy (PDF:43-1359) [, ]. The HAADF-STEM images (Fig. 2c and Figure. S6) and the corresponding fast Fourier transform (FFT) of selected core area analysis (insert in Fig. 2c) further confirm the ordered intermetallic alloy structure.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S092633731930339X"
+}

@@ -1,0 +1,18 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": "(La0.8Sr0.2)1+xMnO3 (x = 0, 0.05, 0.1)",
+    "crystal_phase": "rhombohedral perovskite symmetry (space group R3̅c)",
+    "Characterization_methods": [
+        "X-ray diffraction (XRD)",
+        "High-resolution transmission electron microscopy (HRTEM)",
+        "selected area electron diffraction (SAED)"
+    ],
+    "exposed_crystal_plane_indices": {
+        "(La0.8Sr0.2)1+xMnO3": [
+            "(012)",
+            "(110)"
+        ]
+    },
+    "Proof in the paper": "The X-ray diffraction (XRD, Empyrean series 2, PANalytical) with a Cu Kα radiation of 1.54059 Å was used for phase identification and crystallography. The samples exhibited rhombohedral perovskite symmetry (space group R3̅c), with the peaks indexed by PDF #01-0736750. High-resolution transmission electron microscopy (HRTEM) and selected area electron diffraction (SAED, JEM-2100, JEOL) were used to study the sample morphology and directly measure the d-spacing of the samples. The lattice spacing of the (012) plane and (110) plane were determined for LSM and LS1.05M.",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.9b00800"
+}

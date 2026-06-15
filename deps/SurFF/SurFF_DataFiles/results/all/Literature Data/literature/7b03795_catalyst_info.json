@@ -1,0 +1,21 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "NiCo"
+    ],
+    "crystal_phase": {
+        "NiCo": "face-centered cubic (fcc)"
+    },
+    "exposed_crystal_plane_indices": {
+        "NiCo": [
+            "(111)",
+            "(200)",
+            "(220)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD"
+    ],
+    "Proof in the paper": "For the Ni/SiO2-IMP catalyst, three peaks centered at 44.47°, 51.85°, and 76.34° were found, which could be assigned to (111), (200), and (220) of face-centered cubic (fcc) nickel, respectively. No signals of nickel hydroxide or nickel oxide were observed. The XRD pattern of Co/SiO2-IMP had three peaks at 44.33°, 51.57°, and 75.89°, corresponding to (111), (200), and (220) of fcc cobalt, respectively. For NiCo/SiO2-IMP, the XRD peaks occurred at 44.44°, 51.72°, and 76.30°, similar to those of either fcc Ni or fcc Co.",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.7b03795"
+}

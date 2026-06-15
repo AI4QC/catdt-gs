@@ -1,0 +1,22 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Pt-Ni"
+    ],
+    "crystal_phase": {
+        "Pt-Ni": "face-centered cubic (fcc) structure"
+    },
+    "exposed_crystal_plane_indices": {
+        "Pt-Ni": [
+            "(111)",
+            "(200)",
+            "(220)",
+            "(222)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD"
+    ],
+    "Proof in the paper": "The XRD patterns for the Pt-Ni alloy and PNC are shown in Fig. 1e. Both XRD patterns showed four main peaks located around 39°, 46°, 67° and 87°, which can be ascribed to the corresponding (111), (200), (220) and (222) Pt fcc reflections (JXPDS database #04-0802).",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337316308529"
+}

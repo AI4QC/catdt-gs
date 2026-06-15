@@ -1,0 +1,22 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "PtRu"
+    ],
+    "crystal_phase": {
+        "PtRu": "fcc crystalline structure"
+    },
+    "exposed_crystal_plane_indices": {
+        "PtRu": [
+            "(1 1 1)",
+            "(2 0 0)",
+            "(2 2 0)",
+            "(3 1 1)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD"
+    ],
+    "Proof in the paper": "The XRD patterns of 1.5Pt1.5Ru/C catalysts (Fig. 1a and 1b) exhibit diffraction peaks positioned at 2θ values of 39.7°, 46.2°, 67.4°, and 81.3°, which are indicative of the (1 1 1), (2 0 0), (2 2 0), and (3 1 1) planes of the fcc crystalline structure of metallic pure bulk Pt. These peaks are compared with the reference pattern (ICDD-JCPDS Card No. 040802).",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0021951718301520"
+}

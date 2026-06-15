@@ -1,0 +1,16 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": "PdZnα",
+    "crystal_phase": "face centered cubic (fcc)",
+    "Characterization_methods": [
+        "X-ray diffraction (XRD)"
+    ],
+    "exposed_crystal_plane_indices": [
+        "(1 1 1)",
+        "(2 0 0)",
+        "(2 2 0)",
+        "(3 1 1)"
+    ],
+    "Proof in the paper": "X-ray Diffraction is presented in Fig. 1, the spectrum for Pd shows peaks at 40.78, 46.66, 68.36, and 82.13 2θ in agreement with ICDD card number 046-1043. The diffraction peaks for PdZnα (1 1 1), (2 0 0), (2 2 0), and (3 1 1) are 40.30, 46.88, 68.44, and 82.36.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S002195171200111X"
+}

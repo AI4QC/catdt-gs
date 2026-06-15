@@ -1,0 +1,20 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "NiFe LDH",
+        "Co-NiFe LDH"
+    ],
+    "crystal_phase": {
+        "NiFe LDH": "Ni6Fe2(CO3)(OH)16 (PDF#26–1286)"
+    },
+    "Characterization_methods": [
+        "XRD"
+    ],
+    "exposed_crystal_plane_indices": {
+        "NiFe LDH": [
+            "(204)"
+        ]
+    },
+    "Proof in the paper": "High-resolution TEM showed a lattice spacing of 0.26 nm corresponding to the (204) crystal plane of Ni6Fe2(CO3)(OH)16, which is consistent with the above XRD results.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337322004325"
+}

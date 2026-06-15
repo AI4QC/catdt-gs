@@ -1,0 +1,31 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Pt76Cu24",
+        "Pt52Cu48",
+        "Pt28Cu72",
+        "PtCuAu"
+    ],
+    "crystal_phase": {
+        "Pt76Cu24": "face-centered cubic (fcc)",
+        "Pt52Cu48": "face-centered cubic (fcc)",
+        "Pt28Cu72": "face-centered cubic (fcc)",
+        "PtCuAu": "face-centered cubic (fcc)"
+    },
+    "exposed_crystal_plane_indices": {
+        "Pt76Cu24": [
+            "(111)",
+            "(200)",
+            "(311)",
+            "(222)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD",
+        "SAED",
+        "HAADF-STEM",
+        "HRTEM"
+    ],
+    "Proof in the paper": "The SAED pattern of Pt76Cu24 reveals a polycrystalline diffraction pattern of concentric rings, which can be assigned to (111), (200), (311), and (222) planes of face-centered cubic (fcc) PtCu (Inset of Fig. 1c).",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337318303643"
+}

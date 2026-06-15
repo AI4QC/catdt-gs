@@ -1,0 +1,30 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Ni-BDC",
+        "NiZr-BDC",
+        "NiZrCu-BDC"
+    ],
+    "Characterization_methods": [
+        "XRD",
+        "FTIR",
+        "Raman",
+        "XPS",
+        "TEM",
+        "HAADF-STEM",
+        "EDS"
+    ],
+    "exposed_crystal_plane_indices": {
+        "Ni-BDC": [
+            "(200)"
+        ],
+        "NiZr-BDC": [
+            "(200)"
+        ],
+        "NiZrCu-BDC": [
+            "(200)"
+        ]
+    },
+    "Proof in the paper": "The XRD pattern of Ni-BDC corresponds well to the simulated Ni-BDC, indicating that the two-dimensional Ni-BDC is well crystallized. The main diffraction peaks of the three catalysts appeared at about 8.9° and were identified to the characteristic (200) facet. The TEM and HAADF-STEM images show a clear two-dimensional structure for all three catalysts.",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.1c05984"
+}

@@ -1,0 +1,22 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Pd20–yAuyNi80",
+        "np-Pd100–xAux"
+    ],
+    "crystal_phase": {
+        "Pd20–yAuyNi80": "face-centered cubic (fcc)"
+    },
+    "exposed_crystal_plane_indices": {
+        "Pd20–yAuyNi80": [
+            "(111)",
+            "(200)",
+            "(220)"
+        ]
+    },
+    "Characterization_methods": [
+        "X-ray diffraction (XRD)"
+    ],
+    "Proof in the paper": "The X-ray diffraction (XRD) patterns shown in Figure 1a verify that three Pd20–yAuyNi80 ribbons for dealloying precursors are a uniform single-phase solid solution. All the diffraction peaks can be indexed as a face-centered cubic (fcc) phase with crystal planes of (111), (200), (220).",
+    "url": "https://pubs.acs.org/doi/10.1021/cs400135k"
+}

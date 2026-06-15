@@ -1,0 +1,36 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Ru1/CeO2",
+        "Ni/CeO2",
+        "Ru1Ni/CeO2"
+    ],
+    "crystal_phase": {
+        "Ru1/CeO2": "CeO2 with typical fluorite structure (JCPDS 43–1002)",
+        "Ni/CeO2": "CeO2 with typical fluorite structure (JCPDS 43–1002)",
+        "Ru1Ni/CeO2": "CeO2 with typical fluorite structure (JCPDS 43–1002)"
+    },
+    "exposed_crystal_plane_indices": {
+        "Ru1/CeO2": [
+            "(111)",
+            "(220)",
+            "(311)"
+        ],
+        "Ru1Ni/CeO2": [
+            "(111)",
+            "(220)",
+            "(311)"
+        ],
+        "Ni/CeO2": [
+            "(111)",
+            "(220)",
+            "(311)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD",
+        "HAADF-STEM"
+    ],
+    "Proof in the paper": "The XRD peaks observed for the catalysts and CeO2 support with 2θ of 28.54, 47.52, and 56.38° are indexed to the (111), (220), and (311) planes of CeO2 with the typical fluorite structure (JCPDS 43–1002). No characteristic diffraction peaks belonging to Ni and Ru could be detected due to their low loadings or small nanocrystals.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337322011316"
+}

@@ -1,0 +1,20 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "NiCo2Te4"
+    ],
+    "crystal_phase": {
+        "NiCo2Te4": "cubic structured spinel (space group, FD-3m)"
+    },
+    "exposed_crystal_plane_indices": {
+        "NiCo2Te4": [
+            "(011)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD",
+        "High-resolution TEM (HR-TEM)"
+    ],
+    "Proof in the paper": "The high-resolution TEM image in Fig. 1B reveals an inter-planar spacing of 0.28 nm assigning to the (011) planes of NiCo2Te4 nanoclusters.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337319304400"
+}

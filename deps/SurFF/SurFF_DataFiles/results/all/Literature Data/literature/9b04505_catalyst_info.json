@@ -1,0 +1,19 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "NiFe-LDH"
+    ],
+    "Characterization_methods": [
+        "X-ray diffraction (XRD)",
+        "transmission electron microscopy (TEM)",
+        "energy dispersive X-ray spectroscopy (EDS)",
+        "small angle X-ray scattering (SAXS)"
+    ],
+    "exposed_crystal_plane_indices": {
+        "NiFe-LDH": [
+            "(018)"
+        ]
+    },
+    "Proof in the paper": "The lattice fringe spacing of the crystallite in Figure 2b was calculated to be 0.20 nm (Figure 2c,d). This value corresponds to the 018 planes of the LDH, (36,37) which demonstrated that the LDH with a lateral size of less than 10 nm was successfully obtained.",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.9b04505"
+}

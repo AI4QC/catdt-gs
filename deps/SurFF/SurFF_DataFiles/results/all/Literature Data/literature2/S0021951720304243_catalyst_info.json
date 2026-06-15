@@ -1,0 +1,24 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Ni",
+        "NiFe"
+    ],
+    "crystal_phase": {
+        "NiO": "",
+        "Ni-rich NiFe fcc alloy": ""
+    },
+    "Characterization_methods": [
+        "XRD"
+    ],
+    "exposed_crystal_plane_indices": {
+        "Ni": [
+            "(2 0 0)"
+        ],
+        "NiFe": [
+            "(2 0 0)"
+        ]
+    },
+    "Proof in the paper": "The in situ XRD diffractograms of NiFe-0, NiFe-0.25, and NiFe-0.5 catalysts during reduction are shown in Fig. 3. For the monometallic catalyst, the diffraction line associated with metallic Ni(2 0 0) was detected at 2θ of 51.4° (JCPDS 03–065-2865) after the sample reached 600°C for 15 min. As for the NiFe-0.25 and NiFe-0.5 catalysts, the characteristic peak shifted to a lower angle of 50.85° and 50.75°, respectively. The shift in peak position could confirm the formation of Ni-rich NiFe fcc alloy upon reduction of NiFe-0.25 and NiFe-0.5 catalysts at 600°C.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0021951720304243"
+}

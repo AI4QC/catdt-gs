@@ -1,0 +1,21 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "NiCoFe-LDHs",
+        "NiCo-LDHs",
+        "NiFe-LDHs"
+    ],
+    "crystal_phase": "LDHs",
+    "characterization_methods": [
+        "TEM",
+        "AFM"
+    ],
+    "exposed_crystal_plane_indices": {
+        "NiCoFe-LDHs": [
+            "(012)",
+            "(110)"
+        ]
+    },
+    "Proof in the paper": "The lattice fringes of 0.267 nm (012) and 0.155 nm (110) were identified for NiCoFe-LDHs (Figure 3f). The selected area electron diffraction (SAED) pattern confirmed the crystal structures of NiCo-, NiFe-, NiCoFe-LDHs (inset of Figure 3a–c). AFM images further identified the thickness of the as-synthesized NiCo-LDHs, NiFe-LDHs, and NiCoFe-LDHs materials (Figure 4).",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.0c00007"
+}

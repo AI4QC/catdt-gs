@@ -1,0 +1,17 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": "NiAl",
+    "crystal_phase": "NiO crystalline phases with (200) and (111) crystal planes",
+    "exposed_crystal_plane_indices": {
+        "NiAl": [
+            "(200)",
+            "(111)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD",
+        "HRTEM"
+    ],
+    "Proof in the paper": "The XRD results in Figure 1b show only NiO diffraction peaks for the NiAl oxide catalysts, which are shifted compared to those of pure NiO due to the doping of Al cations. High-resolution (HR) TEM images (Figure 2g–i) indicate that the structure of the catalysts includes only NiO crystalline phases with (200) and (111) crystal planes.",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.0c02347"
+}

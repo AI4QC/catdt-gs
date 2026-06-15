@@ -1,0 +1,15 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": "CuCl2",
+    "crystal_phase": "Not explicitly mentioned",
+    "Characterization_methods": [
+        "High-angle annular dark-field scanning transmission electron microscopy (HAADF-STEM)",
+        "powder X-ray diffraction (XRD)"
+    ],
+    "exposed_crystal_plane_indices": [
+        "(110)",
+        "(111)"
+    ],
+    "Proof in the paper": "The platelet γ-Al2O3 (Figure 1c) has a lattice spacing of 0.28 nm corresponding to the (110) facet that can be observed on its surface. The tubular γ-Al2O3 (Figure 1g) is enclosed by the (111) facet, as evidenced by the lattice spacing of 0.46 nm. No obvious difference can be observed on the powder X-ray diffraction (XRD) patterns, while there is a noteworthy difference at 2θ ∼19°, as shown in the inset of Figure 1d,h, we can see the peak on the sample of Al2O3-T, which is attributed to (111) facet, but it is not shown on Al2O3-P.",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.2c02019"
+}

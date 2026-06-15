@@ -1,0 +1,20 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": "Mo1.0V0.26Te0.1Nb0.20",
+    "crystal_phase": {
+        "Mo1.0V0.26Te0.1Nb0.20": "M1 phase (ICSD No. 55097)"
+    },
+    "exposed_crystal_plane_indices": {
+        "Mo1.0V0.26Te0.1Nb0.20": [
+            "(110)",
+            "(001)"
+        ]
+    },
+    "Characterization_methods": [
+        "X-ray diffraction (XRD)",
+        "Electron microscopy (EDX)",
+        "High-angle annular dark-field scanning transmission electron microscopy (HAADF STEM)"
+    ],
+    "Proof in the paper": "The phase purity was confirmed by powder X-ray diffraction (XRD), using a Bruker D8 ADVANCE diffractometer equipped with Cu Kα1+2 radiation, a secondary graphite monochromator, and a scintillation counter. Analysis of XRD data was performed by Rietveld full patterns fitting using the software package Topas (v 4.2, Bruker AXS) and the M1 crystal structure model of DeSanto et al. Electron microscopy was carried out in two modes using a Cs-corrected FEI Titan 80-300 operating at 300 kV: bright field high-resolution transmission electron microscopy (HRTEM) and high-angle annular dark-field scanning transmission electron microscopy (HAADF STEM). In addition, energy-dispersive X-ray spectroscopy (EDX) was used for elemental mapping of the sample.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0021951713004417"
+}

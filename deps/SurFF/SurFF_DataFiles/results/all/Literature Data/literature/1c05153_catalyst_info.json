@@ -1,0 +1,24 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "PtCo"
+    ],
+    "crystal_phase": {
+        "PtCo": "face-centered-cubic (fcc) crystal structure"
+    },
+    "Characterization_methods": [
+        "SAED",
+        "HAADF-STEM",
+        "HRTEM"
+    ],
+    "exposed_crystal_plane_indices": {
+        "PtCo": [
+            "(1 1 1)",
+            "(2 0 0)",
+            "(2 2 0)",
+            "(3 1 1)"
+        ]
+    },
+    "Proof in the paper": "The selected area electron diffraction (SAED) expressly exhibits four bright concentric rings, ascribed to the (1 1 1), (2 0 0), (2 2 0), and (3 1 1) crystal planes in sequence, reflecting the polycrystalline characteristics of Pt-rich PtCo NFs (Figure S2). The HAADF-STEM image obviously shows that the radial flower is assembled with ultrathin nanosheets (Figure 1b), which provides enough channels for electron transfer and proton exchange. A high-resolution TEM (HRTEM) image shows defective sites on the nanosheets, which would contribute to superior catalytic performance (Figure 1e).",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.1c05153"
+}

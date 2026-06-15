@@ -1,0 +1,26 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "NiSe2",
+        "Ni2P"
+    ],
+    "crystal_phase": {
+        "NiSe2": "cubic NiSe2 (JCPDS No. 11-0552)",
+        "Ni2P": "hexagonal Ni2P (JCPDS No. 65-9706)"
+    },
+    "exposed_crystal_plane_indices": {
+        "NiSe2": [
+            "(2 1 1)"
+        ],
+        "Ni2P": [
+            "(0 0 2)",
+            "(2 1 0)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD",
+        "HRTEM"
+    ],
+    "Proof in the paper": "The high-resolution TEM (HRTEM) image in Fig. 2f shows the lattice fringe spacing of 0.243 nm, which is attributed to the distance of (2 1 1) facet in cubic NiSe2. Meanwhile, the measured lattice spacings of 0.168 nm and 0.191 nm are in good consistent with the (0 0 2) and (2 1 0) facets of hexagonal Ni2P, respectively.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0021951719303914"
+}

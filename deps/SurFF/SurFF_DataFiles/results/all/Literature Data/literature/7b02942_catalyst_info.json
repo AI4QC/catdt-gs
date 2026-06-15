@@ -1,0 +1,20 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "PtxIr100-x"
+    ],
+    "crystal_phase": {
+        "PtxIr100-x": "fcc bulk and surface PtIr solid solution"
+    },
+    "Characterization_methods": [
+        "Atomic force microscopy (AFM)",
+        "X-ray diffraction (XRD)"
+    ],
+    "exposed_crystal_plane_indices": {
+        "PtxIr100-x": [
+            "Pt(001)[010]//[010](001)MgO"
+        ]
+    },
+    "Proof in the paper": "The formation of fcc bulk and surface PtIr solid solution was observed over the whole compositional range despite the large miscibility gap exhibited by these elements below ca. 1000 °C. Moreover, pole figures indicate that all films exhibit a Pt(001)[010]//[010](001)MgO cube-on-cube epitaxial relationship, which is consistent with AFM images. Cyclic voltammetry measurements performed in alkaline solutions confirmed both the presence of Ir atoms at the surface and the (100) surface orientation of all PtxIr100-x surfaces.",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.7b02942"
+}

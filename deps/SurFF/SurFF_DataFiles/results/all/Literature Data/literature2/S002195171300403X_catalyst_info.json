@@ -1,0 +1,32 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Pt",
+        "Pt3Sn"
+    ],
+    "crystal_phase": {
+        "Pt": "face centered cubic (fcc)",
+        "Pt3Sn": "face centered cubic (fcc)"
+    },
+    "exposed_crystal_plane_indices": {
+        "Pt": [
+            "(1 1 1)",
+            "(2 0 0)",
+            "(2 2 0)",
+            "(3 1 1)",
+            "(2 2 2)"
+        ],
+        "Pt3Sn": [
+            "(1 1 1)",
+            "(2 0 0)",
+            "(2 2 0)",
+            "(3 1 1)",
+            "(2 2 2)"
+        ]
+    },
+    "Characterization_methods": [
+        "X-ray powder diffraction (XRD)"
+    ],
+    "Proof in the paper": "The X-ray powder diffraction (PXRD) patterns of the as-synthesized particles, as shown in Fig. 2, suggest they have a face centered cubic (fcc) structure, with peaks assignable to (1 1 1), (2 0 0), (2 2 0), (3 1 1), and (2 2 2) planes. The positions of diffraction peaks for pure Pt metal (70-2057, JCPDS-ICDD) and Pt3Sn alloy (or Pt75Sn25, 65-0958, JCPDS-ICDD) are included for reference.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S002195171300403X"
+}

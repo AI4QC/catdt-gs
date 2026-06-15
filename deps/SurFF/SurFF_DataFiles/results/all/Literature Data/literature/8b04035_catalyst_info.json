@@ -1,0 +1,38 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "CuCe",
+        "CuCe-Fe"
+    ],
+    "crystal_phase": {
+        "CuCe": "cubic fluorite structure of CeO2",
+        "CuCe-Fe": "cubic fluorite structure of CeO2"
+    },
+    "exposed_crystal_plane_indices": {
+        "CuCe": [
+            "(111)",
+            "(200)",
+            "(220)",
+            "(311)",
+            "(222)",
+            "(400)",
+            "(331)",
+            "(420)"
+        ],
+        "CuCe-Fe": [
+            "(111)",
+            "(200)",
+            "(220)",
+            "(311)",
+            "(222)",
+            "(400)",
+            "(331)",
+            "(420)"
+        ]
+    },
+    "Characterization_methods": [
+        "X-ray diffraction (XRD)"
+    ],
+    "Proof in the paper": "The main reflections (2θ = 28.5, 33.1, 47.5, 56.3, 59.1, 69.4, 76.7, and 79.1°) corresponding to the fluorite-type cubic structure of CeO2 with diffractions of (111), (200), (220), (311), (222), (400), (331), and (420) planes (ICDD 34-0394) are observed for both CuCe and CuCe-Fe samples.",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.8b04035"
+}

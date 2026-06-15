@@ -1,0 +1,21 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "FeMoS(mw)",
+        "FeMoS(HT, Ar)",
+        "FeMoS(HT, Ar+H2)"
+    ],
+    "characterization_methods": [
+        "XRD",
+        "SEM",
+        "TEM",
+        "SAED",
+        "HAADF-STEM",
+        "XPS"
+    ],
+    "exposed_crystal_plane_indices": {
+        "FeMoS(mw)": "Amorphous phase (no specific indices)"
+    },
+    "proof_in_the_paper": "The broad diffraction pattern with no discernable peaks clearly confirms the amorphous phase of the FeMoS(mw) (Figure S5a). The characteristic halo ring pattern (Figure 2B, inset) is indeed characteristic for an amorphous material.",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.0c03692"
+}

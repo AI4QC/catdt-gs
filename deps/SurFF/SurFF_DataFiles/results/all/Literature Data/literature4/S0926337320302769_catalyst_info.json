@@ -1,0 +1,27 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "AgPd",
+        "AgPdNi"
+    ],
+    "crystal_phase": {
+        "AgPd": "face-centered cubic (fcc) solid solution crystalline structure",
+        "AgPdNi": "face-centered cubic (fcc) solid solution crystalline structure"
+    },
+    "exposed_crystal_plane_indices": {
+        "AgPd": [
+            "(111)",
+            "(200)"
+        ],
+        "AgPdNi": [
+            "(111)",
+            "(200)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD",
+        "HRTEM"
+    ],
+    "Proof in the paper": "The crystal phases of the as-prepared samples with different nanoalloy structures were characterized by using X-ray diffraction (XRD) and the results are shown in Fig. 1b. A single set of diffraction peaks was observed in the mixed-Ag46Pd54, ascribed to the face-centered cubic (fcc) solid solution crystalline structure. These peaks were located between pure Pd and pure Ag, revealing that Ag and Pd co-alloyed in single phase state in the particles. The core-shell-Ag40Pd60 and janus-Ag20Pd60Ni20 nanoalloys exhibited two sets of distinct diffraction peaks, which were assigned to an Ag-rich solid solution phase (fcc-Ag) and a Pd-rich solid solution phase (fcc-Pd), offering an evidence of phase separation. As shown in Figs. 1c and S1a, from core-shell-Ag20Pd80 to core-shell-Ag70Pd30, the peaks of fcc-Ag increased and the peaks of fcc-Pd gradually weakened until disappeared, pure Pd and pure Ag displayed the fcc structure. The XRD patterns of janus-AgyPd60Ni40-y nanoalloys were similar, although the peaks related to fcc-Ag became weaker with an increase in the nominal Ni content as shown in Figs. 1d and S1b, indicating that the Ag content in the sample was reduced. HRTEM image of the core-shell-Ag40Pd60 nanoparticle reveals the presence of the interface between fcc-Ag and fcc-Pd phase, as shown in Fig. 2b and d, the well-resolved lattice fringes with inter-planar spacing of 0.233 and 0.204 nm were indexed as the (111) and (200) crystal planes of fcc-Ag solid solution phase and the lattice fringes with inter-planar distance of 0.227 and 0.195 nm were assigned to the (111) and (200) crystal planes of fcc-Pd solid solution phase.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337320302769"
+}

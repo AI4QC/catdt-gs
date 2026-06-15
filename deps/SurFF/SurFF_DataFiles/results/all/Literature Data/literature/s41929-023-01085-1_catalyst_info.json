@@ -1,0 +1,31 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Fe",
+        "Co",
+        "FeCo alloy"
+    ],
+    "crystal_phase": {
+        "Fe": "Fe3O4",
+        "Co": "Co3O4, CoO, metallic Co",
+        "FeCo alloy": "bcc Fe–Co alloy phase"
+    },
+    "characterization_methods": [
+        "in situ XRD",
+        "in situ XAS"
+    ],
+    "exposed_crystal_plane_indices": {
+        "Fe": "Fe(110)",
+        "Co": "Co(0001)",
+        "FeCo alloy": "FeCo(110)"
+    },
+    "characterization_methods_indices": [
+        "DFT calculations",
+        "in situ XRD"
+    ],
+    "proof_in_the_paper": [
+        "In situ XRD patterns of FexCoy/CeO2 catalysts (x/y = 0/9, 3/6, 4.5/4.5, 6/3 and 9/0) under the reduction (H2 only) and reaction (CO and H2 at 450°C) conditions (Fig. 2a) indicate the presence of Fe3O4, Co3O4, CoO, metallic Co, and bcc Fe–Co alloy phase.",
+        "DFT studies (Fig. 3, Supplementary Figs. 23–44 and Supplementary Tables 7–14) were performed to enhance insights into the structures and catalytic behaviours observed experimentally, where bcc FeCo was selected to model the Fe–Co alloy according to the in situ XRD measurement (Fig. 2a). The most stable orientation is considered for the monometallic and bimetallic surfaces, that is, Fe(110), Co(0001) and FeCo(110)."
+    ],
+    "url": "https://www.nature.com/articles/s41929-023-01085-1"
+}

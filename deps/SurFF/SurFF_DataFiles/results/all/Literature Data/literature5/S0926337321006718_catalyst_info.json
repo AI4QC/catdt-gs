@@ -1,0 +1,22 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Cu5Pt",
+        "Cu3Pt",
+        "CuPt"
+    ],
+    "crystal_phase": {
+        "Cu5Pt": "face-centered cubic (FCC) structure",
+        "Cu3Pt": "face-centered cubic (FCC) structure",
+        "CuPt": "face-centered cubic (FCC) structure"
+    },
+    "Characterization_methods": [
+        "HRTEM"
+    ],
+    "exposed_crystal_plane_indices": {
+        "Cu3Pt": [
+            "(111)"
+        ]
+    },
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337321006718"
+}

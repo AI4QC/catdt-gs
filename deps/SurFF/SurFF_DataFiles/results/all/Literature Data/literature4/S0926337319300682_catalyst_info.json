@@ -1,0 +1,24 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Pt–Ni"
+    ],
+    "crystal_phase": {
+        "Pt–Ni": "face-centered cubic (fcc)"
+    },
+    "Characterization_methods": [
+        "X-ray diffraction (XRD)",
+        "High-resolution transmission electron microscopy (HRTEM)",
+        "High-angle annular dark-field scanning transmission electron microscopy (HAADF-STEM)"
+    ],
+    "exposed_crystal_plane_indices": {
+        "Pt–Ni": [
+            "{111}",
+            "{200}",
+            "{220}",
+            "{311}"
+        ]
+    },
+    "Proof in the paper": "The XRD spectra of the three kinds of nanostructures show several intense peaks, which can be clearly assigned to (111), (200), (220) and (311) diffractions of face-centered-cubic (fcc) crystal type. Moreover, the lattice spacing (0.19 nm) observed from the single nanosheet [Figure S3(c, d)] coincides with the (200) crystals planes of Pt–Ni alloy. Based on the investigations above and the corresponding fast Fourier transform (FFT) pattern (Figure S3), we can infer that the nanosheets grow along the <100> direction and indicate that the cross double dumbbell nanostructures have a fine crystalline nature.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337319300682"
+}

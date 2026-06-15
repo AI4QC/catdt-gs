@@ -1,0 +1,31 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Pt",
+        "Pt3Sn",
+        "PtSn"
+    ],
+    "crystal_phase": "determined by XRD",
+    "exposed_crystal_plane_indices": {
+        "Pt": [
+            "(1 1 1)",
+            "(2 0 0)",
+            "(2 2 0)"
+        ],
+        "Pt3Sn": [
+            "(1 1 1)",
+            "(2 0 0)",
+            "(2 2 0)"
+        ],
+        "PtSn": [
+            "(1 1 1)",
+            "(2 0 0)",
+            "(2 2 0)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD"
+    ],
+    "Proof in the paper": "The X-ray diffraction patterns of PtSn/C are shown in Fig. 3a. The peaks at 39.6°, 45.9°, and 67.5° were attributed to the (1 1 1), (2 0 0), and (2 2 0) features of Pt (JCPDS 04-802). The XRD patterns of the PtSn/C–H, shown in Fig. 3b, indicate alloy formation from Pt and Sn (Pt3Sn and PtSn) resulting from treatment in H2 at 673 K. For 3Pt1Sn/C–H, the (2 2 0) feature moved from 67.5° for 3Pt/C–H to 65.9° for 3Pt1Sn/C–H catalyst, indicating the formation of a Pt3Sn alloy (JCPDS 35-1360). For 3Pt3Sn/C–H and 3Pt6Sn/C–H, new peaks appeared at 41.8° and 44.1°, which were attributed to the PtSn alloy (JCPDS 25-614).",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0021951715003140"
+}

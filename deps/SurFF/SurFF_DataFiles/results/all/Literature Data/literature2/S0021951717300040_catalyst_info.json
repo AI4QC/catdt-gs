@@ -1,0 +1,25 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Ni",
+        "Ni–Re"
+    ],
+    "crystal_phase": {
+        "Ni": "face-centered cubic (fcc) structure",
+        "Ni–Re": "face-centered cubic (fcc) structure, hexagonal closed packed (hcp) structure"
+    },
+    "exposed_crystal_plane_indices": {
+        "Ni": [
+            "(1 1 1)"
+        ],
+        "Ni–Re": [
+            "(1 1 1)"
+        ]
+    },
+    "Characterization_methods": [
+        "X-ray diffraction (XRD)",
+        "transmission electron microscopy (TEM)"
+    ],
+    "Proof in the paper": "When the catalysts were reduced at 450°C for 1 h (Fig. 1B), metallic Ni of face-centered cubic (fcc) structure and metallic Re of hexagonal closed packed (hcp) structure were clearly observable for the monometallic 5Ni and 2.5Re catalysts, respectively. The presence of Re in bimetallic catalysts led to the broadening of the Ni diffraction peaks, indicating that the size of Ni or bimetallic Ni–Re particles was reduced, in good agreement with the Ni–Re/ZrO2 catalyst. Interestingly, the diffraction peak of Ni(1 1 1) at 2θ of 44.41° for monometallic 5Ni shifted gradually to a lower value of 43.95° for bimetallic 5Ni2.5Re. This shift resulted from the lattice expansion of the Ni unit cell (Table 1), likely due to Re (which has a larger atomic diameter than Ni) penetrating into the Ni lattice during the reduction. This phenomenon has been considered as an indication of alloy formation in the bimetallic Ni–Re catalyst and other bimetallic catalysts, such as Ni–Fe and Ni–Co. When the Re loading was increased to >2.5%, the diffraction peaks shifted further to lower values and the shape of the patterns changed from fcc Ni to hcp Re, which might indicate that the structure of bimetallic particles changed from fcc to hcp as a result of increased Re content. It is worth noting that the estimated particle size for the Ni–Re samples after reduction (Table 1) reflects contributions from both Ni and Re as Re penetrated into the Ni lattice during the reduction, particularly at high Re loadings. The particle size of 5Ni10Re is slightly greater than that of 5Ni5Re as a result of the doubled Re loading.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0021951717300040"
+}

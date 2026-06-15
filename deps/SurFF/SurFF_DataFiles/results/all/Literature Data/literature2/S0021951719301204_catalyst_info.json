@@ -1,0 +1,20 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "CoxNi1−x"
+    ],
+    "crystal_phase": {
+        "CoxNi1−x": "face cubic (fcc)"
+    },
+    "exposed_crystal_plane_indices": {
+        "CoxNi1−x": [
+            "(1 1 1)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD",
+        "HR-TEM"
+    ],
+    "Proof in the paper": "The lattice fringe of 0.20 nm observed in high-resolution TEM (HR-TEM) can be ascribed to the (1 1 1) of Co0.75Ni0.25 (inset of Fig. 3b).",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0021951719301204"
+}

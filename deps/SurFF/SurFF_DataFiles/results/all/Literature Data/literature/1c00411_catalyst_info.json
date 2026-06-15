@@ -1,0 +1,20 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "CoMn"
+    ],
+    "crystal_phase": {
+        "CoMn": "Co2C nanoprisms"
+    },
+    "exposed_crystal_plane_indices": {
+        "CoMn": [
+            "(100)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD",
+        "HRTEM"
+    ],
+    "Proof in the paper": "The XRD pattern (Figure S4) and HRTEM image (Figure S5) of the used CoMn oxide catalyst reveal that quadrangular Co2C nanoprisms were obtained after the FT reaction.",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.1c00411"
+}

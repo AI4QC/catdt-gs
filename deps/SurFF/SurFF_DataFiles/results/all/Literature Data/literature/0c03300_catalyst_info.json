@@ -1,0 +1,16 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": "nano-Co2P",
+    "crystal_phase": "orthorhombic structure",
+    "exposed_crystal_plane_indices": [
+        "(121)",
+        "(211)",
+        "(002)",
+        "(320)"
+    ],
+    "Characterization_methods": [
+        "XRD"
+    ],
+    "Proof in the paper": "The crystal structure of nano-Co2P was confirmed by X-ray diffraction. Major diffraction peaks at 40.8°, 43.5°, 52.3°, and 55.8° were observed and are attributed to the (121), (211), (002), and (320) planes, respectively, of the orthorhombic structure of the Co2P crystal (Figure S1).",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.0c03300"
+}

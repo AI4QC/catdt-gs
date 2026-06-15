@@ -1,0 +1,24 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "PdCu",
+        "PdCu3"
+    ],
+    "crystal_phase": {
+        "PdCu": "body-centered cubic (bcc)",
+        "PdCu3": "face-centered cubic (fcc)"
+    },
+    "exposed_crystal_plane_indices": {
+        "PdCu": [
+            "(111)"
+        ],
+        "PdCu3": [
+            "(111)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD"
+    ],
+    "Proof in the paper": "The PdCu alloy has been found to be in the body-centered cubic (bcc) structure, while the PdCu alloy is in the face-centered cubic (fcc) phase. (63) On the basis of the literature, (82) the 1:1 PdCu composition at temperatures lower than 598 °C is stable in the CsCl structure, which is a typical bcc structure; DFT calculations on formation energy demonstrated that the fcc phases are less stable than the bcc structure for 1:1 PdCu; the PdCu3 alloy was found to have an ordered fcc structure. Therefore, in the present work, we used bcc PdCu and fcc PdCu3 bulk alloy structures (Figure S1 in the Supporting Information) to construct the (111) surfaces for the two types of Pd-Cu alloys, respectively. The lattice constants for bulk PdCu3 and PdCu were fixed at their experimental values of 3.71 and 2.96 Å, respectively. (83) For PdCu3(111), a p(3 × 3) surface slab including four atomic layers was used, with a vacuum thickness of 12 Å to avoid interactions between the repeating slabs. For PdCu(111), two types of (111) surfaces were considered, with Pd and Cu terminated. The Pd- and Cu-terminated PdCu(111) surfaces are stepped surfaces, different from the case for PdCu3(111), which is a flat facet. A p(2 × 2) supercell including eight atomic layers was used, and the vacuum thickness was set to 12 Å. To sample the two-dimensional electronic Brillouin zone of the periodic supercell of PdCu3(111), we used a grid of 2 × 2 × 1 k-points within the Monkhorst–Pack scheme. A k-space mesh of 3 × 3 × 1 was employed for PdCu(111) surfaces. In our calculations, the bottom two atomic layers of PdCu3(111) and the bottom four atomic layers of PdCu(111) were fixed at their original atomic positions in the bulk structure while all remaining layers together with the adsorbates were fully relaxed during structural optimization. The optimized structures of PdCu3(111) and PdCu(111) surfaces are shown in Figure S2.",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.7b04150"
+}

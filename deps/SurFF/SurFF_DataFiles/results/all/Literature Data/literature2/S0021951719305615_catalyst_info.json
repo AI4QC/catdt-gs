@@ -1,0 +1,24 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Pt-Co"
+    ],
+    "crystal_phase": {
+        "Pt-Co": "Polycrystalline"
+    },
+    "exposed_crystal_plane_indices": {
+        "Pt-Co": [
+            "(1 1 1)",
+            "(2 0 0)",
+            "(2 2 0)",
+            "(3 1 1)"
+        ]
+    },
+    "Characterization_methods": [
+        "TEM",
+        "XRD",
+        "SAED"
+    ],
+    "Proof in the paper": "The TEM images as shown in Fig. 1b exactly exhibits their spherical and hollow structure with the diameter of around 50–60 nm and the selected area electron diffraction (SAED) (Fig. 1b insert) clearly shows four bright concentric rings for Pt-Co hollow nanospheres, which are well ascribed to the (1 1 1), (2 0 0), (2 2 0) and (3 1 1) planes of Pt-Co hollow nanospheres respectively, reflecting their polycrystalline characteristics.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0021951719305615"
+}

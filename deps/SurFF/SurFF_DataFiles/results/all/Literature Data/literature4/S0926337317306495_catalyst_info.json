@@ -1,0 +1,37 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Ni",
+        "Ni-Cu",
+        "Ni-Fe"
+    ],
+    "crystal_phase": {
+        "Ni": "face-centered cubic structure",
+        "Ni-Cu": "face-centered cubic structure",
+        "Ni-Fe": "face-centered cubic structure"
+    },
+    "exposed_crystal_plane_indices": {
+        "Ni": [
+            "(111)",
+            "(200)",
+            "(220)"
+        ],
+        "Ni-Cu": [
+            "(111)",
+            "(200)",
+            "(220)"
+        ],
+        "Ni-Fe": [
+            "(111)",
+            "(200)",
+            "(220)"
+        ]
+    },
+    "Characterization_methods": [
+        "X-ray diffraction (XRD)",
+        "Transmission Electron Microscopy (TEM)",
+        "Selected Area Electron Diffraction (SAED)"
+    ],
+    "Proof in the paper": "The XRD patterns of 15Ni/Al2O3, Ni-Cu/Al2O3 and 15Cu/Al2O3 catalysts revealed the presence of metallic Ni peaks at 44.52° and 51.80° for 15Ni/Al2O3 and Cu peaks at 43.3° and 50.4° for 15Cu/Al2O3. The metallic Ni and Cu phases are associated with the face-centered cubic structure. Moreover, Fig. S1a showed the presence of metallic Ni and metallic Cu features at 76.40° and 74.06°, respectively. The three metallic Ni and metallic Cu features located between 30° and 80° corresponded to the (111), (200) and (220) lattice planes. The absence of any NiO and CuO phases indicates that significant reduction of the corresponding metal oxides has occurred. The SAED pattern of each of the catalysts was obtained and shown in Fig. 5(a–c). The concentric ring pattern suggested that Ni and Ni-M phases were polycrystalline in nature. The distances measured on the ring patterns of 15Ni/Al2O3 catalyst indicated the (111), (200) and (220) lattice planes. For example, a distance of 2.04 Å measured on the first ring of Ni correspond to the (111) lattice plane. The lattice spacing with respect to first ring increased for the 75Ni25Fe and 75Ni25Cu catalysts. The distance measured was 2.06 for both the catalysts.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337317306495"
+}

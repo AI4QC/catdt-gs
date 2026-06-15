@@ -1,0 +1,25 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "hcp-CuNi/C"
+    ],
+    "crystal_phase": {
+
+        "hcp-CuNi/C": "hcp phase"
+    },
+    "exposed_crystal_plane_indices": {
+
+        "hcp-CuNi/C": [
+            "(0002)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD"
+    ],
+    "Proof in the paper": [
+        "The XRD pattern of the fcc-Ni/C (Fig. 1a) shows diffraction peaks assigned to the fcc phase of Ni (PDF card no. 04-0850).",
+        "In the case of hcp-Ni/C, all the identified peaks can be indexed to the hcp phase of Ni (PDF card no. 45-1027).",
+        "The HRTEM image of hcp-CuNi/C (Fig. 2k) displays well-resolved lattice fringes with interplanar spacing of 0.187 nm indexed to the (0002) planes of the hcp phase of CuNi."
+    ],
+    "url": "https://www.sciencedirect.com/science/article/pii/S092633732100850X"
+}

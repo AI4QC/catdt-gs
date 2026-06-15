@@ -1,0 +1,24 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "PtIrCo"
+    ],
+    "crystal_phase": {
+        "PtIrCo": "fcc-type structure"
+    },
+    "exposed_crystal_plane_indices": {
+        "PtIrCo": [
+            "(111)",
+            "(200)",
+            "(220)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD",
+        "HE-XRD",
+        "TEM",
+        "HRTEM-EDS"
+    ],
+    "Proof in the paper": "The diffraction peaks are rather broad which is typical for nanosized materials. They appear at 2θ values that are rather close to the ones expected, i.e., 39.7 (111), 46.3 (200), and 67.3 (220) for fcc Pt, 41.0 (111), 47.5 (200), and 69.6 (220) for fcc Ir, and 44.3 (111), 51.6 (200), and 75.9 (220) for fcc Co. The 2θ peaks are shown to be closer to Pt and Ir fcc peaks rather than Co peaks, which can be explained by the alloying characteristic. Although the peaks are quite broad, there is no indication of a separate set of peaks for Co. Pt and Ir have very close 2θ values, but different from those of Co. The result indicates that the nanoparticles have an fcc-type structure without signatures of phase segregation. The particle sizes calculated from the peak widths using the Scherrer equation and the respective fcc lattice parameters calculated from the peak positions are given in Table 1. The particle sizes are comparable with those determined from the TEM data. As expected, the lattice parameters are found to be dependent on the trimetallic composition.",
+    "url": "https://pubs.acs.org/doi/10.1021/cs200022s"
+}

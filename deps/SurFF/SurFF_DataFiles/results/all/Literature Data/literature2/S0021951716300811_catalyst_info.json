@@ -1,0 +1,22 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Pt–Pb"
+    ],
+    "crystal_phase": {
+        "Pt–Pb": "FCC-type structure, solid solution phase"
+    },
+    "exposed_crystal_plane_indices": {
+        "Pt–Pb": [
+            "{1 1 0}"
+        ]
+    },
+    "Characterization_methods": [
+        "TEM",
+        "HRTEM",
+        "STEM–EDS",
+        "EDS analysis"
+    ],
+    "Proof in the paper": "The TEM observation confirmed that the prepared Pt–Pb were site-selectively deposited on {1 1 0} reductive face of TiO2-rod (Fig. 5a and b). The average particle size of Pt–Pb NPs was 5.6 nm. HRTEM image (Fig. 5c) of Pt–Pb NPs and its corresponding FFT pattern (Fig. 5d) indicate that the Pt–Pb NPs formed FCC-type structure, showing the formation of solid solution phase in Pt–Pb alloy system. The elemental mapping with STEM–EDS over the Pt–Pb NPs is presented in Fig. 5e–h.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0021951716300811"
+}

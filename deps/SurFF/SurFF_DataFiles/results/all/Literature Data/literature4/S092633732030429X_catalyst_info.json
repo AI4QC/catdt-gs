@@ -1,0 +1,23 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "NiFe LDH/NiTe"
+    ],
+    "crystal_phase": {
+        "NiFe LDH/NiTe": [
+            "Ni (PDF #04-0850)",
+            "NiTe (PDF #89-2018)",
+            "NiFe LDH"
+        ]
+    },
+    "Characterization_methods": [
+        "HRTEM"
+    ],
+    "exposed_crystal_plane_indices": {
+        "NiFe LDH/NiTe": [
+            "(010) of NiFe LDH",
+            "(101) of NiTe"
+        ]
+    },
+    "url": "https://www.sciencedirect.com/science/article/pii/S092633732030429X"
+}

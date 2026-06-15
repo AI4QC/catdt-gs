@@ -1,0 +1,25 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "IrSi",
+        "PtSi",
+        "Pd2Si",
+        "RhSi",
+        "RuSix"
+    ],
+    "crystal_phase": {
+        "IrSi": "Orthorhombic (JCPDS no. 83-0510, space group: Pnma)"
+    },
+    "Characterization_methods": [
+        "High-angle annular dark-field (HAADF) STEM",
+        "Bright field (BF) STEM",
+        "Fast Fourier transform (FFT) pattern (Figure 2i)"
+    ],
+    "exposed_crystal_plane_indices": {
+        "IrSi": [
+            "Arrangement of metal Ir atoms, Figures 2g,h and S15"
+        ]
+    },
+    "Proof in the paper": "The high-resolution images of high-angle annular dark-field (HAADF) and bright field (BF) in specific selected area clearly display the arrangement of metal Ir atoms (Figures 2g,h and S15), and the crystal structure of intermetallic IrSi can be further confirmed by combining the corresponding fast Fourier transform (FFT) pattern (Figure 2i).",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.1c05175"
+}

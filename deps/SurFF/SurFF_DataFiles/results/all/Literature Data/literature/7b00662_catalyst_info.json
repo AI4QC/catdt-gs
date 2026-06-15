@@ -1,0 +1,19 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "NiCoP"
+    ],
+    "Characterization_methods": [
+        "XRD",
+        "XPS",
+        "SEM",
+        "TEM"
+    ],
+    "exposed_crystal_plane_indices": {
+        "NiCoP": [
+            "(111)"
+        ]
+    },
+    "Proof in the paper": "A high-resolution TEM image confirms that the NiCoP has an interplanar spacing of 0.220 nm, corresponding to the (111) plane of hexagonal NiCoP (Figure 1d).",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.7b00662"
+}

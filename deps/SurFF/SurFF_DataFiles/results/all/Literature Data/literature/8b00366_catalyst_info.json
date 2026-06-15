@@ -1,0 +1,20 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "PtRuCu"
+    ],
+    "crystal_phase": {
+        "PtRuCu": "Hexapod structure with (111) facets"
+    },
+    "exposed_crystal_plane_indices": {
+        "PtRuCu": [
+            "(111)"
+        ]
+    },
+    "Characterization_methods": [
+        "TEM",
+        "XRD"
+    ],
+    "Proof in the paper": "The Fast Fourier Transform (FFT) pattern (Figure 1d) shows regularly arranged spots, indicating that the PtRuCu hexapods is presented in a single crystal with the (111) facets. The spacing of the lattice fringes of PtRuCu nanoparticles is 0.22 nm, corresponding to PtCu (111) facet (27). The XRD pattern of PtRuCu is similar to that of PtCu, but slightly shifts toward the peaks of PtRu. The Peaks located at 41.4°, 48.1°, and 70.6° can be assigned to (111), (200), and (220) facets of PtCu, respectively (30).",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.8b00366"
+}

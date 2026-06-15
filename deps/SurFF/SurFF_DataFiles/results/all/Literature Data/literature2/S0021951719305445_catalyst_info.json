@@ -1,0 +1,29 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Ni-Pt"
+    ],
+    "crystal_phase": {
+        "Ni-Pt alloy": "Ni-Pt alloy",
+        "Ni": "Ni",
+        "Pt": "Pt"
+    },
+    "exposed_crystal_plane_indices": {
+        "Ni-Pt alloy": [
+            "(111)"
+        ],
+        "Ni": [
+            "(111)"
+        ],
+        "Pt": [
+            "(111)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD",
+        "STEM",
+        "XEDS"
+    ],
+    "Proof in the paper": "The XRD patterns after ex-situ reduction exhibit prominent Ni (111) peaks at 44.5° 2θ for all measured Pt loadings and Pt (111) peaks at 39.8° 2θ for 0.4, 0.7, and 1.0 monolayer samples. Between the Pt (111) and Ni (111) peak a strong Ni-Pt alloy peak with an approximate 3 to 1 Ni/Pt ratio was observed.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0021951719305445"
+}

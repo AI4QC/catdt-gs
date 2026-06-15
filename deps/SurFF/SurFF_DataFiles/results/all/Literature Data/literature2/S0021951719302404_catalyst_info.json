@@ -1,0 +1,18 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": "PtCu",
+    "crystal_phase": "face-centered cubic (fcc) structure",
+    "Characterization_methods": [
+        "XRD",
+        "TEM",
+        "HRTEM"
+    ],
+    "exposed_crystal_plane_indices": [
+        "(111)",
+        "(200)",
+        "(220)",
+        "(311)"
+    ],
+    "Proof in the paper": "The peaks located at 39.8°, 46.3°, 67.7°, 81.6° can be assigned to the (111), (200), (220) and (311) planes of Pt, respectively (Fig. 1B). In the case of PtCu NSs, the Pt (111) diffraction peak appears at 40.2° with a positive shift compared with Pt/C (39.8°); no peaks are related to pure Cu or its oxides in Fig. 1B, indicating a contraction of the lattice by incorporation of Cu atoms into the fcc structure of Pt due to the formation of alloys.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0021951719302404"
+}

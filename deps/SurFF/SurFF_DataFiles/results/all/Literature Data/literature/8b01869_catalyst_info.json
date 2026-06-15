@@ -1,0 +1,25 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "NbCu"
+    ],
+    "crystal_phase": {
+        "Cu0.65NbS2": "JCPDS File No. 00-015-0409, space group: p63/mmc"
+    },
+    "exposed_crystal_plane_indices": {
+        "Cu0.65NbS2": [
+            "(100)",
+            "(004)",
+            "(002)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD",
+        "TEM",
+        "XPS",
+        "HRTEM",
+        "STEM-EDS"
+    ],
+    "Proof in the paper": "The XRD peaks of bimetallic samples can be indexed with the hexagonal Cu0.65NbS2 structure (JCPDS File No. 00-015-0409, space group: p63/mmc). The EDS elemental mappings of bimetallic NbCu samples exhibit a homogeneous association between niobium, copper, and sulfur, suggesting the formation of bimetallic structures. HRTEM image of sulfided Nb and bimetallic NbCu0.3 catalysts show fringe spacings of 2.9, 3.2, and 6.6 Å that can be attributed to the (100), (004), and (002) planes of the Cu0.65NbS2 structure.",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.8b01869"
+}

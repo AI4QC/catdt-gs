@@ -1,0 +1,29 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Pd",
+        "PdGa alloy",
+        "Ga2O3"
+    ],
+    "crystal_phase": {
+        "Pd": "metallic state",
+        "PdGa alloy": "metallic state",
+        "Ga2O3": "oxidized state"
+    },
+    "Characterization_methods": [
+        "XRD",
+        "HRTEM"
+    ],
+    "exposed_crystal_plane_indices": {
+        "Pd": [
+            "(1 1 1)"
+        ],
+        "PdGa alloy": [
+            "(3 0 1)",
+            "(1 2 1)",
+            "(0 0 2)"
+        ]
+    },
+    "Proof in the paper": "The peak of Pd (1 1 1) gradually shifted from 40.1° for pure Pd NPs to 39.1° with increased content of Ga in PdxGay NPs due to lattice expansion (Fig. S1 and Table S2), which has been further confirmed by HRTEM images. As shown in the insets of Fig. 1, the lattice distance of the Pd (1 1 1) plane increased from 0.224 (Pd NPs) to 0.232 nm (Pd0.34Ga1 NPs). It should be noted that the peak of the Pd (1 1 1) facet in Pd/Ga2O3 (prepared by a conventional impregnation method) with the same composition of Pd0.34Ga1 remained at about 2θ = 40.1° (Fig. S1). The characteristic peaks of PdGa alloy appeared at 2θ of ~40−41° and ~44.6° (blue reference) in XRD patterns (line 4 in Fig. 4a), which could be indexed as (3 0 1), (1 2 1), and (0 0 2) facets, respectively (JCPDS No. 03–065−7607).",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0021951720305078"
+}

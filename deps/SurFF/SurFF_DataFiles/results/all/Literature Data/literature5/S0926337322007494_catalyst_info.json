@@ -1,0 +1,22 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "PtNb-Nb2O5"
+    ],
+    "crystal_phase": {
+        "PtNb-Nb2O5": "face-centered cubic (fcc) structure of Pt"
+    },
+    "Characterization_methods": [
+        "X-ray powder diffraction (XRD)",
+        "High-resolution transmission electron microscopy (HR-TEM)"
+    ],
+    "exposed_crystal_plane_indices": {
+        "PtNb-Nb2O5": [
+            "(111)",
+            "(200)",
+            "(220)"
+        ]
+    },
+    "Proof in the paper": "The crystalline part corresponds to the (111) plane of PtNb with lattice fringes of 2.30 Å. It indicates that the crystalline PtNb (111) plane mainly exposes Pt atoms and the introduction of Nb expands Pt lattice spacing producing a stress effect. The selected area electron diffraction (SAED) pattern shows the presence of partially crystalline and partially amorphous components. Each ring can be indexed into the (111), (200), and (220) planes, respectively, and the broad diffuse ring confirms the amorphous phase present.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337322007494"
+}

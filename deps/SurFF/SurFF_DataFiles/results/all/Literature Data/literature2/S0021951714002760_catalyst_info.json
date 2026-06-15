@@ -1,0 +1,30 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "NiGa",
+        "Ni5Ga3"
+    ],
+    "crystal_phase": {
+        "NiGa": "β-phase",
+        "Ni5Ga3": "δ-phase"
+    },
+    "exposed_crystal_plane_indices": {
+        "NiGa": [
+            "(0 0 2)"
+        ],
+        "Ni5Ga3": [
+            "(1 1 1)",
+            "(2 1 1)",
+            "(0 1 1)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD",
+        "Rietveld refinement",
+        "TEM",
+        "EELS",
+        "XAS"
+    ],
+    "Proof in the paper": "The XRD data were compared to reference structures for the NiGa (β-phase) and Ni5Ga3 (δ-phase) (Section 'Experimental'). The formation of the Ni5Ga3 phase was confirmed by high-resolution TEM analysis (Section 'discussion'). The XRD data were used to determine the particle size from Scherrer broadening of the main peak (Section 'Experimental'). The local environment of Ni and Ga was analyzed using EELS and XAS (Section 'discussion').",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0021951714002760"
+}

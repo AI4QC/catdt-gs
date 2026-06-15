@@ -1,0 +1,21 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Pt–Ni"
+    ],
+    "crystal_phase": {
+        "Pt–Ni": "Mixed oxide Ni–Mg–Al"
+    },
+    "exposed_crystal_plane_indices": {
+        "Pt–Ni": [
+            "(111)",
+            "(200)",
+            "(220)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD"
+    ],
+    "Proof in the paper": "The patterns of the calcined samples (Figure 1b) show three primary reflections at around 2θ = 36°, 43.5°, and 63°, indicating the structure of Ni–Mg–Al mixed oxides. In the case of Pt-added hydrotalcite-derived catalysts, some reflections could be observed at around 38°, 46.5°, and 68°, corresponding to the (111), (200), and (220) planes for Pt phase.",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.0c04429"
+}

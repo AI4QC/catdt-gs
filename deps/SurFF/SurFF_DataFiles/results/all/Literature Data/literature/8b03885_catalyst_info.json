@@ -1,0 +1,20 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Pd-HTs"
+    ],
+    "Characterization_methods": [
+        "Powder XRD",
+        "XPS",
+        "TEM",
+        "HRTEM"
+    ],
+    "exposed_crystal_plane_indices": {
+        "Pd-HTs": [
+            "Pd(111)",
+            "PdO(110)"
+        ]
+    },
+    "Proof in the paper": "HRTEM images identified two types of NPs in A, those with lattice fringes of 0.227 nm corresponding to fcc Pd(111) facets, and those with lattice fringes of 0.215 nm, corresponding to PdO(110) facets (SI Figure S3).",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.8b03885"
+}

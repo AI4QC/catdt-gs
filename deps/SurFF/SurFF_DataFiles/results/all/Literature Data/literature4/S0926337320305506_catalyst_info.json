@@ -1,0 +1,22 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "PtCo"
+    ],
+    "crystal_phase": {
+        "PtCo": "face center cubic (fcc) PtCo alloy phase"
+    },
+    "Characterization_methods": [
+        "X-ray diffraction (XRD)",
+        "Selected area electron diffraction (SAED)"
+    ],
+    "exposed_crystal_plane_indices": {
+        "PtCo": [
+            "{310}",
+            "{410}",
+            "{510}"
+        ]
+    },
+    "Proof in the paper": "The X-ray diffraction (XRD) pattern of PtCo CNCs and Pt NPs (Fig. 1b) demonstrated the formation of face center cubic (fcc) PtCo alloy phase. The angles of the facets of a PtCo CNC projected along the [001] direction signified by selected area electron diffraction (SAED) (Fig. S4a, inset) were determined to be approximately 18.4°, 14.0° and 11.3°, in consistent with {310}, {410} and {510} high-index facets of Pt, respectively.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337320305506"
+}

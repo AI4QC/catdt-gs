@@ -1,0 +1,13 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": "AuPd",
+    "crystal_phase": "Random AuPd alloy phase",
+    "Characterization_methods": [
+        "XRD"
+    ],
+    "exposed_crystal_plane_indices": {
+        "AuPd": "(39°)"
+    },
+    "Proof in the paper": "No peak related to Au (2θ = 38, 44, and 70°), Pd (2θ = 40, 49, and 67°), or PdO (2θ = 34°) is observed, indicating no phase segregation. Instead, a broad diffraction peak appears at 2θ = 39° (between the expected Au and Pd reflections) in catalysts prepared with acid, corresponding to an AuPd alloy phase. (Section: Discussion)",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.1c05904"
+}

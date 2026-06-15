@@ -1,0 +1,21 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Pt3Mn",
+        "0.07%Mo/Pt3Mn",
+        "0.4%Mo/Pt3Mn",
+        "1.8%Mo/Pt3Mn"
+    ],
+    "crystal_phase": "single fcc structure",
+    "Characterization_methods": [
+        "X-ray diffraction (XRD)"
+    ],
+    "exposed_crystal_plane_indices": {
+        "Pt3Mn": [
+            "(111)",
+            "(200)"
+        ]
+    },
+    "Proof in the paper": "The X-ray diffraction (XRD) patterns of four catalysts show a similar single fcc structure as shown in Figure 2A. Clearly, there are no typical diffraction peaks of Mo or its oxides. It is worth noting that the crystalline orientations of 0.07%Mo/Pt3Mn, 0.4%Mo/Pt3Mn, and 1.8%Mo/Pt3Mn are equally (111) and (200), indicating that the incorporation of Mo hardly alter the crystalline orientations of Pt3Mn nanocrystals.",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.8b04447"
+}

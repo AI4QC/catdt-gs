@@ -1,0 +1,20 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "NiFe LDH"
+    ],
+    "crystal_phase": {
+        "NiFe LDH": "Layered double hydroxides (LDH) phase (JCPDS No. 40-0215)"
+    },
+    "exposed_crystal_plane_indices": {
+        "NiFe LDH": [
+            "(003)",
+            "(006)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD"
+    ],
+    "Proof in the paper": "The X-ray diffraction (XRD) patterns shown in Figure 1a indicate that the amount of NH4F used in the preparation process greatly affects crystal structure and crystallinity. Two diffraction peaks at ∼11.6° and 23.4° correspond to the (003) and (006) reflections, exhibiting the high periodicity along the c-direction, which is characteristic of NiFe LDHs (JCPDS No. 40-0215).",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.0c02501"
+}

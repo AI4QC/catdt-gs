@@ -1,0 +1,17 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Ru-Re/Al2O3",
+        "Ru/Al2O3",
+        "Re/Al2O3"
+    ],
+    "Characterization_methods": [
+        "XRD",
+        "HAADF-STEM"
+    ],
+    "exposed_crystal_plane_indices": {
+        "Ru-Re/Al2O3": "RuO2 particles 20 nm in size, Re species not visible"
+    },
+    "Proof in the paper": "The Ru species was present as RuO2 particles 20 nm in size as determined by the Scherrer equation, and Re species were not visible (Figure 1a). A HAADF-STEM measurement with EDX analysis displayed that Re species were highly dispersed with an average size of 0.5 nm (Figure 1c; more details are given in Figure S4a–c).",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.0c05491"
+}

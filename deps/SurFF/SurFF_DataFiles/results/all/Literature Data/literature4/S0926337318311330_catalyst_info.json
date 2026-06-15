@@ -1,0 +1,21 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "NiFe"
+    ],
+    "crystal_phase": {
+        "NiFe": "Awaruite phase FeNi3 (JCPDS: 38-0419)"
+    },
+    "Characterization_methods": [
+        "XRD"
+    ],
+    "exposed_crystal_plane_indices": {
+        "NiFe": [
+            "(111)",
+            "(200)",
+            "(220)"
+        ]
+    },
+    "Proof in the paper": "The peaks at 44.3°, 51.5°, and 75.8° correspond to the (111), (200), and (220) planes of Awaruite phase FeNi3 (JCPDS: 38-0419) respectively, while the characteristic carbon peak at around 26° can be indexed to (002) graphitic plane, deriving from the carbonization of -CN groups in the PBA precursor. Hence, we suggest that Ni-Fe PBA can be successfully converted into NiFe@NC after carbonization treatment.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337318311330"
+}

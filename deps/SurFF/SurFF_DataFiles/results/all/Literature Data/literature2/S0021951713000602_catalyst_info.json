@@ -1,0 +1,20 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Au–Ag"
+    ],
+    "crystal_phase": {
+        "Au–Ag": "face-centered cubic (fcc) structures of the Au (Ag) bulk metals"
+    },
+    "Characterization_methods": [
+        "HR-TEM"
+    ],
+    "exposed_crystal_plane_indices": {
+        "Au–Ag": [
+            "(1 1 1)",
+            "(2 0 0)"
+        ]
+    },
+    "Proof in the paper": "The Au–Ag nanoparticles show almost the same interplanar spacings of 0.246 nm and 0.213 nm, with a face angle of 123°, corresponding to the (1 1 1) and (2 0 0) planes of the face-centered cubic (fcc) structures of the Au (Ag) bulk metals, respectively, which are consistent with the XRD results.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0021951713000602"
+}

@@ -1,0 +1,44 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Ni2P",
+        "MoP",
+        "NiMo(3:1)P",
+        "NiMo(1:1)P",
+        "NiMo(1:3)P"
+    ],
+    "crystal_phase": {
+        "Ni2P": "hexagonal (P6¯2m)",
+        "MoP": "hexagonal (P6¯m2)",
+        "NiMoP": "hexagonal (P6¯2m)"
+    },
+    "exposed_crystal_plane_indices": {
+        "Ni2P": [
+            "(1 1 1)",
+            "(2 0 1)",
+            "(2 1 0)"
+        ],
+        "NiMo(3:1)P": [
+            "(1 1 1)",
+            "(2 0 1)",
+            "(2 1 0)"
+        ],
+        "NiMo(1:1)P": [
+            "(1 1 1)",
+            "(2 0 1)",
+            "(2 1 0)"
+        ],
+        "NiMo(1:3)P": [
+            "(1 0 0 1)"
+        ],
+        "MoP": [
+            "(1 0 0 1)"
+        ]
+    },
+    "Characterization_methods": [
+        "X-ray diffraction (XRD)",
+        "X-ray absorption near-edge spectroscopy (XANES)"
+    ],
+    "Proof in the paper": "The XRD patterns of the reduced and passivated phosphide catalysts (Fig. 2) showed a broad peak associated with amorphous silica of the MCM-41 support. The Ni-rich samples such as Ni2P/MCM-41, NiMo(3:1)P/MCM-41, and NiMo(1:1)P/MCM-41 presented a series of peaks corresponding to the (1 1 1), (2 0 1), and (2 1 0) reflections which gradually shifted to lower angle from the positions for Ni2P toward those of NiMoP, consistent with the formation of alloys. The Mo-rich sample shows the (1 0 0 1) reflection of MoP also shifted to lower angle. These consistent variations in the XRD patterns give evidence for the formation of the Ni and Mo alloy.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S002195171730249X"
+}

@@ -1,0 +1,15 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": "PdM (M = Pb, Sn, In)",
+    "crystal_phase": {
+        "Pd3Pb": "intermetallic Pd3Pb (PDF#50–1631)"
+    },
+    "Characterization_methods": [
+        "XRD"
+    ],
+    "exposed_crystal_plane_indices": {
+        "Pd3Pb": "(111)"
+    },
+    "Proof in the paper": "The high-resolution TEM (HRTEM, Fig. 1d) image displays that atomic lattice stripes of the intermetallic OVs-Pd3Pb-2 catalyst and the lattice spacing is 0.23 nm, which can be considered as the (111) face of the intermetallic Pd3Pb.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337322004064"
+}

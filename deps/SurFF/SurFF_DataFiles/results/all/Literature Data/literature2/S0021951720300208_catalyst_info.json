@@ -1,0 +1,20 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "NiCu0.33"
+    ],
+    "crystal_phase": {
+        "NiCu0.33": "Ni3Cu alloy crystal"
+    },
+    "Characterization_methods": [
+        "XRD",
+        "HR-TEM"
+    ],
+    "exposed_crystal_plane_indices": {
+        "NiCu0.33": [
+            "(1 1 1)"
+        ]
+    },
+    "Proof in the paper": "The peaks for NiCu0.33/C at 44.36 and 51.71° agree well with the simulated profiles for Ni3Cu alloy crystal and demonstrate the formation of NiCu0.33 alloy (Figure S5). The lattice spacings of 0.335 and 0.201 nm in the HR-TEM images of NiCu0.33/C correspond to the (2 2 0) plane of graphitic carbon and (1 1 1) plane of Ni3Cu alloy, respectively (Fig. 2).",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0021951720300208"
+}

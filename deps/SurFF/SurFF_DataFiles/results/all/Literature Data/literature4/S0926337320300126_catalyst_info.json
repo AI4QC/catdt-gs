@@ -1,0 +1,21 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Ni–Pt"
+    ],
+    "crystal_phase": {
+        "Ni–Pt": "single fcc phase"
+    },
+    "exposed_crystal_plane_indices": {
+        "Ni–Pt": [
+            "{111}",
+            "{200}"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD",
+        "SAED"
+    ],
+    "Proof in the paper": "The XRD patterns show the {111} and {200} reflections for a single fcc phase, along with the reflections of the fcc-Cu seed layer (Fig. 10a). The existence of a single phase should be beneficial for HER, especially when intended for use in acidic media. A two-phase alloy would immediately act as a galvanic cell when subjected to an electrolyte, leading to the dissolution of the less noble phase. In the case of separate deposition of Ni and Pt, the former would be dissolved preferentially. In the selected area electron diffraction (SAED) pattern obtained by TEM, rings attributed to {220} and {311}-planes are observed, confirming the existence of the fcc phase (Fig. 10b). The occurrence of continuous rings demonstrates the nanocrystallinity of the Ni–Pt phase, in agreement with the very broad peaks present in the XRD patterns with exception of the thin film with 98 at% Ni, which shows narrower peaks caused by a bigger crystallite size in accordance with the microstructure (Fig. 7b).",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337320300126"
+}

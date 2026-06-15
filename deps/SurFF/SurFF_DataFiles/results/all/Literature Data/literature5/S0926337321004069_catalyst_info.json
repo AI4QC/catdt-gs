@@ -1,0 +1,21 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "CoSe2",
+        "Pd1-CoSe2"
+    ],
+    "crystal_phase": {
+        "CoSe2": "cubic (JCPDS 09-234)"
+    },
+    "exposed_crystal_plane_indices": {
+        "CoSe2": [
+            "(210)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD",
+        "HAADF-STEM"
+    ],
+    "Proof in the paper": "The X-ray diffraction (XRD) pattern in Fig. S1b can be indexed as a cubic structure (JCPDS 09-234). The lattice fringe with an interplanar spacing of 2.6 Å was assigned to the (210) planes of the cubic CoSe2 nanostructures, indicating the maintained structures of Pd1-CoSe2 nanobelts during the Pd atom anchoring.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337321004069"
+}

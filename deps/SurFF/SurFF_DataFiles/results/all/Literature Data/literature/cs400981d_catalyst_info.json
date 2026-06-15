@@ -1,0 +1,16 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": "LiMn1.5Ni0.5O4",
+    "crystal_phase": "cubic spinel (Fd3m) phase",
+    "exposed_crystal_plane_indices": [
+        "(111)",
+        "(311)",
+        "(400)",
+        "(440)"
+    ],
+    "Characterization_methods": [
+        "X-ray diffraction (XRD)"
+    ],
+    "Proof in the paper": "The X-ray diffraction (XRD) data presented in Figure 1 confirm the formation of the cubic spinel (Fd3m) phase for all the four morphologies: cubic, spherical, octahedral, and truncated octahedral. The diffraction peaks at 18.82°, 36.34°, 44.20°, and 64.36° correspond, respectively, to the (111), (311), (400), and (440) planes of spinel LiMn1.5Ni0.5O4 (JCPDS 32-0581).",
+    "url": "https://pubs.acs.org/doi/10.1021/cs400981d"
+}

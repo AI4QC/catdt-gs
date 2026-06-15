@@ -1,0 +1,23 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Pt–Sn"
+    ],
+    "crystal_phase": {
+        "Pt–Sn": "face-centered cubic (fcc) structure of metallic Pt crystals"
+    },
+    "Characterization_methods": [
+        "XRD"
+    ],
+    "exposed_crystal_plane_indices": {
+        "Pt–Sn": [
+            "(1 1 1)",
+            "(2 0 0)",
+            "(2 2 0)",
+            "(3 1 1)",
+            "(2 2 2)"
+        ]
+    },
+    "Proof in the paper": "The peaks located at 2θ around 39.6°, 45.6°, 66.8°, 80.7°, and 85.4° in all the samples, correspond to the diffractions of (1 1 1), (2 0 0), (2 2 0), (3 1 1), and (2 2 2) planes of fcc Pt. It apparently indicates that the structure of Pt–Sn bimetallic NPs formed is identical to a face-centered-cubic (fcc) structure of metallic Pt crystals.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0021951714002644"
+}

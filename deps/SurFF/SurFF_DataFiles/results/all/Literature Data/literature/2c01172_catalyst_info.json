@@ -1,0 +1,19 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "MoSe2/Ti3C2Tx"
+    ],
+    "Characterization_methods": [
+        "X-ray diffraction (XRD)"
+    ],
+    "exposed_crystal_plane_indices": {
+        "MoSe2/Ti3C2Tx": [
+            "(002)",
+            "(004)",
+            "(101)",
+            "(105)"
+        ]
+    },
+    "Proof in the paper": "The XRD patterns of MoSe2 and MoSe2/MXene were obtained to confirm the presence of MoSe2 on MXene. MoSe2 shows four diffraction peaks at 13.2, 31.8, 38.3, and 56.2° (Figure S1), which correspond to 2H-MoSe2 (JCPDS No. 29-0914). The characteristic peaks of MoSe2/Ti3C2Tx (green curve in Figure 1a) also agree well with 2H-MoSe2, and the peak (002) at 7.1° is ascribed to the presence of the underlying MXene structure, indicating the successful preparation of MoSe2/Ti3C2Tx.",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.2c01172"
+}

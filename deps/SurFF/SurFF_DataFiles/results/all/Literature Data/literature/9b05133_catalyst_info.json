@@ -1,0 +1,17 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Pt1.5Ni",
+        "MS-Pt1.5Ni",
+        "A-Pt1.5Ni",
+        "A-MS-Pt1.5Ni"
+    ],
+    "Characterization_methods": [
+        "HAADF-STEM"
+    ],
+    "exposed_crystal_plane_indices": {
+        "Pt1.5Ni": "(111)"
+    },
+    "Proof in the paper": "The atomic resolution STEM image of A-MS-Pt1.5Ni taken from the selected area marked by the yellow box in Figure 2a is shown in Figure 2b. Based on the different contrasts between Pt and Ni, the Ni atoms at near-surface are almost entirely replaced by Pt atoms, resulting in two to three Pt-rich layers (the atomical thin Pt-rich layers are highlighted by red dots), while a thick Pt-rich layer is found on the A-Pt1.5Ni (Figure 2c,d).",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.9b05133"
+}

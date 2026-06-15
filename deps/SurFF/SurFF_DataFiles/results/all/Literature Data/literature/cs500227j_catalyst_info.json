@@ -1,0 +1,18 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": "Pd3Au",
+    "crystal_phase": "face-centered cubic",
+    "Characterization_methods": [
+        "Transmission electron microscopy (TEM)",
+        "X-ray diffraction (XRD)"
+    ],
+    "exposed_crystal_plane_indices": {
+        "Pd3Au": [
+            "(100)",
+            "(110)",
+            "(111)"
+        ]
+    },
+    "Proof in the paper": "The structures, as determined by crystallography, were similar for all of the Pd3Au/C electrocatalysts (Figure 3), indicating that the samples had a typical face-centered cubic structure. The crystalline sizes of the Pd3Au/C electrocatalysts were determined as 3.0, 3.1, 3.2, and 3.3 nm for asp, Ar, CO, and CO–Ar, respectively, as determined by the (220) refection, which corresponds well with the TEM results. The XRD position of the (220) reflection was located at 65.42°, 65.50°, 65.46°, and 65.58° for asp, Ar, CO, and CO–Ar, respectively. The (220) peak positions of Pd3Au catalysts were found to be shifted to lower angles compared to pure Pd (68.17°, JCPDS 65–6174). The shifting of peaks to a low angle was demonstrated with the formation of the Pd3Au alloy.",
+    "url": "https://pubs.acs.org/doi/10.1021/cs500227j"
+}

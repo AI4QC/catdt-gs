@@ -1,0 +1,16 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": "FexNi2–xP (x = 0.5, 1.0, 1.5)",
+    "crystal_phase": "P6̅2m",
+    "characterization_methods": [
+        "Transmission electron microscopy (TEM)",
+        "X-ray diffraction (XRD)"
+    ],
+    "exposed_crystal_plane_indices": [
+        "(111)",
+        "(002)",
+        "(011)"
+    ],
+    "Proof in the paper": "The X-ray diffraction (XRD) spectra in Figure 2d represented that Ni2P and Fe2P had the same hexagonal structures with a space group of P6̅2m. As the composition changed from Ni2P to Fe2P in FexNi2–xP, the (111) plane of the metal phosphides shifted linearly from 40.7° of Ni2P to 40.3° of Fe2P. Besides, the (002) plane of Fe2P appeared at 51.9° when Fe was enriched in TMP. The small peak shown at 33° in the Fe2P represents the (011) plane of the orthorhombic FeP phase. (25)",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.0c02301"
+}

@@ -1,0 +1,20 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": "Pd-Cu",
+    "crystal_phase": {
+        "Pd-Cu": "face-centred cubic (fcc) Pd (JCPDS No. 65-2867)"
+    },
+    "Characterization_methods": [
+        "TEM",
+        "HR-TEM"
+    ],
+    "exposed_crystal_plane_indices": {
+        "Pd-Cu": [
+            "(100)",
+            "(110)",
+            "(111)"
+        ]
+    },
+    "Proof in the paper": "The XRD patterns of these supported Pd10%Cu2.5% match well with the standard diffraction patterns of corresponding support materials and bare fcc Pd (JCPDS No. 65-2867) (SI Fig. S6). The HR-TEM image of Pd-Cu nanocrystal (Fig. 2(a6)) reveals spacing of 0.352 nm and 0.223 nm, which is consistent with the (1001) plane of anatase TiO2 and (111) plane of Pd, respectively.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0021951720304188"
+}

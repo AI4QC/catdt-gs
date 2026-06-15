@@ -1,0 +1,18 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Ru-HAP"
+    ],
+    "crystal_phase": {
+        "Ru-HAP": "hexagonal, space group P63/m (JCPDS No. 73-0293)"
+    },
+    "exposed_crystal_plane_indices": {
+        "Ru nanoclusters": "average size about 1.2 nm"
+    },
+    "Characterization_methods": [
+        "XRD",
+        "HAADF-STEM"
+    ],
+    "Proof in the paper": "The powder XRD patterns of HAP and Ru-HAP are shown in Figure S3 in the Supporting Information. They revealed pure crystalline HAP (hexagonal, space group P63/m, No. 176, JCPDS No. 73-0293) without Ru diffractograms. (8) Ru did not change the crystal structure of HAP, and Ru nanoclusters were highly dispersed to show no long-range patterns. The Ru nanoclusters could be observed directly in the HAADF-STEM image, as shown in Figure 5. The average Ru particle size was about 1.2 nm, as estimated by HAADF-STEM analysis of randomly selected clusters.",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.6b03186"
+}

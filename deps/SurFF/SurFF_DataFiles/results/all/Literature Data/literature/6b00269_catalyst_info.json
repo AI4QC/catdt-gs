@@ -1,0 +1,25 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Cu–Sn"
+    ],
+    "crystal_phase": {
+        "Cu–Sn": [
+            "Cu6.26Sn5",
+            "Cu3.02Sn0.98",
+            "(Cu32Sn)0.12"
+        ]
+    },
+    "exposed_crystal_plane_indices": {
+        "Cu–Sn": [
+            "(111)",
+            "(110)",
+            "(211)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD"
+    ],
+    "Proof in the paper": "The XRD characterization of the optimized Cu–Sn sample before and after 1 and 14 h of CO2 electroreduction is presented in Figure 6. All samples showed intense metallic Cu diffractions that appeared mostly owing to the substrate at 43.5° (111) and 50.6° (110) (PDF 00-004-0836). All samples exhibited diffraction peaks that were assigned to Cu2O at 36.7° (111) and 61.6° (220) (PDF 01-071-3645) before and after reaction. In the diffractograms presented in Figure 6, amorphous phases were observed in the region below 30° (a complete XRD spectrum from θ = 10° to 100° is presented in Figure S6). After the long-term stability test of the Cu–Sn sample, it was possible to observe the appearance of a new diffraction feature near 2θ = 41° (“Cu–Sn after 14 h reaction”, Figure 6). The diffraction peak was attributed to the formation of a Cu–Sn alloy. The alloy composition may be in the range of Cu6.26Sn5, Cu3.02Sn0.98, or (Cu32Sn)0.12 (PDF 01-077-7742).",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.6b00269"
+}

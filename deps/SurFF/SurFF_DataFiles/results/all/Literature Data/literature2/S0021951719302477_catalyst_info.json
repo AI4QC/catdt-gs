@@ -1,0 +1,23 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Ag1Pd1"
+    ],
+    "crystal_phase": {
+        "Ag1Pd1": "face centered cubic (fcc) phase"
+    },
+    "exposed_crystal_plane_indices": {
+        "Ag1Pd1": [
+            "(111)",
+            "(100)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD",
+        "XPS",
+        "TEM",
+        "HRTEM"
+    ],
+    "Proof in the paper": "The XRD patterns of the synthesized Ag(111), Ag(100), Ag1Pd1(111), and Ag1Pd1(100) catalyst are presented in Fig. 5, The typical peaks of Ag (111) and (100), in catalysts located at 38.12° and 44.30° could be observed respectively (JCPDS-89-3722). The corresponding peaks of Pd (111) and Pd (100) at 40.11° and 46.65° are also observed (JCPDS-65-2687). The XRD results indicate that Ag and Pd are existing in Ag1Pd1 alloy state in both alloy (111) and alloy (100) catalysts. The TEM and HRTEM images of the alloy catalysts were taken in order to study the detail morphology and structure of the catalysts (presented in Fig. 7). As it can be seen in the TEM images of the as prepared alloy catalyst (see Fig. 7a, c), the Ag1Pd1(100) catalyst exhibited a nanocube morphology and the Ag1Pd1(111) catalyst exhibited a nanotetrahedron morphology. To further validate the specific planes of Alloy NPs, we carried out the high-resolution TEM (HRTEM), and the results are shown in Fig. 7b and d. The lattice spacing of 0.231 nm could be assigned to the (111) face centered cubic (fcc) Ag1Pd1 alloy, the lattice spacing of 0.200 nm corresponded to the (100) face centered cubic (fcc) Ag1Pd1 alloy. The result implied that different preferential surface structures of Ag1Pd1 alloy NPs were achieved using the galvanic replacement method.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0021951719302477"
+}

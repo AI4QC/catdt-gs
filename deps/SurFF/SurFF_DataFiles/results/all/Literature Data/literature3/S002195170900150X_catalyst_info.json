@@ -1,0 +1,22 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "PtRu"
+    ],
+    "crystal_phase": {
+        "PtRu": "face-centred cubic (fcc)"
+    },
+    "exposed_crystal_plane_indices": {
+        "PtRu": [
+            "(1 1 1)",
+            "(2 0 0)",
+            "(2 2 0)",
+            "(3 1 1)"
+        ]
+    },
+    "Characterization_methods": [
+        "X-ray diffraction (XRD)"
+    ],
+    "Proof in the paper": "The peak located at a 2θ value of about 54° in the XRD pattern is referred to the carbon support. The other four peaks are characteristic of face-centred cubic (fcc) crystalline Pt, corresponding to the planes (1 1 1), (2 0 0), (2 2 0) and (3 1 1), respectively, indicating that the alloy catalyst has single-phase-disordered structures.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S002195170900150X"
+}

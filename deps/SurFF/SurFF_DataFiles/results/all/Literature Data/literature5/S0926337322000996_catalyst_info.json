@@ -1,0 +1,27 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "NiSe2",
+        "TiO2"
+    ],
+    "crystal_phase": {
+        "NiSe2": "orthorhombic and cubic phases",
+        "TiO2": "anatase tetragonal phase"
+    },
+    "Characterization_methods": [
+        "XRD"
+    ],
+    "exposed_crystal_plane_indices": {
+        "NiSe2": [
+            "(210)",
+            "(211)",
+            "(311)",
+            "(321)"
+        ],
+        "TiO2": [
+            "(101)"
+        ]
+    },
+    "Proof in the paper": "The XRD pattern of as prepared samples are shown in Fig. 1. The diffraction pattern in Fig. 1(a) reflects successful formation of anatase TiO2 tetragonal phase, which is in good agreement with the previously reported patterns and the JCPDS no: 073–1764. Fig. 1(b) shows the diffraction lines of NiSe2, where two phases of NiSe2 are observed in which the lines with (*) symbol represents orthorhombic phase and rest of lines were attributed to cubic phase. Fig. 1(c) explains XRD pattern of TNS 25% nanocomposite, where the lines with (#) represents (210), (211), (311) and (321) planes of cubic NiSe2 and remaining lines were corresponding to TiO2 nanoparticles.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337322000996"
+}

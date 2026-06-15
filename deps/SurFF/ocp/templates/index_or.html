@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surface Energy Predictions</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #main-content {
+            display: flex;
+            width: 80%;
+            margin-top: 20px;
+        }
+
+        #image-display {
+            position: relative;
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        #image-display img {
+            max-width: 100%;
+            height: auto;
+            max-height: 70vh;
+        }
+
+        #image-caption {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            padding: 5px;
+            border-radius: 5px;
+        }
+
+        #image-title {
+            font-size: 24px;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        #data-display {
+            flex: 1;
+            margin-left: 20px;
+            overflow: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table, th, td {
+            border: 1px solid black;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: center;
+        }
+
+        #next-button {
+            margin-top: 20px;
+            align-self: flex-end;
+        }
+
+        h1 {
+            font-size: 36px;
+            color: white;
+            text-align: center;
+            background-color: purple;
+            padding: 20px;
+            border-radius: 10px;
+            width: auto;
+        }
+
+        #table-title {
+            font-size: 24px;
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        #crystal-id-list {
+            font-size: large;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>SurFF: Universal Model for Surface Exposure Across Intermetallic Crystals</h1>
+    <form id="upload-directory-form" action="/upload-directory" method="post">
+        <label for="directory" style="font-size: large;">Crystal_structure files directory:</label>
+        <input type="text" name="directory" placeholder="Enter directory path">
+        <button type="submit" style="color: white; background-color: green">Upload Directory</button>
+    </form>
+    
+    <div id="main-content">
+        <div id="image-display">
+            <div id="image-caption">Crystal ID: {{ keys[0] }}</div>
+            <div id="image-title">Prediction Image</div>
+            <img id="image" src="{{ url_for('static', filename='static/example/wullf_shape/' ~ initial_image) }}" alt="Prediction Image">
+        </div>
+        
+        <div id="data-display">
+            <div id="table-title">Prediction Data</div>
+            <div id="crystal-id-list">Crystal IDs: {{ keys|join(', ') }}</div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Crystal ID</th>
+                        <th>Slab ID</th>
+                        <th>Miller</th>
+                        <th>Shift</th>
+                        <th>Surface Energy Prediction</th>
+                        <th>Area Prediction</th>
+                    </tr>
+                </thead>
+                <tbody id="data-table">
+                    {% for i in range(keys|length) %}
+                    <tr>
+                        <td>{{ keys[i] }}</td>
+                        <td>{{ initial_data['slab_id'][i] }}</td>
+                        <td>{{ initial_data['miller'][i] }}</td>
+                        <td>{{ initial_data['shift'][i] }}</td>
+                        <td>{{ initial_data['surface_energy_pred'][i] }}</td>
+                        <td>{{ initial_data['area_pred'][i] }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            
+            <button id="next-button">Next</button>
+        </div>
+    </div>
+
+    <script>
+        let keys = {{ keys|tojson }};
+        let currentIndex = 0;
+
+        $('#next-button').click(function() {
+            currentIndex++;
+            if (currentIndex >= keys.length) {
+                currentIndex = 0;
+            }
+
+            $.getJSON(`/data/${keys[currentIndex]}`, function(response) {
+                if (response.error) {
+                    alert(response.error);
+                } else {
+                    let tbody = $('#data-table');
+                    tbody.empty();
+                    for (let i = 0; i < response.data.crystal_id.length; i++) {
+                        let row = `<tr>
+                            <td>${keys[currentIndex]}</td>
+                            <td>${response.data.slab_id[i]}</td>
+                            <td>${response.data.miller[i]}</td>
+                            <td>${response.data.shift[i]}</td>
+                            <td>${response.data.surface_energy_pred[i]}</td>
+                            <td>${response.data.area_pred[i]}</td>
+                        </tr>`;
+                        tbody.append(row);
+                    }
+                    $('#image').attr('src', `static/example/wullf_shape/${response.image}`);
+                    $('#image-caption').text(`Crystal ID: ${keys[currentIndex]}`);
+                }
+            });
+        });
+
+        $('#upload-directory-form').submit(function(e) {
+            e.preventDefault();
+            let formData = $(this).serialize();
+            $.ajax({
+                url: '/upload-directory',
+                type: 'POST',
+                data: formData,
+                success: function(response) {
+                    alert('Directory processed successfully!');
+                    location.reload();
+                },
+                error: function(response) {
+                    alert('Failed to process directory.');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

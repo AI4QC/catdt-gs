@@ -1,0 +1,29 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Ir(HEDTA)Cl"
+    ],
+    "Characterization_methods": [
+        "Powder X-ray diffraction analysis (PXRD)",
+        "inductively coupled plasma-optical emission spectrometry (ICP-OES)",
+        "transmission electron microscopy (TEM)",
+        "field emission scanning electron microscopy (FE-SEM)",
+        "elemental mapping performed by X-ray spectroscopy (EDS) supported by FE-SEM",
+        "X-ray photoelectron spectroscopy (XPS)"
+    ],
+    "exposed_crystal_plane_indices": {
+        "Ir(HEDTA)Cl": [
+            "(110)"
+        ]
+    },
+    "Characterization_methods_for_exposed_indices": [
+        "Scanning tunnelling microscopy",
+        "electron-stimulated desorption ion angle distribution/low energy electron diffraction",
+        "IR",
+        "near edge X-ray absorption fine structure",
+        "X-ray photoelectron diffraction",
+        "density functional theory computation"
+    ],
+    "Proof in the paper": "The −COOH group is suitable to interact with the dominant orientation (110) of the rutile TiO2 surface, where the Ti···Ti distance of 3 Å allows for a stable bridging configuration, as seen by numerous studies, including scanning tunnelling microscopy, electron-stimulated desorption ion angle distribution/low energy electron diffraction, IR, near edge X-ray absorption fine structure, X-ray photoelectron diffraction, and density functional theory computation.",
+    "url": "https://pubs.acs.org/doi/10.1021/cs501590k"
+}

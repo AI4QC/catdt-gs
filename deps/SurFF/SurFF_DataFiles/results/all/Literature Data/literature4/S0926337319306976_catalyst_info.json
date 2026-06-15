@@ -1,0 +1,21 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Pt-Co"
+    ],
+    "crystal_phase": {
+        "Pt-Co": "face-centered cubic (fcc) structure"
+    },
+    "Characterization_methods": [
+        "HRTEM",
+        "XRD"
+    ],
+    "exposed_crystal_plane_indices": {
+        "Pt-Co": [
+            "{200}",
+            "{220}"
+        ]
+    },
+    "Proof in the paper": "The lattice fringe spaces are measured to be 0.195 nm and 0.137 nm, which can be indexed to {200} and {220} planes, respectively. These two values are just between the lattice spacing of standard Pt and Co face-centered cubic (fcc) structure, demonstrating the successful alloying of Pt and Co [39].",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337319306976"
+}

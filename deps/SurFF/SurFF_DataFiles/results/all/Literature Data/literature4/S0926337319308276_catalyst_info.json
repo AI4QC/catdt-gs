@@ -1,0 +1,22 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "PtPd"
+    ],
+    "crystal_phase": {
+        "PtPd": "face-centered cubic (fcc)"
+    },
+    "exposed_crystal_plane_indices": {
+        "PtPd": [
+            "(111)",
+            "(200)",
+            "(220)",
+            "(311)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD"
+    ],
+    "Proof in the paper": "As shown in Fig. S1, the sharp peak at 26.4° represents the (002) plane of graphite (ICDD no. 41-1487) in CNFs [40,41] and the other four peaks at 40.1°, 46.6°, 68.0°, and 82.0° can be readily indexed to the (111), (200), (220), and (311) reflections of face-centered cubic (fcc) PtPd (ICDD no. 65-6418), which are in agreement with those of the previous reports [42,43].",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337319308276"
+}

@@ -1,0 +1,21 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": "AuCu/FeOx",
+    "crystal_phase": {
+        "AuCu/FeOx": [
+            "Au",
+            "maghemite",
+            "hematite"
+        ]
+    },
+    "Characterization_methods": [
+        "HAADF-STEM"
+    ],
+    "exposed_crystal_plane_indices": {
+        "AuCu/FeOx": [
+            "(001)"
+        ]
+    },
+    "Proof in the paper": "The X-ray diffraction (XRD) patterns for the calcined AuCu/FeOx dumbbell NCs showed the presence of Au and maghemite upon calcination, and for the D3-A sample, a contribution was also observed from a hematite phase, as the HRTEM results suggested (Fig. 4). The HAADF-STEM images of the activated catalysts showed the formation of dumbbell NCs with a hollow MOx domain, particularly for the D2-A and D3-A samples (Fig. 1).",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337318305678"
+}

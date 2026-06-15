@@ -1,0 +1,27 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "(Co4Mn1)Se2",
+        "(Co2Mn1)Se2",
+        "(Co1Mn1)Se2",
+        "CoSe2"
+    ],
+    "crystal_phase": {
+        "CoSe2": "orthorhombic CoSe2 phase"
+    },
+    "exposed_crystal_plane_indices": {
+        "(Co4Mn1)Se2": [
+            "(111)",
+            "(220)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD",
+        "HRTEM",
+        "FFT",
+        "Raman",
+        "XPS"
+    ],
+    "Proof in the paper": "The XRD patterns of the (CoMn)Se2 nanosheets are shown in Fig. 2A. Similar to that of CoSe2 nanosheets, the result clearly identifies the (CoMn)Se2 nanosheets with different Co/Mn ratios as an orthorhombic CoSe2 phase. The disappearance of LDH diffraction peaks indicates the complete conversion during the anion exchange process (Fig. S10). Fig. 2B exhibits the Raman spectra of the (CoMn)Se2 nanosheets. A typical peak located at 173.5 cm−1 was observed for all the (CoMn)Se2 nanosheets, corresponding to that of the orthorhombic CoSe2 structure [29]. Moreover, the full-width at half-maximum (FWHM) at 173.5 cm−1 was found to increase with the increasing Mn/Co ratio (Fig. S11), further implying the structural disorder caused by the incorporation of Mn [30]. Accordingly, the disorder in (Co1Mn1)Se2 was larger than that in (Co4Mn1)Se2 and CoSe2, which was further demonstrated by HRTEM (Fig. S12). Compared to (Co4Mn1)Se2 and CoSe2, ultra-small nanoparticles with more lattice curvy and distortion were clearly observed in (Co1Mn1)Se2, suggesting the increased disorder with the increasing Mn/Co ratio. In addition, XPS analysis was applied to investigate the electronic properties of (CoMn)Se2 nanosheets. As shown in Fig. 2C, the binding energies of Co 2p3/2 in (Co4Mn1)Se2 at 779.1 eV and Co 2p1/2 at 794 eV corresponded to Co2+ cations in CoSe2 [31]. The obvious shake-up satellites at the higher energy side of the Co 2p signal indicate the antibonding orbital between the Co and Se atom [32]. Notably, the gradual shifts of Co 2p XPS peaks to lower energy were observed with the introduction of Mn, suggesting the modulated electronic structure of Co centers (Table S1). Fig. 2D shows the binding energy of Mn 2p3/2 in (Co4Mn1)Se2 were at 641.1 eV, which can be assigned to Mn2+ cations in manganese chalcogenides, confirming the incorporation of Mn in the CoSe2 nanostructures [33,34]. The valence state is further verified by the Mn 3s XPS analysis, which represents a definite indicator for the Mn valence [35,36]. As shown in Fig. S13, the Mn 3s spectrum splits into a doublet of peaks with a multiplet splitting energy of 6.1 eV, demonstrating the Mn2+ states in the (CoMn)Se2 [37]. Moreover, the Mn 2p peaks in (CoMn)Se2 show a positive shift to higher binding energy with the increase of Mn contents (Table S1), further indicating the electron transfer between Mn and Co. The highly negative charges in catalysts is believed to optimize the binding energy of OER intermediates and thus facilitate the OER process [38,39]. In addition, the minor broad Co 2p3/2 and Mn 2p3/2 XPS peaks at 781.1 eV and 642.5 eV in Fig. 2C, D were assigned to surface oxides impurities, in accordance with the previous study that the metal selenide’s surface is prone to oxidation by air [, ].",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337318304843"
+}

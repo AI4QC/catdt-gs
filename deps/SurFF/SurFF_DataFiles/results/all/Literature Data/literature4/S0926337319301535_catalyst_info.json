@@ -1,0 +1,25 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Fe-Al-Cu"
+    ],
+    "crystal_phase": {
+        "Fe-Al-Cu": "γ-Fe2O3"
+    },
+    "exposed_crystal_plane_indices": {
+        "Fe-Al-Cu": [
+            "(311)",
+            "(440)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD",
+        "TEM",
+        "SAED",
+        "XPS",
+        "XANES",
+        "EXAFS"
+    ],
+    "Proof in the paper": "The XRD patterns of all fresh catalysts did not contain any sharp peaks, even though these catalysts had been calcined at 400°C. This low degree of crystallinity was attributed to the formation of amorphous mixed oxide phases, namely α-Fe2O3 (hematite, JCPDS #33-0664) and γ-Fe2O3 (maghemite, JCPDS #39-1346) [21]. Typically, calcined fresh Fe-based catalysts show well-defined peaks of crystalline α-Fe2O3 [11,12,33], as observed for bare Fe and Fe-Al catalysts (Fig. S3), whereas as-prepared Fe-Al-Cu catalysts exhibited a diffraction peak of γ-Fe2O3 at 35.63° [21,33,34,46,47]. α-Fe2O3 possesses a hexagonal structure containing fully oxidized Fe3+ ions, while γ-Fe2O3 has an imperfect spinel structure that can be represented as [Fe83+]tetra[Fe40/33+□8/3]octaO32 [21,33,34,46,47], where tetra, octa, and □ correspond to tetrahedral, octahedral, and vacant cation sites, respectively.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337319301535"
+}

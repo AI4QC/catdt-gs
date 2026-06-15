@@ -1,0 +1,35 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "InNi",
+        "InNi2",
+        "InNi3",
+        "In3Ni2"
+    ],
+    "crystal_phase": {
+        "InNi": "PDF# 07-0178",
+        "InNi2": "PDF# 42-1033",
+        "InNi3": "PDF# 65-3522",
+        "In3Ni2": "PDF# 65-7718"
+    },
+    "exposed_crystal_plane_indices": {
+        "InNi": [
+            "(001)"
+        ],
+        "InNi2": [
+            "(110)"
+        ],
+        "InNi3": [
+            "(201)"
+        ],
+        "In3Ni2": [
+            "(110)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD",
+        "DFT calculation"
+    ],
+    "Proof in the paper": "The single-crystal cell structural models for InNi, InNi2, InNi3, and In3Ni2 were built according to previous reports and the XRD results. (30,31) The geometry optimization and self-consistent field of the bulk In–Ni IMC convergence criterion were set as follows: energy = 10–6 eV and force = 0.001 eV/Å. The InNi (001), InNi2 (110), InNi3 (201), and In3Ni2 (110) surfaces were cut from the optimized cell and were modeled by four layers.",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.2c00671"
+}

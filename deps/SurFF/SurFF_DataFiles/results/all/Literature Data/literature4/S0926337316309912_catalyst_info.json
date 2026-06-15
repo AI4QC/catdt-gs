@@ -1,0 +1,60 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "CeO2",
+        "Ce0.95Cu0.05",
+        "Ce0.85Cu0.15",
+        "Ce0.60Cu0.40",
+        "Ce0.40Cu0.60",
+        "Ce0.15Cu0.85",
+        "Ce0.05Cu0.95",
+        "CuO"
+    ],
+    "crystal_phase": {
+        "CeO2": "cubic fluorite lattice structure of ceria (Fm3m symmetry)",
+        "Ce0.95Cu0.05": "cubic fluorite lattice structure of ceria (Fm3m symmetry)",
+        "Ce0.85Cu0.15": "cubic fluorite lattice structure of ceria (Fm3m symmetry)",
+        "Ce0.60Cu0.40": "cubic fluorite lattice structure of ceria (Fm3m symmetry)",
+        "Ce0.40Cu0.60": "cubic fluorite lattice structure of ceria (Fm3m symmetry)",
+        "Ce0.15Cu0.85": "cubic fluorite lattice structure of ceria (Fm3m symmetry)",
+        "Ce0.05Cu0.95": "cubic fluorite lattice structure of ceria (Fm3m symmetry)",
+        "CuO": "CuO phase"
+    },
+    "exposed_crystal_plane_indices": {
+        "CeO2": [
+            "(200)",
+            "(220)"
+        ],
+        "Ce0.95Cu0.05": [
+            "(200)",
+            "(220)"
+        ],
+        "Ce0.85Cu0.15": [
+            "(200)",
+            "(220)"
+        ],
+        "Ce0.60Cu0.40": [
+            "(200)",
+            "(220)"
+        ],
+        "Ce0.40Cu0.60": [
+            "(200)",
+            "(220)"
+        ],
+        "Ce0.15Cu0.85": [
+            "(200)",
+            "(220)"
+        ],
+        "Ce0.05Cu0.95": [
+            "(200)",
+            "(220)"
+        ],
+        "CuO": []
+    },
+    "Characterization_methods": [
+        "XRD",
+        "TEM"
+    ],
+    "Proof in the paper": "The X-ray diffraction (XRD) patterns of the samples showed the cubic fluorite lattice structure of ceria (Fm3m symmetry) for pure CeO2 and binary oxide catalysts. The TEM images of the samples showed multiple nanoparticles displaying lattice fringes whose interplanar distances are compatible with the presence of the fluorite phase in all cases, with the most common exposed facets being (200) and (220).",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337316309912"
+}

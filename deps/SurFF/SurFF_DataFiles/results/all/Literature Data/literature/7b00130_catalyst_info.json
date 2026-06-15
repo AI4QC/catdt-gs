@@ -1,0 +1,24 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "MoV",
+        "MoVTeNb"
+    ],
+    "crystal_phase": {
+        "MoV": "M1"
+    },
+    "exposed_crystal_plane_indices": {
+        "MoV": [
+            "(ab plane)"
+        ]
+    },
+    "Characterization_methods": [
+        "X-ray powder diffraction",
+        "single crystal analysis",
+        "scanning electron microscopy",
+        "scanning transmission electron microscopy",
+        "HAADF STEM"
+    ],
+    "Proof in the paper": "The X-ray powder diffraction (Figure S2a) and SEM images (Figure S3) of (Mo,V)Ox reveal phase purity and high crystallinity of the synthesized material. The particle size distribution is broad, and the shape of the particles is not uniform. High-resolution electron microscopy of the small particles selected by transmission electron microscopy also reveal that these particles are composed of the crystalline M1 phase (Figure S4). The bulk metal composition determined by EDX corresponds to 29.5 at % V and 70.5 at % Mo.",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.7b00130"
+}

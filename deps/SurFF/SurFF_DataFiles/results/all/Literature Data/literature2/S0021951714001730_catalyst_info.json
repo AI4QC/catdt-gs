@@ -1,0 +1,23 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "PdAu"
+    ],
+    "crystal_phase": {
+        "PdAu": "face-centered cubic (fcc) structure"
+    },
+    "exposed_crystal_plane_indices": {
+        "PdAu": [
+            "(1 1 1)",
+            "(2 0 0)",
+            "(2 2 0)"
+        ]
+    },
+    "Characterization_methods": [
+        "UV–vis spectroscopy",
+        "XRD",
+        "HRTEM"
+    ],
+    "Proof in the paper": "The XRD patterns of PdAu thin film dried from colloidal sols exhibit three diffraction peaks that can be indexed to diffraction from the (1 1 1), (2 0 0), and (2 2 0) of the face-centered cubic (fcc) structure of metallic PdAu (Fig. 1B). The lattice structure of nanoflowers shown in Fig. 2C can be observed with lattice spacing 0.230 and 0.200 nm measured for the (1 1 1) and (1 0 0) facets, in accord with the exposed PdAu facets in XRD patterns.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0021951714001730"
+}

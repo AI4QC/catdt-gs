@@ -1,0 +1,22 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "PtFe0.7Cu0.3",
+        "PtFe0.5Cu0.5"
+    ],
+    "crystal_phase": {
+        "PtFe0.7Cu0.3": "tetragonal PtFe ordered intermetallic",
+        "PtFe0.5Cu0.5": "tetragonal PtFe ordered intermetallic"
+    },
+    "Characterization_methods": [
+        "X-ray diffraction (XRD)",
+        "high-angle annular dark-field scanning transmission electron microscopy (HAADF-STEM)"
+    ],
+    "exposed_crystal_plane_indices": {
+        "PtFe0.5Cu0.5": [
+            "(001)"
+        ]
+    },
+    "Proof in the paper": "Atomic-scale STEM images of PtFe0.5Cu0.5 exhibited a 3.7 Å lattice d-spacing, which was assigned to the (001) facets, based on PDF #01-089-2051 (Figure 1B,C).",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.9b04344"
+}

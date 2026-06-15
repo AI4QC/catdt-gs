@@ -1,0 +1,24 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Ni3Ga",
+        "Ni5Ga3",
+        "NiGa"
+    ],
+    "crystal_phase": "phase-pure bulk crystal structure",
+    "exposed_crystal_plane_indices": {
+        "Ni3Ga": [
+            "(111)"
+        ],
+        "NiGa": [
+            "(110)"
+        ]
+    },
+    "Characterization_methods": [
+        "X-ray diffraction (XRD)",
+        "high resolution XRD (HR-XRD)",
+        "Computational surface science studies in the density-functional theory (DFT) slab model framework"
+    ],
+    "Proof in the paper": "The bulk compositions of as-reduced SiO2-supported Ni + Ga IMCs (Ni3Ga/SiO2, Ni5Ga3/SiO2, and NiGa/SiO2) were all nearly phase pure. After the annealing pretreatment, bulk phases of Ni3Ga/SiO2 and NiGa/SiO2 were retained. Computational surface science studies were employed to correlate the basic surface chemical features with the observed catalytic activity and selectivity of the Ni + Ga IMCs.",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.0c01261"
+}

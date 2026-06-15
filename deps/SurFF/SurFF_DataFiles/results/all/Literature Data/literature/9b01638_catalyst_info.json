@@ -1,0 +1,16 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "In/Co"
+    ],
+    "Characterization_methods": [
+        "ADF-STEM"
+    ],
+    "exposed_crystal_plane_indices": {
+        "In/Co": [
+            "(111)"
+        ]
+    },
+    "Proof in the paper": "The precipitation is nearly quantitative, with a synthesis yield of 61% based on indium and 59% based on cobalt. The nitrogen adsorption–desorption isotherm of the In@Co-1 precatalyst (Figure S3a) is characteristic of a mesoporous/macroporous solid (type II–IV) and indicates a low specific surface area of 30 m2g–1. Imaging by annular dark field scanning transmission electron microscopy (ADF-STEM) was used to investigate the morphological properties of the In@Co-1 catalyst before reaction. The micrograph presented in Figure S4 shows a typical example of agglomerates containing round Co3O4 nanoparticles in the 10–40 nm range and larger In(OH)3 nanoparticles shaped as rectangular parallelepipeds (>100 nm × 50 nm). Co and In elemental maps computed from electron energy loss spectroscopy (EELS) reveal that some of the Co3O4 aggregates are sometimes filled or trapped within an amorphous indium hydroxide phase (Figure S4c,d).",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.9b01638"
+}

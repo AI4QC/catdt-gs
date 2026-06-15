@@ -1,0 +1,30 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Pt",
+        "Pt-Ru"
+    ],
+    "crystal_phase": {
+        "Pt": "face-centered cubic (fcc)",
+        "Pt-Ru": "alloyed phases"
+    },
+    "characterization_methods": [
+        "XRD",
+        "TEM",
+        "XPS"
+    ],
+    "exposed_crystal_plane_indices": {
+        "Pt": [
+            "(111)",
+            "(200)",
+            "(220)",
+            "(311)"
+        ],
+        "Pt-Ru": [
+            "(111)",
+            "(311)"
+        ]
+    },
+    "proof_in_the_paper": "The XRD pattern of Pt/C in Fig. 3a shows the (111), (200), (220), and (311) reflections corresponding to fcc platinum (JCPDS 04-0802). Pt/CRu-dim and Pt/CRu-com show only the (111) and (311) Pt reflections, indicating the formation of alloyed Pt-Ru phases. The SAED patterns from the HR-TEM images (Fig. 4 and Fig. 5) confirm the distances between lattice fringes attributed to Pt (111) and Ru (101).",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337317302266"
+}

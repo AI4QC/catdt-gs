@@ -1,0 +1,19 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Pd14.9Bi"
+    ],
+    "crystal_phase": {
+        "Pd14.9Bi": "face-centered cubic (fcc) crystal structure"
+    },
+    "Characterization_methods": [
+        "High-resolution transmission electron microscopy (HRTEM)"
+    ],
+    "exposed_crystal_plane_indices": {
+        "Pd14.9Bi": [
+            "(111)"
+        ]
+    },
+    "Proof in the paper": "The lattice spacing of (111) measured in Fig. 1e shows a d-spacing of 0.231 nm, which is a little larger than that of pure Pd (0.227 nm), suggesting the formation of PdBi alloy phase.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337323001649"
+}

@@ -1,0 +1,21 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "CoGa"
+    ],
+    "crystal_phase": {
+        "Co": "JCPDS: 15-0806",
+        "CoGa": "JCPDS: 15-0578"
+    },
+    "Characterization_methods": [
+        "XRD",
+        "HRTEM"
+    ],
+    "exposed_crystal_plane_indices": {
+        "CoGa": [
+            "(111)"
+        ]
+    },
+    "Proof in the paper": "From the HRTEM image of CoGa–ZnAl-LDO/γ-Al2O3 (Fig. 3A), the (1 1 1) facet assigned to CoGa particles can be clearly observed, with a lattice spacing of 0.210 nm.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0021951716300586"
+}

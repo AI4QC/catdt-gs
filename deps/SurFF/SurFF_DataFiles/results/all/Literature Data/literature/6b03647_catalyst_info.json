@@ -1,0 +1,19 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "PdxAu100-xNPs"
+    ],
+    "crystal_phase": {
+        "PdxAu100-xNPs": "FCC lattice structure"
+    },
+    "Characterization_methods": [
+        "PXRD"
+    ],
+    "exposed_crystal_plane_indices": {
+        "Pd53Au47": [
+            "(111)"
+        ]
+    },
+    "Proof in the paper": "The observed maxima for the (111) reflection was found to shift from 2θmax = 39.9° for pure PdNPs (FCC Pd, expected 40.1°) to lower angles as the content of Au was increased, until reaching 38.2° for pure AuNPs. By comparison, NPs with composition Pd53Au47 had 2θmax = 39.2° due to the (111) reflection; this compares closely to the calculated value of 39.1° for Pd50Au50NPs (assuming an FCC lattice structure).",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.6b03647"
+}

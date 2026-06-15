@@ -1,0 +1,21 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Pt-Fe"
+    ],
+    "crystal_phase": {
+        "PtFe": "fcc alloy",
+        "FeOx": "species"
+    },
+    "Characterization_methods": [
+        "XRD",
+        "XPS"
+    ],
+    "exposed_crystal_plane_indices": {
+        "PtFe": [
+            "(1 1 1)"
+        ]
+    },
+    "Proof in the paper": "The diffraction pattern at 2θ = 39.8° assigned to Pt(1 1 1) was detected for Pt/MTS-1-MS, indicating that Pt NPs were successfully loaded on MTS-1-MS. Surprisingly, the diffraction peak at around 2θ of 39.8° obviously shifted to higher angle after Fe doping (Fig. 2b), a hint that part of Fe inserted to Pt(1 1 1) facets and caused lattice compression to a certain extent. Hence, Pt-Fe alloy with fcc structure formed.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0021951721000361"
+}

@@ -1,0 +1,14 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": "PdCu",
+    "crystal_phase": "face-centred cubic (fcc)",
+    "Characterization_methods": "XRD",
+    "exposed_crystal_plane_indices": {
+        "PdCu": [
+            "{111}",
+            "{200}"
+        ]
+    },
+    "Proof in the paper": "In the XRD analysis, we can clearly see that the red region should appear in the fcc Pd {111} facet of 40.1° and the fcc Cu {111} facet of 43.3°. The two sharp metal diffraction peaks expand and widen into one span around 4°, indicating that Pd and Cu form an alloy structure with small particle size and maintain the original fcc structure. At the same time, the degree of peak broadening in different samples is generally consistent, demonstrating that the particle sizes of PdCu NPs formed at different ratios and temperatures are not that different. This can be further verified in the equally broadened {200} peak region at 47-49° in the blue region. The broadening of such a diffraction peak may also be caused by a polycrystalline alloy structure.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337319302930"
+}

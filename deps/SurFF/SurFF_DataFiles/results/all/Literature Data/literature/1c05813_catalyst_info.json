@@ -1,0 +1,28 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": "Ni1–xVx LDH (0 ≤ x ≤ 1)",
+    "crystal_phase": {
+        "Ni(OH)2": "Layered β-Ni(OH)2 phase (JCPDS 14-0117)",
+        "NiV LDH": "NiV LDH (PDF 52-1627)"
+    },
+    "exposed_crystal_plane_indices": {
+        "Ni(OH)2": [
+            "(001)",
+            "(100)",
+            "(101)",
+            "(102)",
+            "(110)",
+            "(111)",
+            "(103)",
+            "(202)"
+        ],
+        "NiV LDH": [
+            "(009)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD"
+    ],
+    "Proof in the paper": "The XRD spectrum of the pure Ni(OH)2 film shows diffraction peaks at the 2θ angles of 19.34, 33.15, 38.67, 52.16, 59.11, 62.80, 72.89, and 82.01°, which are associated with the (001), (100), (101), (102), (110), (111), (103), and (202) reflection planes, respectively, of the layered β-Ni(OH)2 phase (JCPDS 14-0117). (42) A clear feature appears at 34.23° following the incorporation of V into the Ni(OH)2 matrix, which corresponds to the characteristic (009) facet of the NiV LDH (PDF 52-1627), indicating that the deposited films are isomorphous, like layered β-Ni(OH)2.",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.1c05813"
+}

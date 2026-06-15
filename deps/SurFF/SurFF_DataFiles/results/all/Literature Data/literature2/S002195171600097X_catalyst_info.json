@@ -1,0 +1,37 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "PdCu/C-1",
+        "PdCu/C-2",
+        "Pd/C"
+    ],
+    "crystal_phase": "face-centered cubic (fcc)",
+    "characterization_methods": [
+        "Powder X-ray diffraction (pXRD)"
+    ],
+    "exposed_crystal_plane_indices": {
+        "PdCu/C-1": [
+            "(1 1 1)",
+            "(2 0 0)",
+            "(2 2 0)",
+            "(3 1 1)",
+            "(2 2 2)"
+        ],
+        "PdCu/C-2": [
+            "(1 1 1)",
+            "(2 0 0)",
+            "(2 2 0)",
+            "(3 1 1)",
+            "(2 2 2)"
+        ],
+        "Pd/C": [
+            "(1 1 1)",
+            "(2 0 0)",
+            "(2 2 0)",
+            "(3 1 1)",
+            "(2 2 2)"
+        ]
+    },
+    "Proof in the paper": "From the pXRD patterns, Fig. 1e, all the samples are identified as a face-centered cubic (fcc) structure showing (1 1 1), (2 0 0), (2 2 0), (3 1 1) and (2 2 2) lattice planes.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S002195171600097X"
+}

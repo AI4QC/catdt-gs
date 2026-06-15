@@ -1,0 +1,21 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "PdxCoy"
+    ],
+    "crystal_phase": {
+        "PdxCoy": "face-centered cubic (fcc) phase"
+    },
+    "exposed_crystal_plane_indices": {
+        "PdxCoy": [
+            "(111)"
+        ]
+    },
+    "Characterization_methods": [
+        "STEM-HAADF",
+        "STEM-EDX",
+        "TEM"
+    ],
+    "Proof in the paper": "The interplanar spacing of the lattice fringes is 0.214 nm, corresponding to Pd1Co1 (111) plane of face-centered cubic (fcc) phase. Formation of a bimetallic atomic alloy of Pd and Co was confirmed by both scanning transmission electron microscopy-high-angle annular dark-field imaging (STEM-HAADF) and scanning transmission electron microscopy-energy-dispersive X-ray spectroscopy (STEM-EDX).",
+    "url": "https://pubs.acs.org/doi/10.1021/cs5000153"
+}

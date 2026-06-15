@@ -1,0 +1,36 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "RhFeOx",
+        "RhFe/FeOx",
+        "Rh/(Fe,Mn)Ox"
+    ],
+    "crystal_phase": {
+        "RhFeOx": "face-centered cubic (fcc) {111} and {200} planes of metallic Rh",
+        "Rh1Fe1 alloy": {
+            "phase": "Rh1Fe1 alloy phase (ICSD C25-1408)",
+            "structure": "fcc Rh1Fe1 alloy with the space group of Pm3m and a RhFe ratio of 1:1"
+        }
+    },
+    "exposed_crystal_plane_indices": {
+        "RhFeOx": [
+            "{111}",
+            "{200}"
+        ],
+        "Rh1Fe1 alloy": [
+            "{111}",
+            "{200}",
+            "{211}"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD",
+        "HRTEM",
+        "STEM-EDX"
+    ],
+    "Proof in the paper": {
+        "RhFeOx": "The indicated lattice fringes with d-spacings of 2.2 and 1.9 Å are consistent with face-centered cubic (fcc) {111} and {200} planes of metallic Rh (space group of Fm3̅m). Metallic Fe or crystalline FeOx particles were not observed during HRTEM imaging. (Figure 1a)",
+        "Rh1Fe1 alloy": "Representative lattice fringe analysis on HRTEM images of smaller particles yields d-spacings of 2.1, 1.5, and 1.2 Å, which are consistent with {111}, {200}, and {211} lattice planes of fcc Rh1Fe1 alloy with the space group of Pm3m and a RhFe ratio of 1:1 (Figure 3a)"
+    },
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.0c05365"
+}

@@ -1,0 +1,30 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Ni",
+        "Rh",
+        "RhNi"
+    ],
+    "crystal_phase": {
+        "Ni": "fcc",
+        "Rh": "fcc",
+        "RhNi": "fcc"
+    },
+    "exposed_crystal_plane_indices": {
+        "Ni": [
+            "(110)"
+        ],
+        "Rh": [
+            "(111)"
+        ],
+        "RhNi": [
+            "(111)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD",
+        "HAADF-STEM"
+    ],
+    "Proof in the paper": "The lattice fringes of the Rh NP in Rh/Al2O3 exhibit d spacings of 0.22 nm (Fig. 1b), which can be indexed to the (111) plane of fcc Rh, while those of Rh–Ni NPs possessed a slightly smaller d spacing value of 0.21 nm (Fig. 1d) which may reflect either (111) planes of the parent fcc Rh NPs or RhNi alloy NPs.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337320304446"
+}

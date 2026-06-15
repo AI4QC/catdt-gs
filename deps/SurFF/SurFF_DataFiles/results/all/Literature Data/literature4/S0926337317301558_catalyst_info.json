@@ -1,0 +1,23 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": "AuPd@Pd",
+    "crystal_phase": "face-centered cubic (fcc)",
+    "Characterization_methods": [
+        "XRD",
+        "TEM",
+        "HRTEM",
+        "HAADF-STEM-EDS",
+        "XPS"
+    ],
+    "exposed_crystal_plane_indices": {
+        "AuPd@Pd": [
+            "(111)",
+            "(200)",
+            "(220)",
+            "(311)",
+            "(222)"
+        ]
+    },
+    "Proof in the paper": "The representative diffraction peaks detected at 38.2°, 44.5°, 64.8°, 77.7°, and 82.0° are well indexed to the (111), (200), (220), (311) and (222) facets of the fcc AuPd alloy respectively. Meanwhile, the diffraction peaks all consistently emerge between those of bulk Au and Pd, which confirms the formation of the AuPd alloy. Besides, the weak shoulder peak appeared from each peak indicate the emergence of the external Pd shell around the AuPd core, powerfully demonstrating the formation of the core-shell AuPd@Pd structures again.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337317301558"
+}

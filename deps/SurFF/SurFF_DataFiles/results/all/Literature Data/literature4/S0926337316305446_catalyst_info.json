@@ -1,0 +1,25 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Pt-Sn"
+    ],
+    "crystal_phase": {
+        "Pt-Sn": "face centered cubic (fcc)"
+    },
+    "exposed_crystal_plane_indices": {
+        "Pt-Sn": [
+            "(111)",
+            "(200)",
+            "(220)",
+            "(311)",
+            "(222)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD",
+        "EDX",
+        "XPS"
+    ],
+    "Proof in the paper": "The typical face centered cubic (fcc) crystalline peaks of Pt are identified, namely the planes (111), (200), (220), (311) and (222). X-ray diffractograms of Pt-Sn/C catalysts are given in Fig. 1.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337316305446"
+}

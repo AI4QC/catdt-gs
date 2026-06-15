@@ -1,0 +1,16 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Sn-containing Beta zeolite"
+    ],
+    "Characterization_methods": [
+        "XRD"
+    ],
+    "exposed_crystal_plane_indices": {
+        "Sn-containing Beta zeolite": [
+            "(302)"
+        ]
+    },
+    "Proof in the paper": "Figure 1 shows the XRD patterns of H-Beta and the post-treated samples under study. Typical diffraction peaks of Beta zeolite occur for all of the samples, suggesting that the dealumination treatment and incorporation of Sn species did not cause structural changes in Beta zeolite, in line with previous reports. (3) Except for the mixed SnO2/[Si]Beta, no obvious characteristic diffraction peaks of Sn species were detected in the Sn-containing zeolites, because of the homogeneous dispersion of Sn species. During the processes of dealumination and introduction of Sn species, the contraction/expansion of the Beta zeolite framework occurs, causing slight changes in the diffraction peak of (302) at 2θ = 22.5°. (48,49) After dealumination, an obvious decrease in d302 spacing associated with the 2θ value, from 3.941 Å (H-Beta, 2θ = 22.54°) to 3.897 Å ([Si]Beta, 2θ = 22.80°), occurs (Figure 1), confirming the contraction of the [Si]Beta matrix. After Sn introduction, the d302 spacing gradually increases with an enhancement in the Sn loadings: e.g., from 3.897 Å for [Si]Beta (2θ = 22.80°) to 3.927 Å for 5%Sn-Beta-I and then to 3.939 Å for 10%Sn-Beta-I. This indirectly demonstrated the expansion of the BEA framework, revealing that the Sn species was successfully introduced into the Beta zeolite framework. This is in good agreement with the N2 adsorption/desorption results, where no obvious differences in BET surface areas and micropore volumes occur for the Sn-containing zeolites (Table 1).",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.0c02356"
+}

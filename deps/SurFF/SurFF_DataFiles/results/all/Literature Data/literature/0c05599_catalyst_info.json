@@ -1,0 +1,18 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Ir1Mo1/TiO2",
+        "Ir1/TiO2",
+        "Mo1/TiO2"
+    ],
+    "exposed_crystal_plane_indices": {
+        "Ir1Mo1/TiO2": "(100)"
+    },
+    "Characterization_methods": [
+        "AC-HAADF STEM",
+        "XAFS",
+        "DRIFTS"
+    ],
+    "Proof in the paper": "The dual single-atom structure was confirmed by aberration-corrected scanning transmission electron microscopy (STEM), X-ray absorption fine structure (XAFS) spectroscopy, and diffuse reflectance infrared Fourier transform spectroscopy (DRIFTS). Ir1Mo1/TiO2 shows much greater catalytic activity and chemoselectivity in the hydrogenation of 4-nitrostyrene (4-NS) to 4-vinylaniline (4-VA) than the SACs Ir1/TiO2 and Mo1/TiO2 prepared with the same method from homometallic precursors. Density functional theory (DFT) calculations demonstrate that Ir1 sites are responsible for H2 activation and Mo1 sites are the active sites for the adsorption of 4-NS via the nitro group. The synergistic effects of the two sets of single atoms give rise to an enhanced catalytic performance.",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.0c05599"
+}

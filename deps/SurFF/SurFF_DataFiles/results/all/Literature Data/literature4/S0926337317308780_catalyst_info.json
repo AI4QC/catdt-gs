@@ -1,0 +1,19 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Pd100-XAuX"
+    ],
+    "crystal_phase": {
+        "Pd100-XAuX": "face-centered cubic (fcc) lattice"
+    },
+    "Characterization_methods": [
+        "XRD"
+    ],
+    "exposed_crystal_plane_indices": {
+        "Pd100-XAuX": [
+            "Pd(111)"
+        ]
+    },
+    "Proof in the paper": "The patterns of both catalysts show reflections characteristic of a face-centered-cubic (fcc) lattice, corresponding to the structures of Pd or PdAu crystallites. The average diameter of metal crystallites was calculated on the basis of the Pd (111) peak broadening according to Scherrer equation.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337317308780"
+}

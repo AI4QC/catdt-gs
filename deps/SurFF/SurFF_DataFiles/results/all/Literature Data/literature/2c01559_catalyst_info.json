@@ -1,0 +1,25 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "RuCu(II)/AC",
+        "RuCu(I)/AC",
+        "RuCu(0)/AC",
+        "Ru/AC"
+    ],
+    "crystal_phase": {
+        "RuCu(II)/AC": "Cu(Cl)2·2(H2O)",
+        "RuCu(I)/AC": "Cu2O",
+        "RuCu(0)/AC": "Cu(0)"
+    },
+    "Characterization_methods": [
+        "XRD"
+    ],
+    "exposed_crystal_plane_indices": {
+        "RuCu(I)/AC": [
+            "(101)",
+            "(100)"
+        ]
+    },
+    "Proof in the paper": "Two characteristic lattice fringes with lattice spacings of 0.21 and 0.23 nm were found in the high-resolution transmission electron microscope images of RuCu(I)/AC, which were attributed to the (101) and (100) crystal faces of Ru, respectively (Figure S11).",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.2c01559"
+}

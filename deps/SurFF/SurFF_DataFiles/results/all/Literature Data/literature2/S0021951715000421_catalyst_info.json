@@ -1,0 +1,54 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "LaCoO3",
+        "LaCo0.95Pd0.05O3",
+        "LaFeO3",
+        "Pt/LaFeO3"
+    ],
+    "crystal_phase": {
+        "LaCoO3": "rhombohedral",
+        "LaCo0.95Pd0.05O3": "rhombohedral",
+        "LaFeO3": "orthorhombic",
+        "Pt/LaFeO3": "orthorhombic"
+    },
+    "exposed_crystal_plane_indices": {
+        "LaCoO3": [
+            "(002)",
+            "(111)",
+            "(200)",
+            "(202)"
+        ],
+        "LaCo0.95Pd0.05O3": [
+            "(002)",
+            "(111)",
+            "(200)",
+            "(202)"
+        ],
+        "LaFeO3": [
+            "(002)",
+            "(111)",
+            "(200)",
+            "(202)"
+        ],
+        "Pt/LaFeO3": [
+            "(111) of Pt",
+            "(002)",
+            "(111)",
+            "(200)",
+            "(202) of LaFeO3"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD",
+        "XRD",
+        "XRD",
+        "HRTEM"
+    ],
+    "Proof in the paper": {
+        "LaCoO3 and LaCo0.95Pd0.05O3": "The typical rhombohedral structure for LaCoO3 was maintained after Pd incorporation. The Rietveld refinement method allows the calculation of structural parameters collected in Table 1 showing an elongation of the distance a and a parallel expansion of the elementary cell volume.",
+        "LaFeO3": "The orthorhombic phase of LaFeO3 was identified from measurements of the lattices fringes of the (0 0 2), (1 1 1), (2 0 0), and (2 0 0 2) crystal planes characteristic of this structure.",
+        "Pt/LaFeO3": "Platinum particles were also observed, with measured lattice fringes corresponding to the (1 1 1) planes of metallic platinum. Among the observed particles, HRTEM micrographs recorded on Pt/LaFe(R300) show a preferential orientation of the (1 1 1) crystal planes of the Pt particles, anchored to the different (2 0 0), (1 1 1), (0 0 2), and (2 0 0 2) planes characteristic of LaFeO3 structure."
+    },
+    "url": "https://www.sciencedirect.com/science/article/pii/S0021951715000421"
+}

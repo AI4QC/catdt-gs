@@ -1,0 +1,35 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Au",
+        "Pd",
+        "AuPd"
+    ],
+    "crystal_phase": {
+        "Au": "face-centered cubic (FCC) lattice structure",
+        "Pd": "FCC lattice structure of Pd(1 1 1) reflection",
+        "AuPd": "FCC lattice structure"
+    },
+    "exposed_crystal_plane_indices": {
+        "Au": [
+            "(111)",
+            "(200)",
+            "(220)",
+            "(311)"
+        ],
+        "Pd": [
+            "(1 1 1)"
+        ],
+        "AuPd": [
+            "(111)",
+            "(200)",
+            "(220)",
+            "(311)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD"
+    ],
+    "Proof in the paper": "The wide-angle XRD patterns of these samples are shown in Fig. 1. Au/S15-p exhibits four diffraction peaks at 38.16°, 44.30°, 64.58°, and 77.54°, indexed to (111), (200), (220), and (311) reflections, respectively, for the face-centered cubic (FCC) lattice structure of Au (PDF# 65–2870). Pd/S15-p shows only one diffraction peak at 39.72°, assigned to Pd(1 1 1) reflection (PDF# 46–1043) that is weak and broad, indicating poor crystallinity with structural defects. For bimetallic AuPd/S15-p, reflections assigned to both metallic Au and Pd are clearly seen individually, which rules out the possibility of a single-phase homogeneous Au–Pd alloy.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0021951712000413"
+}

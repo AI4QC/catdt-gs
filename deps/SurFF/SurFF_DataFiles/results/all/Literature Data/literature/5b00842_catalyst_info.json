@@ -1,0 +1,20 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Pt1Com",
+        "Pd1Con"
+    ],
+    "Characterization_methods": [
+        "Scanning transmission electron microscopy (STEM)",
+        "Extended X-ray absorption fine structure spectroscopy (EXAFS)",
+        "High-angle annular dark-field scanning transmission electron microscopy (HAADF-STEM)"
+    ],
+    "exposed_crystal_plane_indices": {
+        "Pt1Com": [
+            "(1-10)",
+            "(001)"
+        ]
+    },
+    "Proof in the paper": "Figure 2 presents TEM images of pure Co3O4 nanorods we synthesized. The preferentially exposed surfaces are (1–10) and (001). They have an average size of ∼6 nm × ∼6 nm × ∼50–200 nm. Upon anchoring Pt atoms on Co3O4 nanorods, the morphology of nanorods basically remains, although some nanorods are broken into shorter ones. The measured interplanar distance of (220) of 0.1 atom % Pt/Co3O4, 2.82 Å is the same as pure Co3O4 nanorods. Thus, the impregnation of Pt atoms on Co3O4 does not change the lattice of Co3O4 because the immobilization of noble metal atoms on well-crystallized Co3O4 nanorods was done under a mild condition.",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.5b00842"
+}

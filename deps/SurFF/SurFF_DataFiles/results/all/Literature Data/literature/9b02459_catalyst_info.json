@@ -1,0 +1,27 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Ga–Rh"
+    ],
+    "crystal_phase": {
+        "Ga–Rh": "mixture of solid intermetallic Ga–Rh compounds (e.g., Ga16Rh3) and a liquid Rh–Ga-rich alloy"
+    },
+    "Characterization_methods": [
+        "X-ray photoelectron spectroscopy (XPS)",
+        "IR-spectroscopy",
+        "microscopy",
+        "density-functional theory (DFT) calculations"
+    ],
+    "exposed_crystal_plane_indices": {
+        "Ga–Rh": [
+            "(110)",
+            "(001)"
+        ]
+    },
+    "Characterization_methods_2": [
+        "Transmission electron microscopy (TEM)",
+        "electron diffraction"
+    ],
+    "Proof in the paper": "The transition to a fully liquid supported alloy droplet at Ga/Rh ratios above 80, results in a drastic increase in catalyst activity with high propylene selectivity. The combining results from catalytic studies, X-ray photoelectron spectroscopy, IR-spectroscopy under reaction conditions, microscopy, and density-functional theory calculations, we obtained a comprehensive microscopy picture of the working principle of the Ga–Rh supported catalytically active liquid metal solution. (Abstract)",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.9b02459"
+}

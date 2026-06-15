@@ -1,0 +1,25 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Pt",
+        "PtNi",
+        "PtNiRu"
+    ],
+    "crystal_phase": {
+        "Pt": "face center cubic (fcc)",
+        "PtNi": "face center cubic (fcc)",
+        "PtNiRu": "face center cubic (fcc)"
+    },
+    "exposed_crystal_plane_indices": {
+        "Pt": "(111)",
+        "PtNi": "(111)",
+        "PtNiRu": "(111)"
+    },
+    "Characterization_methods": [
+        "TEM",
+        "HAADF-STEM",
+        "XRD"
+    ],
+    "Proof in the paper": "The energy dispersive spectroscopy (EDS), which was measured during the TEM observation, indicates that the Pt-NPs were immobilized on the carbon black surface and the Pt peaks were observed at 2.1 and 9.6 keV, as depicted in Fig. 2(d). The crystal structure of the Pt-NPs was determined using XRD (Supporting information, Fig. S4). The XRD patterns of the Pt/C on the Si wafer substrate exhibited the carbon black peak at 26.2° and characteristic diffraction peaks of Pt (111), Pt (200), Pt (220), and Pt (311) at 2θ = 39.6°, 45.2°, 67.2°, and 80.7°, respectively, which indicated that Pt was present in the face center cubic (fcc).",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337316309195"
+}

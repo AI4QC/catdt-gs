@@ -1,0 +1,28 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Pd0.50Au0.50",
+        "Pd0.66Au0.34",
+        "Pd0.32Au0.68",
+        "Pd/PDA-rGO",
+        "Au/PDA-rGO",
+        "Pd0.57(Low)Au0.43(Low)/PDA-rGO",
+        "Pd0.49Au0.51/rGO"
+    ],
+    "Characterization_methods": [
+        "XRD",
+        "TEM",
+        "TEM-EDS",
+        "XPS",
+        "FT-IR",
+        "ICP-AES"
+    ],
+    "exposed_crystal_plane_indices": {
+        "Pd0.50Au0.50": [
+            "(111)",
+            "(200)"
+        ]
+    },
+    "Proof in the paper": "The XRD patterns of the as-prepared PdAu bimetallic catalysts are shown in Figure 1 (a). Two peaks at 38.14° and 44.50° can be observed in the XRD pattern of the Pd0.50Au0.50/PDA-rGO catalyst. The 2θ positions of these two peaks are slightly larger than the reference diffraction peaks of the Au(111) (38.08°) and Au(200) (44.26°), respectively, according to the international center for diffraction data (ICDD: 00-004-0784).",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.8b00294"
+}

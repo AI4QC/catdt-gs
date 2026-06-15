@@ -1,0 +1,27 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "MoP/SN",
+        "MoP/SNG"
+    ],
+    "crystal_phase": {
+        "MoP/SN": "hexagonal WC-type structure (space group P6̅m2)",
+        "MoP/SNG": "hexagonal WC-type structure (space group P6̅m2)"
+    },
+    "exposed_crystal_plane_indices": {
+        "MoP/SN": [
+            "(100)",
+            "(101)"
+        ],
+        "MoP/SNG": [
+            "(100)",
+            "(101)"
+        ]
+    },
+    "Characterization_methods": [
+        "X-ray diffraction (XRD)",
+        "High-resolution transmission electron microscopy (HR-TEM)"
+    ],
+    "Proof in the paper": "The lattice spacings of 0.27 and 0.21 nm and corresponding fast Fourier transforms (FFT) are assigned to (100) and (101) planes for hexagonal MoP in Figure 3e and f.",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.7b00555"
+}

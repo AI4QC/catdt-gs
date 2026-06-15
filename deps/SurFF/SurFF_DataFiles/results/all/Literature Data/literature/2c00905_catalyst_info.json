@@ -1,0 +1,20 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Fe"
+    ],
+    "crystal_phase": {
+        "Fe": "Fe(110)"
+    },
+    "exposed_crystal_plane_indices": {
+        "Fe": [
+            "Fe(110)"
+        ]
+    },
+    "Characterization_methods": [
+        "XPS",
+        "SXRD"
+    ],
+    "Proof in the paper": "The surface of a 4N5 purity Fe(110) single crystal was prepared and characterized using XPS and SXRD. The XPS and SXRD data confirmed the surface preparation and the presence of a clean metallic Fe(110) surface (see the Methods section and Section S1 in the Supporting Information for details).",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.2c00905"
+}

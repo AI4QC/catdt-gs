@@ -1,0 +1,19 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Ni-Co"
+    ],
+    "crystal_phase": {
+        "Ni-Co": "Lattice-strained Ni-Co alloy"
+    },
+    "characterization_methods": [
+        "HAADF STEM"
+    ],
+    "exposed_crystal_plane_indices": {
+        "Ni-Co": [
+            "(111)"
+        ]
+    },
+    "proof_in_the_paper": "The sub-angstrom spatial resolution and high sensitivity of incoherent scattering to atomic number associated with the HAADF-STEM imaging mode allows for efficient detection of even single Ni/Co atoms dispersed on or in the Al2O3 support. (21) The measured lattice spacing of Ni-Co particles was approximately 1.94 Å (see Figure 4D and Figure S13), which is slightly smaller than the standard value (2.04 Å) for the interplanar distance of face-centered cubic (fcc) Ni(111) and Co(111). This indicates that the postimpregnated Co is in a coherent substitution relationship with host Ni atoms, forming a Ni-Co solid solution alloy.",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.8b02821"
+}

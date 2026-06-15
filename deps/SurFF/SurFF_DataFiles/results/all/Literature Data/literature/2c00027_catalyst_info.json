@@ -1,0 +1,20 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "NiCo"
+    ],
+    "crystal_phase": {
+        "NiCo": "MEL-type structure of S-2"
+    },
+    "exposed_crystal_plane_indices": {
+        "NiCo": [
+            "(111)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD",
+        "HAADF-STEM"
+    ],
+    "Proof in the paper": "The XRD patterns for fresh catalysts are shown in Figure S2. Only the MEL-type structure of S-2 was identified, and no peaks related to the metal phase were detected due to the low metal loading or high dispersion of metal NPs. The morphologies and metal NPs were visualized using high-angle annular dark-field scanning transmission electron microscopy (HAADF-STEM) measurement, and the images of the reduced catalysts are displayed in Figures 1 and S3.",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.2c00027"
+}

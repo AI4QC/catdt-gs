@@ -1,0 +1,22 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "NiMo IMC"
+    ],
+    "crystal_phase": {
+        "NiMo IMC": "Intermetallic compound phase (PDF#48−1745)"
+    },
+    "exposed_crystal_plane_indices": {
+        "NiMo IMC": [
+            "(041)",
+            "(331)",
+            "(133)",
+            "(241)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD"
+    ],
+    "Proof in the paper": "The XRD pattern of NiMo IMC/Al2O3 sample shows characteristic reflections at 2θ 40.8°, 43.2°, 43.9° and 45.6°, which are indexed to (041), (331), (133) and (241) plane of NiMo intermetallic compound phase (PDF#48−1745).",
+    "url": "https://www.sciencedirect.com/science/article/pii/S092633732030984X"
+}

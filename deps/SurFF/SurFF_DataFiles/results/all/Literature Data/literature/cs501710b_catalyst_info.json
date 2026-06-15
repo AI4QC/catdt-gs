@@ -1,0 +1,31 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Pt–Au–Co",
+        "Pt–Ir–Co",
+        "Pt–Co",
+        "Pt"
+    ],
+    "Characterization_methods": [
+        "XRD",
+        "TEM",
+        "XPS",
+        "SAED"
+    ],
+    "exposed_crystal_plane_indices": {
+        "Pt–Au–Co": [
+            "(111)"
+        ],
+        "Pt–Ir–Co": [
+            "(111)"
+        ],
+        "Pt–Co": [
+            "(111)"
+        ],
+        "Pt": [
+            "(111)"
+        ]
+    },
+    "Proof in the paper": "The X-ray diffraction (XRD) analysis (Figure 2A,B) showed the fcc (111) peak of Pt–Au–Co alloys shifted toward lower angles with increasing Au content. The (111) peak of Pt–Ir–Co alloys remained essentially unchanged. Typical selected area electron diffraction (SAED) patterns are shown in the insets of Figure 1. All catalyst films are random solid solutions with face-centered cubic (fcc) crystal structures.",
+    "url": "https://pubs.acs.org/doi/10.1021/cs501710b"
+}

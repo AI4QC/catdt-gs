@@ -1,0 +1,25 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Pt3Sn",
+        "PtSn",
+        "SnO2"
+    ],
+    "crystal_phase": [
+        "cubic",
+        "hexagonal",
+        "tetragonal"
+    ],
+    "Characterization_methods": [
+        "HRTEM",
+        "XRD"
+    ],
+    "exposed_crystal_plane_indices": {
+        "Pt3Sn": [
+            "(111)",
+            "(200)"
+        ]
+    },
+    "Proof in the paper": "The results showed that the 1:1 catalyst sample heat-treated at 500°C (500N) contained a Pt-rich Pt3Sn-type cubic phase (a0=0.3965 nm) and tetragonal SnO2. The sample from the same precursors heat-treated at 900°C (900N) consisted of stoichiometric hexagonal PtSn, a nearly stoichiometric Pt3Sn-type cubic phase (a0=0.3988 nm), and tetragonal SnO2. The Pt3Sn-type particles are predominantly single nanocrystals with mean diameters of ∼3–4 nm (E270), ∼4 nm (500N), and ∼5 nm (900N), and the PtSn particles in the latter sample were larger. For the histograms of the particle size distribution of the catalysts, see Fig. 1. The Pt3Sn-type particles in the 500N and 900N are generally highly faceted, with {111} and {200} facets, whereas those in the E270 catalyst generally had a smooth spheroidal outline.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0021951705001193"
+}

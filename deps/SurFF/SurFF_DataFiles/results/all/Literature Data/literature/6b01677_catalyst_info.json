@@ -1,0 +1,25 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "PdZn",
+        "PdCu",
+        "Pd2Ga"
+    ],
+    "crystal_phase": {
+        "PdZn": "Intermetallic PdZn phase",
+        "PdCu": "One-to-one alloy phases for Pd–Cu and Pd–Fe"
+    },
+    "Characterization_methods": [
+        "XRD"
+    ],
+    "exposed_crystal_plane_indices": {
+        "PdZn": [
+            "(101)"
+        ],
+        "PdCu": [
+            "(110)"
+        ]
+    },
+    "Proof in the paper": "The TEM image of PdZn/Al2O3 (Figure 2) shows lattice fringes [spacing of 2.22 nm (Figure 2d, yellow lines)] that correspond to those of the PdZn(101) planes [2.19 nm, ICDD-PDF 00-006-0620 (Figure 2d, light blue lines)]. For PdCu, the report mentions the use of Pd(111), PdCu(110), and PdZn(111) planes for periodic density functional theory calculations, indicating the exposure of these planes on the catalyst surface.",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.6b01677"
+}

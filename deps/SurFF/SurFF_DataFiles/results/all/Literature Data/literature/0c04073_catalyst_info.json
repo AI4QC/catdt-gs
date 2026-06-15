@@ -1,0 +1,16 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": "InPd",
+    "crystal_phase": "intermetallic compound",
+    "Characterization_methods": [
+        "XRD",
+        "HR-TEM"
+    ],
+    "exposed_crystal_plane_indices": {
+        "InPd": [
+            "(100)"
+        ]
+    },
+    "Proof in the paper": "Additional HR-TEM micrographs showed small and well-dispersed InPd particles with diameters < 10 nm, which are identified via their (100) spacing of d = 3.2 Å on highly crystalline In2O3 particles (Figure 3b).",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.0c04073"
+}

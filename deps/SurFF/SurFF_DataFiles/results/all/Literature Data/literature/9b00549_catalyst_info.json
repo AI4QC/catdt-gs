@@ -1,0 +1,20 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Pt3Co",
+        "PtCo"
+    ],
+    "crystal_phase": {
+        "Pt3Co": "Au3Cu structure type",
+        "PtCo": "AuCu structure type"
+    },
+    "Characterization_methods": [
+        "XRD",
+        "STEM"
+    ],
+    "exposed_crystal_plane_indices": {
+        "Pt3Co": "(111)"
+    },
+    "Proof in the paper": "The XRD pattern for the 2Pt0.6Co catalyst indicates the presence of two phases: monometallic Pt and Pt3Co intermetallic alloy (Figure 9A). The EXAFS spectrum of the reduced particle (Table 2) and difference (Table 5) EXAFS spectrum of the surface have (Pt–Co):(Pt–Pt) CN ratios of around 0.5, consistent with a bulk and surface of Pt3Co. The XRD pattern for 2Pt4Co/SiO2 shows significant differences from the previous catalysts (Figure 9D). Two different phases can be identified in these nanoparticles. The first phase contains large, sharp peaks corresponding to a Co hcp pattern, suggesting the presence of larger monometallic Co nanoparticles. The second phase contains very small and broad peaks, indicating the presence of small bimetallic Pt–Co nanoparticles. However, due to the small size and the interference of much larger Co peaks, it is difficult to confirm the presence of either PtCo or Pt3Co. The summary of these characterizations leads to the structures and morphologies shown in Figure 12. The specific NP composition, structure, and morphology depend on the Pt:Co ratio and the availability of Co near the Pt NPs, which are initially formed. While the exact structure and morphology are different at different Co loadings, the surface of each is a Pt3Co structure.",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.9b00549"
+}

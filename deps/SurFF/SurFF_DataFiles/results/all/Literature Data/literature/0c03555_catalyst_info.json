@@ -1,0 +1,26 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Pd",
+        "PdBInc."
+    ],
+    "characterization_methods": [
+        "XRD",
+        "TEM",
+        "XAS"
+    ],
+    "exposed_crystal_plane_indices": {
+        "Pd": [
+            "(111)"
+        ],
+        "PdBInc./C": [
+            "(111)"
+        ]
+    },
+    "characterization_methods_for_exposed_indices": [
+        "XRD",
+        "TEM"
+    ],
+    "proof_in_the_paper": "From the XRD pattern, Pd(111) measured as a dominant plane in XRD, d-spacing/lattice parameter of PdBInc./C was calculated to be 2.334/4.044 Å from 38.54°. The d-spacing/lattice parameter from fast Fourier transform (FFT) and the line profile of PdBInc./C in TEM was measured to be avg. 2.345/4.062 and 2.338/4.050 Å, which also correspond well with the XRD results (Figures 1b and S2c). For Pd/C, the d-spacing/lattice parameter was measured to be 2.331/4.037 Å from 38.6° in XRD, 2.334/4.044 Å in FFT, and 2.325/4.027 Å in the line profile (Figures 1a and S2a,b).",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.0c03555"
+}

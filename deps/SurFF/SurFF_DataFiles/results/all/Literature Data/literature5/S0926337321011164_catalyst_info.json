@@ -1,0 +1,18 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": "Cu6Sn5",
+    "crystal_phase": {
+        "Cu6Sn5": "Cu6Sn5 (PDF#45–1488)"
+    },
+    "exposed_crystal_plane_indices": {
+        "Cu6Sn5": [
+            "(22−1)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD",
+        "TEM"
+    ],
+    "Proof in the paper": "The XRD pattern (Fig. 2d) showed the main peaks at 30.09°, 42.97°, 43.27 and 53.38° which were corresponded to the (22−1), (132), (42−2), and (24−1) planes of Cu6Sn5 (PDF#45–1488). TEM images in Fig. 2e showed that Cu6Sn5 were assembled by villous nanoparticles. The high-resolution TEM image (Fig. 2f) revealed that the crystal lattice spacing was estimated to be 0.304 nm, which was in accordance with the (22−1) crystal face of Cu6Sn5.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337321011164"
+}

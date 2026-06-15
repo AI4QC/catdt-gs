@@ -1,0 +1,26 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "PdCu2",
+        "PdCu2@Pt-H",
+        "PdCu2-Pt-K",
+        "PdCu2-Pt-K-HCl"
+    ],
+    "crystal_phase": {
+        "PdCu2": [
+            "disordered face-centered cubic (FCC)",
+            "ordered intermetallic body-centered cubic (BCC)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD"
+    ],
+    "exposed_crystal_plane_indices": {
+        "PdCu2": [
+            "(220) for FCC",
+            "(211) for BCC"
+        ]
+    },
+    "Proof in the paper": "The XRD pattern of PdCu2/C shows that the PdCu2 cores are a mixture of disordered face-centered cubic (FCC) and ordered intermetallic body-centered cubic (BCC) crystals (Fig. 2a), which is in good agreement with the phase diagram of Pd–Cu alloys. The sizes of the FCC and BCC crystals were calculated as 4.9 and 9.2 nm, respectively, using the Scherrer equation and the peak broadening of the (220) diffraction for FCC crystals and the (211) diffraction for BCC crystals.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337317311189"
+}

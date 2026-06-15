@@ -1,0 +1,19 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "CuCe"
+    ],
+    "crystal_phase": {
+        "CuCe": "not explicitly specified in the report"
+    },
+    "Characterization_methods": [
+        "HAADF-STEM"
+    ],
+    "exposed_crystal_plane_indices": {
+        "CuCe": [
+            "(1 1 1)"
+        ]
+    },
+    "Proof in the paper": "In the HAADF-STEM images, only CeO2 support with clear lattice fringe direction attributed to (1 1 1) was observed, which had a respective interplanar spacing of 0.32 nm. No separated Cu aggregations emerged both in 5CuCe-used and 20CuCe-used (Fig. 1c and 1d).",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0021951721003262"
+}

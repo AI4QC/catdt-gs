@@ -1,0 +1,26 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Pt",
+        "Pt–Na",
+        "Pt–Mg"
+    ],
+    "Characterization_methods": [
+        "XRD",
+        "STEM",
+        "EDX"
+    ],
+    "exposed_crystal_plane_indices": {
+        "Pt": [
+            "(110)"
+        ],
+        "Pt–Na": [
+            "(210)"
+        ],
+        "Pt–Mg": [
+            "(222)"
+        ]
+    },
+    "Proof in the paper": "The XRD pattern of Na/Al2O3 was similar to that of the parent Al2O3, without any observed diffraction peaks derived from NaAlO2 (Figure S5). The equilibrium of NaAlO2 formation from Na2O and Al2O3 described using HSC Chemistry 9 indicates that NaAlO2 is thermodynamically stable below 700 °C (Figure S6). A small and/or amorphous NaAlO2 phase is possibly formed owing to low Na loading, resulting in no observation of NaAlO2 in XRD measurement. Following the impregnation of Pt species and calcination (Pt–Na/Al2O3 before H2 reduction), new small peaks were observed at 2θ of 22.1, 35.3, and 56.2°, which were assigned to the (110), (210), and (222) NaPt3O4 diffraction peaks, (49) respectively (Figure S7). This suggests that small ternary oxides of Na and Pt were formed on Na/Al2O3. (50) We tried to prepare larger NaPt3O4 by increasing the loading amount with a similar Pt to Na molar ratio (Pt: 3 wt %, Na2O: 9 wt %), but no diffraction patterns derived from NaPt3O4 were observed (Figure S7). Upon H2 treatment, diffraction peaks derived from NaPt3O4 had disappeared, whereas those derived from metallic Pt were hardly observed, which is consistent with the formation of small Na-modified Pt NPs.",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.1c05339"
+}

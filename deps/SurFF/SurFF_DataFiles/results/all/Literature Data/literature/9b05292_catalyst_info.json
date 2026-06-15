@@ -1,0 +1,26 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "CGCu1Pd1",
+        "CGCu1Pd1/SDIr0.03"
+    ],
+    "crystal_phase": {
+        "CGCu1Pd1": "face-centered cubic polycrystalline structures",
+        "CGCu1Pd1/SDIr0.03": "face-centered cubic polycrystalline structures"
+    },
+    "exposed_crystal_plane_indices": {
+        "CGCu1Pd1": [
+            "(111)"
+        ],
+        "CGCu1Pd1/SDIr0.03": [
+            "(111)"
+        ]
+    },
+    "Characterization_methods": [
+        "X-ray diffraction (XRD)",
+        "selected area electron diffraction (SAED)",
+        "Fast Fourier transform (FFT)"
+    ],
+    "Proof in the paper": "The selected area electron diffraction (SAED) patterns (Figure 6, right) clearly reveal that both CGCu1Pd1 and CGCu1Pd1/SDIr0.03 NSs possess face-centered cubic polycrystalline structures. Their (111) d-spacings (Table 3) are derived from both the fast Fourier transform (FFT) and SAED patterns.",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.9b05292"
+}

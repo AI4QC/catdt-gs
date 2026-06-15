@@ -1,0 +1,20 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Pd–Rh"
+    ],
+    "crystal_phase": {
+        "Pd–Rh": "face-centered cubic (fcc)"
+    },
+    "exposed_crystal_plane_indices": {
+        "Pd–Rh": [
+            "(100)"
+        ]
+    },
+    "Characterization_methods": [
+        "PXRD",
+        "HRTEM"
+    ],
+    "Proof in the paper": "HRTEM image and corresponding fast Fourier transformation (FFT) pattern confirmed that the NCs were enclosed by six (100) facets.",
+    "url": "https://pubs.acs.org/doi/10.1021/cs5001625"
+}

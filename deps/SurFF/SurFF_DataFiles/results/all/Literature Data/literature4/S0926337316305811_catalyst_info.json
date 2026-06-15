@@ -1,0 +1,24 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Pt",
+        "PtNi"
+    ],
+    "crystal_phase": {
+        "PtNi": "γ-Al2O3"
+    },
+    "exposed_crystal_plane_indices": {
+        "Pt": [
+            "(111)"
+        ],
+        "PtNi": [
+            "(111)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD",
+        "STEM"
+    ],
+    "Proof in the paper": "The high resolution image of the PtNi NPs in Fig. 1c presents both Pt core with interplanar lattice fringes distance of 0.23 nm, corresponding to Pt (111) planes, and the obvious boundary around the Pt core. The STEM images and EDS mapping of Pt and PtNi NPs loaded on γ-Al2O3 are presented in Fig. 3.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337316305811"
+}

@@ -1,0 +1,26 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "RuFe"
+    ],
+    "crystal_phase": {
+        "RuFe": "hexagonal crystal structure (ICDD #03-065-6545)"
+    },
+    "exposed_crystal_plane_indices": {
+        "RuFe": [
+            "(010)",
+            "(002)",
+            "(011)",
+            "(012)",
+            "(110)",
+            "(013)",
+            "(020)",
+            "(112)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD"
+    ],
+    "Proof in the paper": "The XRD peaks of RuFe@NC-900(5h) were observed at 39.48, 43.09, 45.23, 59.87, 71.62, 80.51, 85.01, and 87.39° that correspond to the (010), (002), (011), (012), (110), (013), (020), and (112) planes (Figure 2a). This confirms the formation of the Ru-Fe alloy phase (ICDD #03-065-6545) and the hexagonal crystal structure.",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.1c04527"
+}

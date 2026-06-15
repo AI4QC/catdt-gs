@@ -1,0 +1,23 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "PtAu"
+    ],
+    "crystal_phase": {
+        "PtAu": "face centered cubic (fcc)"
+    },
+    "Characterization_methods": [
+        "XRD",
+        "TEM",
+        "EDS",
+        "XPS"
+    ],
+    "exposed_crystal_plane_indices": {
+        "PtAu": [
+            "{111}",
+            "{200}"
+        ]
+    },
+    "Proof in the paper": "The diffraction pattern of the latter catalyst shows the main characteristic peaks of the face centered cubic, fcc, Pt crystalline structure ([03-065-2868] ICDD-PDF) with the lattice parameter of 0.3928 nm and the average particle size of ∼2 nm. High resolution transmission electron micrographs, HRTEM, (Fig. 4B) clearly indicated that these particles are of fcc type whose orientation is close to {110} i.e. Fast Fourier transforms (FFTs) show planes of {111} and {200} types.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337318310312"
+}

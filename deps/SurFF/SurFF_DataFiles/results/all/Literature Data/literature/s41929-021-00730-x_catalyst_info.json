@@ -1,0 +1,16 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": "Pt–Co–In",
+    "crystal_phase": "(Pt1−xCox)2In3 pseudo-binary alloy structure",
+    "characterization_methods": [
+        "HAADF-STEM"
+    ],
+    "exposed_crystal_plane_indices": {
+        "Pt–Co–In": [
+            "(110)",
+            "(102)"
+        ]
+    },
+    "proof_in_the_paper": "Figure 1j shows an HAADF-STEM image of a single Pt–Co–In nanoparticle, where a crystal structure with interplanar distances of 2.28 and 2.29 Å was observed. These values were close to those of the (110) and (102) planes of intermetallic Pt2In3 (Fig. 1j,k).",
+    "url": "https://www.nature.com/articles/s41929-021-00730-x"
+}

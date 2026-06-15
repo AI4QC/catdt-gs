@@ -1,0 +1,29 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Co/HAP",
+        "Co8Ni2/HAP",
+        "Co5Ni5/HAP",
+        "Co2Ni8/HAP",
+        "Ni/HAP"
+    ],
+    "crystal_phase": {
+        "Co/HAP": "Co(111)",
+        "Ni/HAP": "Ni(111)",
+        "CoNi alloy nanoparticles": "fcc structure"
+    },
+    "Characterization_methods": [
+        "XRD",
+        "HRTEM"
+    ],
+    "exposed_crystal_plane_indices": {
+        "Co/HAP": [
+            "(111)"
+        ],
+        "Co5Ni5/HAP": [
+            "(111)"
+        ]
+    },
+    "Proof in the paper": "The Co/HAP and Ni/HAP catalysts display characteristic diffraction peaks belonging to Co(111) and Ni(111) at 44.2° and 44.7° respectively. There is only one diffraction peak between 44.2° and 44.7° on the bimetallic CoNi/HAP catalysts. It is highly possible that the lattice structure of Co (111) and Ni (111) are distorted, leading to the formation of CoNi alloy nanoparticles. HRTEM in Fig. 3c also shows that only one kind of lattice spacing (~ 0.208 nm) belonging to Co/Ni (111) could be observed in the Co5Ni5/HAP catalyst.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337322000789"
+}

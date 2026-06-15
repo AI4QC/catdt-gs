@@ -1,0 +1,25 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Ni2P",
+        "NiSe2"
+    ],
+    "crystal_phase": {
+        "Ni2P": "hexagonal Ni2P (JCPDS No. 03-0953)",
+        "NiSe2": "cubic NiSe2 (JCPDS No. 65-1843)"
+    },
+    "exposed_crystal_plane_indices": {
+        "Ni2P": [
+            "(111)"
+        ],
+        "NiSe2": [
+            "(211)"
+        ]
+    },
+    "Characterization_methods": [
+        "X-ray diffraction (XRD)",
+        "High-resolution TEM (HRTEM)"
+    ],
+    "Proof in the paper": "The clear lattice fringes with distances of 0.221 and 0.244 nm are corresponding to (111) plane of Ni2P and (211) plane of NiSe2, respectively, demonstrating that the nanoparticles are Ni2P while the nanosheets are assigned to NiSe2. (Fig. 2e)",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337319309920"
+}

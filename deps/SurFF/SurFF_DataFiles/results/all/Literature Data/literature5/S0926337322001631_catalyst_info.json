@@ -1,0 +1,27 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Pd",
+        "PdxAuy"
+    ],
+    "crystal_phase": {
+        "Pd": "face-centered cubic (Fm̅3̅m)",
+        "PdxAuy": "face-centered cubic (Fm̅3̅m)"
+    },
+    "Characterization_methods": [
+        "X-ray diffraction (XRD)",
+        "High-resolution transmission electron microscopy (HRTEM)"
+    ],
+    "exposed_crystal_plane_indices": {
+        "Pd": [
+            "(111)",
+            "(200)"
+        ],
+        "PdxAuy": [
+            "(111)",
+            "(200)"
+        ]
+    },
+    "Proof in the paper": "The X-ray diffraction (XRD) is performed to explore the crystalline structure of PdxAuy NWs (Fig. 2a). Pd NWs is a face-centered cubic structure with the space group Fm̅3̅m, and the crystal plane of (111) and (200) correspond to the lattice spacing of 0.225 nm and 0.195 nm, respectively, in accordance with the HRTEM results. The crystalline structure of PdxAuy NWs is still similar with the Pd NWs with increasing the Au content because of the low content of Au element. However, the peaks of (111) and (200) crystal planes are shifted towards a higher angle, suggesting the lattice spacing of Pd atoms becomes smaller due to the compression effect resulted from the outer Au atoms, in agreement with the TEM results (Fig. 2b).",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337322001631"
+}

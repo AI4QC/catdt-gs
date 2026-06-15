@@ -1,0 +1,19 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": "Pd3Pb",
+    "crystal_phase": {
+        "Pd3Pb": "Pd3Pb intermetallic phase (space group: Pm̅3m)"
+    },
+    "Characterization_methods": [
+        "X-ray diffraction (XRD)"
+    ],
+    "exposed_crystal_plane_indices": {
+        "Pd3Pb": [
+            "(111)",
+            "(200)",
+            "(110)"
+        ]
+    },
+    "Proof in the paper": "The XRD analysis indicated that the desired intermetallic Pd3Pb or monometallic Pd nanoparticles were successfully formed on several oxide supports. For all supports, apparent peaks corresponding to 111 and 200 diffractions of the Pd3Pb phase were observed at 38.6° and 44.9°, respectively (PDF #04-002-9725). A small peak assigned to 110 diffraction of Pd3Pb, which does not appear with an fcc structure due to distinction rule, was also observed at 31.3°.",
+    "url": "https://pubs.acs.org/doi/10.1021/cs501695m"
+}

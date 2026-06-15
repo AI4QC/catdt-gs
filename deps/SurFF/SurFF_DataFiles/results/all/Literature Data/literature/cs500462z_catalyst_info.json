@@ -1,0 +1,41 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Pd–Ni–P",
+        "Pd–Ni",
+        "Pd-blk"
+    ],
+    "crystal_phase": {
+        "Pd–Ni–P": "amorphous structure",
+        "Pd–Ni": "amorphous structure",
+        "Pd-blk": "face centered cubic (fcc)"
+    },
+    "characterization_methods": {
+        "Pd–Ni–P": [
+            "X-ray diffraction (XRD)"
+        ],
+        "Pd–Ni": [
+            "X-ray diffraction (XRD)"
+        ],
+        "Pd-blk": [
+            "X-ray diffraction (XRD)"
+        ]
+    },
+    "exposed_crystal_plane_indices": {
+        "Pd–Ni–P": [
+            "(111)"
+        ],
+        "Pd–Ni": [
+            "(111)"
+        ],
+        "Pd-blk": [
+            "(111)"
+        ]
+    },
+    "Proof in the paper": {
+        "Pd–Ni–P": "The peak for the (111) plane broadens when Ni and P are added to Pd.",
+        "Pd–Ni": "The peak for the (111) plane broadens when Ni and P are added to Pd.",
+        "Pd-blk": "The peak for the (111) plane broadens when Ni and P are added to Pd."
+    },
+    "url": "https://pubs.acs.org/doi/10.1021/cs500462z"
+}

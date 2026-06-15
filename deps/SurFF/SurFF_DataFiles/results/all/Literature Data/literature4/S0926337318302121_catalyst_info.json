@@ -1,0 +1,30 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "TePtCo",
+        "TePt"
+    ],
+    "crystal_phase": {
+        "TePtCo": "face-centered cubic (fcc) structure",
+        "TePt": "face-centered cubic (fcc) structure"
+    },
+    "exposed_crystal_plane_indices": {
+        "TePtCo": [
+            "(111)",
+            "(200)",
+            "(220)"
+        ],
+        "TePt": [
+            "(111)",
+            "(210)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD",
+        "TEM",
+        "HRTEM",
+        "HAADF-STEM-EDS"
+    ],
+    "Proof in the paper": "The XRD patterns (Fig. S3A) showed peaks at 39.9°, 46.2°, and 67.4° for TePtCo NTs/C, which can be assigned to the (111), (200), and (220) planes of fcc structure, respectively. The peaks at 30.6° and 45.5° for TePt NTs/C are assigned to the (111) and (210) plane of PtTe. HRTEM images (Fig. 2B) reveal clear lattice fringes of NPs with an interplanar distance of approximately 0.22 nm, corresponding to the (111) plane of the face-centered cubic (fcc) alloy structure.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337318302121"
+}

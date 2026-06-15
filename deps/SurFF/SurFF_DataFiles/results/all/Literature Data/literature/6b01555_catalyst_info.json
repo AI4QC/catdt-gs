@@ -1,0 +1,14 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": "Fe0.64Ni0.36",
+    "crystal_phase": "Alloy solid solution",
+    "characterization_methods": [
+        "XRD",
+        "TEM"
+    ],
+    "exposed_crystal_plane_indices": {
+        "Fe0.64Ni0.36": "(111)"
+    },
+    "proof_in_the_paper": "The peaks labeled as “★” in Figure 1A (b) were assigned to the diffraction peaks of Fe0.64Ni0.36 (PDF no. 47-1405), which was the in situ exsolved NPs from the LSFN backbone. The lattice space between the two parallel planes of the Fe–Ni alloy nanospheres was 0.2097 nm (Figure 2F), which is in close accordance with the calculated value of 0.2074 nm in (111) planes in the P space group of the Fe0.64Ni0.36 alloy.",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.6b01555"
+}

@@ -1,0 +1,20 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Pd2Ga"
+    ],
+    "crystal_phase": {
+        "Pd2Ga": "orthorhombic Pd2Ga"
+    },
+    "exposed_crystal_plane_indices": {
+        "Pd2Ga": [
+            "(020)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD",
+        "HR-TEM"
+    ],
+    "Proof in the paper": "The XRD patterns of the Pd/Ga products revealed only broad diffraction peaks corresponding to orthorhombic Pd2Ga (Figure 1a). HR-TEM analyses of the Pd/Ga colloids show the presence of well-defined spherical NPs with a lattice spacing consistent with the Pd2Ga crystalline phase (Figure 2). The average crystallite size of Pd2Ga particles was determined by applying the Scherrer equation to the most intense and not overlapped reflections at 44.8° (020) (Section).",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.6b02928"
+}

@@ -1,0 +1,19 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": "Pt/3DOM CZY",
+    "crystal_phase": "Fluorite-type structure of CeO2 with a face-centered-cubic (FCC) lattice",
+    "exposed_crystal_plane_indices": {
+        "Pt/3DOM CZY": [
+            "(111)",
+            "(200)",
+            "(220)",
+            "(311)",
+            "(222)",
+            "(400)",
+            "(331)"
+        ]
+    },
+    "Characterization_methods": "XRD",
+    "Proof in the paper": "The XRD measurements were conducted using a Philips PW-1800 diffractometer with Cu Kα radiation, and the results are illustrated in Figure 1. All of the diffraction peaks of the x wt % Pt/3DOM CZY samples could be indexed to (111), (200), (220), (311), (222), (400), and (331) lattice planes, and the CZY in x wt % Pt/3DOM CZY possessed a fluorite-type structure of CeO2 with a face-centered-cubic (FCC) lattice.",
+    "url": "https://pubs.acs.org/doi/10.1021/cs501773h"
+}

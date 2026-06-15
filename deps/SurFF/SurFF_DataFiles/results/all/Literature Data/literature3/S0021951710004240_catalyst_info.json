@@ -1,0 +1,8 @@
+{
+"is_metal_catalyst": "Yes",
+"chemical_composition": ["Al13Co4"],
+"crystal_phase": {"Al13Co4": "orthorhombic (Pearson symbol oP102, space group Pmn21, No. 31)"},
+"exposed_crystal_plane_indices": {"Al13Co4": ["(1\xa00\xa00)"]},
+"Characterization_methods": ["X-ray diffraction by single-crystal and powder specimens", "low-energy electron diffraction", "scanning tunneling microscopy (STM)"],
+"Proof in the paper": "The crystal structure of Al13Co4 has been determined by Grin et al. using X-ray diffraction by single-crystal and powder specimens. The structure is orthorhombic (Pearson symbol oP102, space group Pmn21, No. 31). The (1\xa00\xa00) surface has been investigated by Addou et al. using low-energy electron diffraction and scanning tunneling microscopy (STM)."
+}

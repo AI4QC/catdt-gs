@@ -1,0 +1,16 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": "Pt3Sn",
+    "crystal_phase": "L12 ordered structure",
+    "Characterization_methods": [
+        "X-ray diffraction (XRD)",
+        "Transmission electron microscopy (TEM)"
+    ],
+    "exposed_crystal_plane_indices": {
+        "Pt3Sn": [
+            "{100}"
+        ]
+    },
+    "Proof in the paper": "The X-ray diffraction (XRD) patterns of the acetic-acid-treated and the thermally treated nanocubes are shown in Figure 1a. The XRD patterns normalized by the 111 peak were used to calculate the degree of ordering from the ratio of (110) diffraction peak integration to its initial value as this peak is characteristic of the L12 ordered structure (highlighted in Figure 1b). The low-magnification transmission electron microscopy (TEM) image in Figure S1a and the histogram in Figure S1b show that 87% of the nanoparticles are cubic in shape, which are bounded by the {100} facets.",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.0c05370"
+}

@@ -1,0 +1,21 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Pt–Ni"
+    ],
+    "crystal_phase": {
+        "Pt–Ni": "determined by X-ray diffraction (XRD)"
+    },
+    "exposed_crystal_plane_indices": {
+        "Pt–Ni": [
+            "(100)",
+            "(110)",
+            "(111)"
+        ]
+    },
+    "Characterization_methods": [
+        "X-ray diffraction (XRD)"
+    ],
+    "Proof in the paper": "The XRD pattern, however, appeared to indicate that Pt lattice compression was still prevalent and likely improved the HER–HOR activity. Differences in exposed lattices may also have affected the performance (Figures 3d,e and S5). Although hydrogen annealing to 275 °C resulted in slightly more Pt{100} and slightly less Pt{111}, the differences were less than 5%. These results indicated that some heterogeneity in terms of lattice spacing (characteristically Pt to heavily compressed) and facet (although {100} dominant) existed, which may have resulted in a range of chemisorption strengths and activities at individual Pt sites. (16,25,62)",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.0c01568"
+}

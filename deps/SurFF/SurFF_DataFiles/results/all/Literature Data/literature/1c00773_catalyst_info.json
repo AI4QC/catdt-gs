@@ -1,0 +1,24 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": "NiFe LDH",
+    "crystal_phase": {
+        "NiFe LDH": [
+            "α-NiFe LDH",
+            "γ-NiFe LDH"
+        ]
+    },
+    "exposed_crystal_plane_indices": {
+        "α-NiFe LDH": [
+            "(003)"
+        ],
+        "γ-NiFe LDH": [
+            "(003)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD",
+        "WAXS"
+    ],
+    "Proof in the paper": "The diffraction profiles (Figure 2a) of either catalyst featured the expected set of Bragg reflections of the hydrotalcite structure (JCPDS: 00-014-0191). The α-NiFe LDH crystal structure is shown in Figure 2b. The structure involves brucite-type layers of Ni(II)O6 and Fe(III)O6 edge-connected octahedra with H terminated O pointing along the stacking direction. The positive charge of the layers is balanced by anions intercalated along with water molecules between the brucite units. Under oxidative potentials, the noncatalytic α-NiFe LDH phase transformed into γ-NiFe LDH concomitant to the Ni oxidation process, as illustrated by the Bode diagram in Figure 1b and experimentally confirmed by operando results. (7) This transformation is characterized by the contraction of the interlayer distance d (Figure 2b) associated with the (003) peak reflection.",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.1c00773"
+}

@@ -1,0 +1,28 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Ru/CeO2",
+        "Ru/Ce0.9Cr0.1Ox"
+    ],
+    "crystal_phase": {
+        "Ru/CeO2": "cubic fluorite structure",
+        "Ru/Ce0.9Cr0.1Ox": "cubic fluorite structure"
+    },
+    "exposed_crystal_plane_indices": {
+        "Ru/CeO2": [
+            "(101)",
+            "(211)"
+        ],
+        "Ru/Ce0.9Cr0.1Ox": [
+            "(111)",
+            "(220)",
+            "(311)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD",
+        "HRTEM"
+    ],
+    "Proof in the paper": "The XRD patterns of the catalysts and the corresponding supports are shown in Figure 1. For the individual CeO2 support, the three strongest peaks were observed at 2θ of 28.55, 47.48, and 56.34°, corresponding to diffraction of the (111), (220), and (311) facets of a cubic fluorite structure. For the RuO2/CeO2 sample, besides the diffraction peaks of the CeO2 support, two small peaks were also detected at 35.05 and 54.24°, which correspond to diffraction of the (101) and (211) facets of RuO2 microcrystallites. For the RuO2/Ce0.9Cr0.1Ox sample, whose Ru loading was same to that in RuO2/CeO2, no Ru-related species were detected, indicating that introduction of Cr into the CeO2 support hindered crystallization of surface RuO2.",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.0c05468"
+}

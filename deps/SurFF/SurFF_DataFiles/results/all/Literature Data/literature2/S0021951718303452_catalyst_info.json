@@ -1,0 +1,33 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Pt",
+        "Pt3Sn",
+        "Pt2Sn",
+        "PtSn"
+    ],
+    "crystal_phase": "determined by X-ray diffraction (XRD)",
+    "exposed_crystal_plane_indices": {
+        "Pt": [
+            "(111)",
+            "(200)"
+        ],
+        "Pt3Sn": [
+            "(111)",
+            "(200)"
+        ],
+        "Pt2Sn": [
+            "(111)",
+            "(200)"
+        ],
+        "PtSn": [
+            "(111)",
+            "(200)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD"
+    ],
+    "Proof in the paper": "The XRD patterns in the region where low index planes of the metals are present for as synthesized SiO2-supported Pt and Pt-Sn catalysts are displayed in Fig. 1. The 1Pt/SiO2 sample reveals features characteristic of Pt (111) and (200) at 39.8° and 46.1° (JCDPS 00-004-0802), respectively, whereas the addition of 0.2wt% Sn shifted the Pt (111) and (200) peaks to lower angles (39.2° and 45.7°) indicative of incorporation of Sn into the Pt lattice. Increasing the Sn content to 0.6wt% resulted in features associated with a Pt3Sn alloy of 39.0° and 45.4° (JCDPS 00-035-1360) and with a PtSn alloy at 41.7° and 44.0° (JCDPS 00-025-0614). Addition of 1.2wt% Sn decreased the intensity of the Pt3Sn alloy peaks while increasing the intensity of the PtSn alloy peaks. The most heavily Sn-promoted (2.4wt%) catalyst had peaks at 41.7° and 44.2°, suggesting the presence of PtSn alloy without any detectable Pt3Sn alloy.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0021951718303452"
+}

@@ -1,0 +1,26 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "PdPt"
+    ],
+    "crystal_phase": {
+        "PdPt": "face-centered cubic (fcc)"
+    },
+    "exposed_crystal_plane_indices": {
+        "PdPt": [
+            "(111)",
+            "(200)",
+            "(220)",
+            "(311)",
+            "(222)"
+        ]
+    },
+    "Characterization_methods": [
+        "TEM",
+        "XRD",
+        "STEM",
+        "STEM-EDX"
+    ],
+    "Proof in the paper": "The high-resolution TEM image exhibited two lattice spacings of 0.228 and 0.198 nm, indicating that PdPt nanowires were dominated by the (111) and (002) planes of fcc crystallographic orientation (Fig. 1d). The crystalline nature of the PdPt nanowires was also confirmed by wide-angle XRD (Fig. 1f). Five typical peaks can be indexed as the (111), (200), (220), (311), and (222) reflections of typical fcc nanocrystals.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337318306787"
+}

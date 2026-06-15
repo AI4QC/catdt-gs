@@ -1,0 +1,20 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "PdAg"
+    ],
+    "crystal_phase": {
+        "PdAg": "alloy structure"
+    },
+    "Characterization_methods": [
+        "HRTEM",
+        "XRD"
+    ],
+    "exposed_crystal_plane_indices": {
+        "PdAg": [
+            "(111)"
+        ]
+    },
+    "Proof in the paper": "The HRTEM and elements analysis strongly suggest that in the forming process of nanowires, PdAg alloy nanoparticles were first formed and then grow into nanowires. (36, 38, 39) The crystalline phase of the PdAg nanowires was further studied with powder XRD measurement. Figure 3 shows the XRD pattern of the PdAg nanowires. It can be clearly seen that the nanowires show clear diffraction peaks, corresponding to the (111), (200), (220), and (311) planes as labeled in Figure 3. The distribution of Pd and Ag in the whole nanowires was studied with element analysis mapping. Figure 2C–F shows the HAADF-STEM image and selected-area element analysis maps of Pd, Ag and the overlay. The element maps reveal that the elements of Pd and Ag are homogeneously dispersed in the PdAg nanowires, indicating the formation of alloy structure.",
+    "url": "https://pubs.acs.org/doi/10.1021/cs200538g"
+}

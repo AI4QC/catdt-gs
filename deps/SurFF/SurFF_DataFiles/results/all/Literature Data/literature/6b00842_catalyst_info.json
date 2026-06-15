@@ -1,0 +1,16 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": "Pt3Ni",
+    "crystal_phase": "Not explicitly mentioned in the report",
+    "exposed_crystal_plane_indices": {
+        "Pt3Ni": [
+            "(111)"
+        ]
+    },
+    "Characterization_methods": [
+        "LEIS",
+        "SXS"
+    ],
+    "Proof in the paper": "The modeling of the different Pt3Ni(111) terminations used in this work have been based on LEIS and SXS measurements of Stamenkovic et al. (5, 6)",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.6b00842"
+}

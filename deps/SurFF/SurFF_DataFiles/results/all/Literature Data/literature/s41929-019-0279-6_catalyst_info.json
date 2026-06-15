@@ -1,0 +1,14 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": "PtNi",
+    "characterization_methods": [
+        "HAADF-STEM"
+    ],
+    "exposed_crystal_plane_indices": {
+        "PtNi": [
+            "(111)"
+        ]
+    },
+    "proof_in_the_paper": "The HAADF-STEM results show an ultrafine one-dimensional (1D) crystalline configuration with rich surface defects, concave cavity sites and steps, as highlighted by white arrows in Fig. 2a. The HAADF-STEM image shows that the (111) spacing is 0.225 nm (Fig. 2a), ~2.2% smaller than that of crystalline Pt (0.230 nm).",
+    "url": "https://www.nature.com/articles/s41929-019-0279-6"
+}

@@ -1,0 +1,19 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "PtRh"
+    ],
+    "crystal_phase": {
+        "PtRh": "Alloy"
+    },
+    "Characterization_methods": [
+        "HAADF STEM"
+    ],
+    "exposed_crystal_plane_indices": {
+        "PtRh": [
+            "(111)"
+        ]
+    },
+    "Proof in the paper": "The lattice spacing is measured to be 0.217 nm (Figure 1f), corresponding to the (111) facets of the PtRh alloy. All the positions of characteristic diffraction peaks PtRh NDs/C are between the corresponding diffraction peaks of Pt and Rh (Figure 1g), and the position of the characteristic peak gradually approaches that of Rh as the content of Rh increases (Figure S2), in line with the changed lattice spacing owing to the formation of the PtRh alloy.",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.1c05462"
+}

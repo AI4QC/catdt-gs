@@ -1,0 +1,30 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Co-MOF",
+        "CoFe-MOF",
+        "Fe-MOF"
+    ],
+    "crystal_phase": {
+        "Co-MOF": "diaqua-bis(5-carboxy-1H-imidazole-4-carboxylate)cobalt(II) (CCDC no. 998828)"
+    },
+    "exposed_crystal_plane_indices": {
+        "Co-MOF": [
+            "(110)",
+            "(001)"
+        ],
+        "CoFe-MOF": [
+            "(110)",
+            "(001)"
+        ],
+        "Fe-MOF": [
+            "(110)",
+            "(001)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD"
+    ],
+    "Proof in the paper": "The structural features of as-prepared MOFs were characterized by the XRD technique (Figure 3a). The results verified that Co-MOF, CoFe-MOF, and Fe-MOF samples have a similar structure, consistent with the simulated phase of diaqua-bis(5-carboxy-1H-imidazole-4-carboxylate)cobalt(II) (CCDC no. 998828).",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.9b00072"
+}

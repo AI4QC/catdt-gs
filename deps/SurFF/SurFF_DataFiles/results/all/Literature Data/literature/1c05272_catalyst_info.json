@@ -1,0 +1,22 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": "Cu–Zn",
+    "crystal_phase": {
+        "Cu–Zn": [
+            "ZnO",
+            "Cu2O"
+        ]
+    },
+    "Characterization_methods": [
+        "X-ray diffraction (XRD)",
+        "X-ray photoelectron spectroscopy (XPS)",
+        "High-resolution transmission electron microscopy (HR-TEM)"
+    ],
+    "exposed_crystal_plane_indices": {
+        "Cu–Zn": [
+            "Zn(101)"
+        ]
+    },
+    "Proof in the paper": "The lattice fringe at the shell layer corresponded to Zn(101) (Figure 4B), consistent with the elemental distribution of the core–shell sample after 20 min electrocatalytic CO2RR (Figure 4C).",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.1c05272"
+}

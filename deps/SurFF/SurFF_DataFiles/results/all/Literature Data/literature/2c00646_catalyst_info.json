@@ -1,0 +1,16 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": "Cu–Pd",
+    "crystal_phase": "single face-centered cubic (fcc) phase",
+    "Characterization_methods": [
+        "X-ray diffraction (XRD)",
+        "High-resolution transmission electron microscopy (HRTEM)"
+    ],
+    "exposed_crystal_plane_indices": {
+        "Cu–Pd": [
+            "(100)"
+        ]
+    },
+    "Proof in the paper": "High-resolution transmission electron microscopy (HRTEM) images show polycrystalline nanostructures with crystal domains on the sub-10 nm scale for all of the three alloy compositions (Figure 1b–d).",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.2c00646"
+}

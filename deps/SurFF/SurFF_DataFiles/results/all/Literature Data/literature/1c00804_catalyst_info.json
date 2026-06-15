@@ -1,0 +1,23 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "PdBi"
+    ],
+    "crystal_phase": {
+        "PdBi": "β-PdBi2 (space group I4/mmm (139), tetragonal structure)"
+    },
+    "Characterization_methods": [
+        "HAADF-STEM",
+        "XRD",
+        "EXAFS"
+    ],
+    "exposed_crystal_plane_indices": {
+        "PdBi": [
+            "(105)",
+            "(110)",
+            "(103)"
+        ]
+    },
+    "Proof in the paper": "The nanoparticles seen in PdBi/Calcite (Figure 1c,d), however, show lattice distances of ca. 0.205, 0.237, and 0.265 nm, which correspond to the (105), (110), and (103) lattice planes of β-PdBi2 (space group I4/mmm (139), tetragonal structure). (42) The corresponding interplanar angle and fast Fourier transform (FFT, Figure 1e) pattern further confirm these results.",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.1c00804"
+}

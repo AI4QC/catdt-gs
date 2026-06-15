@@ -1,0 +1,22 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Co–Fe alloy"
+    ],
+    "crystal_phase": {
+        "Co–Fe alloy": "Co–Fe alloy nanoparticles"
+    },
+    "exposed_crystal_plane_indices": {
+        "Co–Fe alloy": [
+            "(1 1 0)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD",
+        "EDX",
+        "TEM",
+        "High-resolution TEM"
+    ],
+    "Proof in the paper": "The lattice space between the two parallel planes of the Co–Fe alloy nanoparticles is 0.212 nm (Figure 3F), which is closely in accordance with the calculated value of 0.202 nm in (1 1 0) planes of the Co–Fe alloy in space group Pm3̅m (221).",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.5b02296"
+}

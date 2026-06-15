@@ -1,0 +1,25 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Ru/CNT",
+        "RuFe/CNT"
+    ],
+    "exposed_crystal_plane_indices": {
+        "Ru/CNT": [
+            "(101)",
+            "(100)"
+        ],
+        "RuFe/CNT": [
+            "(100)",
+            "(101)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD",
+        "XPS",
+        "TEM",
+        "HRTEM"
+    ],
+    "Proof in the paper": "The XRD patterns of the as-reduced RuFe/CNT catalysts with different Ru/Fe atomic ratios are shown in Figure 2. Distinct diffraction peaks of the metallic Ru species (2θ = 38.5°, 42.3°, and 44.0°) were observed in the XRD pattern of Ru/CNT. The representative HRTEM image of as-reduced Ru1Fe1/CNT catalyst as shown in Figure 5 indicated that the two intervals of 0.200 and 0.226 nm between the corresponding two lattice fringes were slightly smaller than the (101) and (100) lattice spacings of ruthenium in the Ru/CNT catalyst with p63/mmc structure. The included angle around 25° of the two facets in the Ru1Fe1/CNT is very close to the theoretical value of 28.45° between the {100} and {101} facets, implying that the exposed crystal planes of the Ru1Fe1/CNT catalyst were dominated by {100} and {101} facets of Ru–Fe alloy.",
+    "url": "https://pubs.acs.org/doi/10.1021/cs200386q"
+}

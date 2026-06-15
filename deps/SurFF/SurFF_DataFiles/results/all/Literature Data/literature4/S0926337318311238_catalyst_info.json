@@ -1,0 +1,20 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "CoMo"
+    ],
+    "crystal_phase": {
+        "CoMo": "2H-MoS2 (hexagonal structure)"
+    },
+    "Characterization_methods": [
+        "XRD"
+    ],
+    "exposed_crystal_plane_indices": {
+        "CoMo": [
+            "(002)",
+            "(100)"
+        ]
+    },
+    "Proof in the paper": "The MoS2 (002) peak at 2θ = 14.2° indicates a multilayered MoS2 structure over s-CoMo/G-IM [43]. In contrast, no multilayered MoS2 peaks at 2θ = 14.2° are detected in the XRD patterns of s-CoMo/G-HMBx, suggesting that the MoS2 nanoparticles on these catalysts are well-dispersed on graphene. No characteristic peaks of cobalt species were observed in the XRD patterns because of low cobalt loading on all the catalysts.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337318311238"
+}

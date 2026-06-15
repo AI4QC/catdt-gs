@@ -1,0 +1,19 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": "PtCu",
+    "crystal_phase": {
+        "PtCu": "L11 (R3̅m rhombohedral)"
+    },
+    "Characterization_methods": [
+        "XRD",
+        "HAADF-STEM"
+    ],
+    "exposed_crystal_plane_indices": {
+        "PtCu": [
+            "(021)",
+            "(205)"
+        ]
+    },
+    "Proof in the paper": "The lattice spacings from the HAADF-STEM image of a single particle are calculated to be 0.436 and 0.230 nm, which correspond to the (021) and (205) planes of the intermetallic PtCu, manifesting that the Int-PtCuN/KB nanoparticles prepared have an ordered intermetallic R3̅m rhombohedral L11 structure.",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.0c04021"
+}

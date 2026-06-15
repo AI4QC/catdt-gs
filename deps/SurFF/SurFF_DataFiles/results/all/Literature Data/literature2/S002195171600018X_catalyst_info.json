@@ -1,0 +1,22 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Pd–Pt"
+    ],
+    "crystal_phase": {
+        "Pd–Pt": "Core–shell nanocubes"
+    },
+    "exposed_crystal_plane_indices": {
+        "Pd–Pt": [
+            "(0001)",
+            "(1100)",
+            "(1101)"
+        ]
+    },
+    "Characterization_methods": [
+        "HRTEM",
+        "ETEM"
+    ],
+    "Proof in the paper": "High resolution image of the edge and the corner of such a frame concave nanocrystal, seen in Fig. 2, corresponds to the epitaxial growth of Pt on the (0001) Pd faces. Despite of a mismatch of 1.4% between the Pt and Pd atomic radius, the (0002) lattice planes are continuous at the interface, due to the accommodation of Pt on the Pd substrate, with some distortions. It confirms that Pt is mainly deposited near the corners, creating some higher index facets.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S002195171600018X"
+}

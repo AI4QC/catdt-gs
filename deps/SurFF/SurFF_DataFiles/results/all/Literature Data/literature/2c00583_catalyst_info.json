@@ -1,0 +1,26 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Co3Mo3N",
+        "CoMo",
+        "Co/SiO2"
+    ],
+    "crystal_phase": {
+        "Co3Mo3N": "cubic CMN phase",
+        "CoMo": "mixed phase of Co7Mo6 alloy and metallic Mo",
+        "Co/SiO2": "not specified"
+    },
+    "characterization_methods": [
+        "DFT calculations"
+    ],
+    "exposed_crystal_plane_indices": {
+        "Co3Mo3N": [
+            "(111)"
+        ],
+        "CoMo": [
+            "(001)"
+        ]
+    },
+    "proof_in_the_paper": "The (001) surface of rhombohedral Co7Mo6 structure and the (111) surface of cubic CMN structure were modeled with a 2 × 2 slab for CM and CMN catalysts, respectively, in which the top two layers of atoms and the coordination of H and O were relaxed. (4,45−47)",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.2c00583"
+}

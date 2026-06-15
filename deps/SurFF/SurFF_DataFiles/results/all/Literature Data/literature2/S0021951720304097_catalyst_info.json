@@ -1,0 +1,34 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Ni3Zn1-MMO",
+        "Ni1Zn1-MMO",
+        "Ni1Zn3-MMO"
+    ],
+    "crystal_phase": {
+        "Ni3Zn1-MMO": "α-NiZn",
+        "Ni1Zn1-MMO": "α-NiZn",
+        "Ni1Zn3-MMO": "β-NiZn"
+    },
+    "exposed_crystal_plane_indices": {
+        "Ni3Zn1-MMO": [
+            "(111)",
+            "(200)"
+        ],
+        "Ni1Zn1-MMO": [
+            "(111)",
+            "(200)"
+        ],
+        "Ni1Zn3-MMO": [
+            "(231)",
+            "(522)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD",
+        "HRTEM",
+        "XAFS"
+    ],
+    "Proof in the paper": "The XRD patterns of the resulting Ni and NiZn alloy catalysts show characteristic reflections of Ni(111) and Ni(200) for Ni3Zn1-MMO and Ni1Zn1-MMO, and reflections of (231) and (522) for Ni1Zn3-MMO, indicating the formation of NiZn alloy with different phases. HRTEM images confirm the lattice spacing corresponding to these planes.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0021951720304097"
+}

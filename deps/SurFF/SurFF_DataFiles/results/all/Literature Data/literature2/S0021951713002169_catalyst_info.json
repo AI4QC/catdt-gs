@@ -1,0 +1,26 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Ni",
+        "NiCo",
+        "NiCoCe"
+    ],
+    "crystal_phase": {
+        "Ni": "NiO",
+        "NiCo": "mixed oxides of Ni and Co",
+        "NiCoCe": "CeO2"
+    },
+    "Characterization_methods": [
+        "XRD",
+        "HRTEM"
+    ],
+    "exposed_crystal_plane_indices": {
+        "NiCoCe": [
+            "(111)",
+            "(110)",
+            "(100)"
+        ]
+    },
+    "Proof in the paper": "In Fig. 4A, fringes of several crystallites in different orientations can be seen. Using the Fourier filtering techniques for this image, an electron diffraction pattern can be obtained that is shown in Fig. 4B. Reflections can be seen at least from three different lattices. Circles indicated by “a,” “b,” and “c” correspond to d-spacing of ca. 4.65 Å, 3.12 Å, and 2.4 Å, respectively, which can be attributed to reflections from crystal planes of different spinels (CoAl2O4 (1 1 1), NiAl2O4 (1 1 1), MgAl2O4 (1 1 1)) as well as CeO2 (1 1 1) and different metal oxides (CoO (1 1 1), NiO (1 1 1), MgO(1 1 1)), respectively.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0021951713002169"
+}

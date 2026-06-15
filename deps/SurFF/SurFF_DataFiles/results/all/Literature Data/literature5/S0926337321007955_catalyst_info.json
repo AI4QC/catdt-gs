@@ -1,0 +1,20 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Ni-Pt/Al2O3"
+    ],
+    "crystal_phase": {
+        "Ni-Pt/Al2O3": "Ni phase (JCPDS No. 04-0850), Pt phase (JCPDS No. 04-0802)"
+    },
+    "exposed_crystal_plane_indices": {
+        "Ni-Pt/Al2O3": [
+            "(111)",
+            "(200)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD"
+    ],
+    "Proof in the paper": "Fig. 1 shows the diffraction patterns of reduced bimetallic catalysts. It can be seen that all samples contain Al2O3 phase (JCPDS No. 79-1558) at 2θ= 37.7°, 45.8°, and 66.8°. Moreover, diffraction peaks at 44.3°and 51.7°, which are indexed to the planes (111) and (200) of Ni phase (JCPDS No. 04-0850), respectively, are presented in all samples. Specifically, the Ni (200) plane is employed to estimate the crystal size (see Table 1). For these bimetallic catalysts, a new peak at 39° is detected for NiPt/Al2O3 and Pt-Ni/Al2O3 catalyst, attributing to Pt (111) plane (JCPDS No. 04-0802).",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337321007955"
+}

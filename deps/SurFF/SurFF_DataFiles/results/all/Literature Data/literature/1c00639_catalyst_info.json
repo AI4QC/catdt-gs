@@ -1,0 +1,21 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Pt-Sn"
+    ],
+    "crystal_phase": {
+        "Pt-Sn": "disordered Pt3Sn alloy with face-centered cubic (fcc) configuration"
+    },
+    "Characterization_methods": [
+        "XRD",
+        "HR-TEM"
+    ],
+    "exposed_crystal_plane_indices": {
+        "Pt3Sn": [
+            "(111)",
+            "(200)"
+        ]
+    },
+    "Proof in the paper": "With Sn addition, diffraction peaks of (111) and (200) shift to a lower diffraction angle (Figure 1c). The degrees of the diffraction pattern from Pt-Sn/SBA-15 differ from the one of intermetallic Pt3Sn because disordered a Pt3Sn alloy phase formed. Fringe spacings expanded from 0.225 nm of Pt(111) (Figure 1a) to 0.237 nm of Pt3Sn(111) (Figure 1b). These phenomena indicate that the relatively larger Sn atoms were incorporated into the Pt lattice to form a disordered Pt3Sn alloy with the face-centered cubic (fcc) configuration maintained. (11,28,47,48)",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.1c00639"
+}

@@ -1,0 +1,24 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "RuTe2"
+    ],
+    "crystal_phase": {
+        "RuTe2": "orthorhombic"
+    },
+    "exposed_crystal_plane_indices": {
+        "RuTe2": [
+            "(111)",
+            "(120)",
+            "(211)",
+            "(031)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD",
+        "TEM",
+        "SAED"
+    ],
+    "Proof in the paper": "The XRD patterns (Fig. 1b) showed distinct characteristic peaks of orthorhombic RuTe2 (PDF#44−1405) indicating a temperature dependence of crystalline degree. The TEM images (Fig. 2) and SAED pattern (Fig. 2h) confirmed the crystalline nature of RuTe2 with lattice spacings corresponding to the (111), (120), (211), and (031) facets of orthorhombic RuTe2.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337320306962"
+}

@@ -1,0 +1,20 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "MoP"
+    ],
+    "crystal_phase": {
+        "MoP": "hexagonal-WC structure"
+    },
+    "Characterization_methods": [
+        "High-resolution TEM",
+        "XRD"
+    ],
+    "exposed_crystal_plane_indices": {
+        "MoP": [
+            "(001)"
+        ]
+    },
+    "Proof in the paper": "The (001) surface was selected in previous work from a subset of possible exposed surfaces based on stability analysis using the Bravais–Friedel–Donnay–Harker (BFDH) crystal morphology algorithm as a first approximation. (30, 31) Qualitative comparisons were successfully made between theoretical and experimental results using this model P-terminated surface, (4) and experimental high-resolution TEM and XRD studies have supported assumptions of (001) facet stability. (2)",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.6b03403"
+}

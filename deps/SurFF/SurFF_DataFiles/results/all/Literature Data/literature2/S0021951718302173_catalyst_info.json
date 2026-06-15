@@ -1,0 +1,24 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "PdRu"
+    ],
+    "crystal_phase": {
+        "PdRu": "face centered cubic (fcc)"
+    },
+    "exposed_crystal_plane_indices": {
+        "PdRu": [
+            "(111)",
+            "(002)",
+            "(022)",
+            "(311)",
+            "(222)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD",
+        "HRTEM"
+    ],
+    "Proof in the paper": "The well-defined face centered cubic (fcc) was observed for all PdRu alloy nanoparticles of different sizes and the diffraction peaks for PdRu alloy nanoparticles were attributed to (111), (002), (022), (311) and (222) facets respectively. Based on Bragg’s equation, the (111) inter plane distances of PdRu alloy nanoparticles were calculated to be 2.23 Å, in agreement with that derived from HRTEM results.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0021951718302173"
+}

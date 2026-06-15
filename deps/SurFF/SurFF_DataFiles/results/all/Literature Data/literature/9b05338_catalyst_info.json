@@ -1,0 +1,15 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": "Ni2P",
+    "crystal_phase": "Ni2P",
+    "Characterization_methods": [
+        "Powder X-ray diffraction (XRD)",
+        "X-ray photoelectron spectroscopy (XPS)",
+        "Density functional theory (DFT)"
+    ],
+    "exposed_crystal_plane_indices": {
+        "Ni2P": "(001)"
+    },
+    "Proof in the paper": "Peak widths in the powder X-ray diffraction (XRD) patterns before and after H2 annealing correspond to a similar Scherrer size of 18 nm (Figure 1). Using DFT, we determine that a large variety of adsorbates (H, O, N, NO) induce a reconstruction of the Ni-rich surface (Figure 7c).",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.9b05338"
+}

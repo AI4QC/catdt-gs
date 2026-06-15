@@ -1,0 +1,21 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Ni–Mo"
+    ],
+    "crystal_phase": {
+        "Ni–Mo": "fcc Ni"
+    },
+    "exposed_crystal_plane_indices": {
+        "Ni–Mo": [
+            "Ni(111)"
+        ]
+    },
+    "Characterization_methods": [
+        "HAADF-STEM",
+        "EDX spectroscopy",
+        "DFT calculations"
+    ],
+    "Proof in the paper": "Only fcc Ni was observed during electron diffraction measurements (Figure S3). The Ni(111) surface was modeled by a three-layer-thick p(4 × 4) slab with dimensions of 997 pm × 997 pm.",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.0c02743"
+}

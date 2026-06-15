@@ -1,0 +1,16 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Au/Ni"
+    ],
+    "Characterization_methods": [
+        "X-ray absorption spectroscopy (XAS)"
+    ],
+    "exposed_crystal_plane_indices": {
+        "Au/Ni": [
+            "(111)"
+        ]
+    },
+    "Proof in the paper": "The report states, \"All calculations were based on (111)-oriented slabs of Ni, modified by introduction of Au atoms (see the Supporting Information for details), step sites, or both as (111) planes are expected to dominate the surfaces of relatively large particles such as ours.\"",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.8b05154"
+}

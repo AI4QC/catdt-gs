@@ -1,0 +1,27 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Sn-In alloy",
+        "InSn4"
+    ],
+    "crystal_phase": {
+        "InSn4": "InSn4 (JCPDS: 48-1547)"
+    },
+    "exposed_crystal_plane_indices": {
+        "InSn4": [
+            "(001)",
+            "(100)",
+            "(101)",
+            "(110)",
+            "(111)",
+            "(200)",
+            "(102)",
+            "(201)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD"
+    ],
+    "Proof in the paper": "The crystalline structure of the resulting Sn-In alloy nanoparticles was examined by XRD measurements. From Fig. 1a, SnIn-3 (the sample prepared at the Sn:In molar ratio of 3:1) exhibit a series of well-defined diffraction peaks that are indexed to InSn4 (JCPDS: 48-1547) at 2θ = 29.7° (001), 32.0° (100), 44.3° (101), 57.1° (110), 65.8° (111), 67.0° (200), 71.4° (102), and 75.1° (201).",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337321001053"
+}

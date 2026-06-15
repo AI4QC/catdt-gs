@@ -1,0 +1,32 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Mo2B",
+        "α-MoB",
+        "MoB2",
+        "Ti2B",
+        "Cr2B",
+        "Mn2B",
+        "Fe2B",
+        "Co2B",
+        "Ni2B",
+        "Ta2B",
+        "W2B"
+    ],
+    "exposed_crystal_plane_indices": {
+        "Mo2B": [
+            "(001)"
+        ],
+        "α-MoB": [
+            "(001)"
+        ],
+        "MoB2": [
+            "(001)"
+        ]
+    },
+    "Characterization_methods": [
+        "Density functional theory (DFT) calculations"
+    ],
+    "Proof in the paper": "The report states, \"The (2 × 2) supercell of Mo2B, (3 × 3) supercell of α-MoB, and (3 × 3) supercell of α-MoB2 were constructed to model the boron-terminated (001) surface.\" This indicates that the (001) surface was modeled for each of the mentioned metal borides using DFT calculations.",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.9b04103"
+}

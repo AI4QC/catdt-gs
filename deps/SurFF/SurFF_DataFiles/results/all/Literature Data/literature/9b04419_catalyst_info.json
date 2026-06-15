@@ -1,0 +1,27 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Pt3Co",
+        "Ga-doped Pt3Co"
+    ],
+    "crystal_phase": {
+        "Pt3Co": "face-centered cubic (fcc)",
+        "Ga-doped Pt3Co": "face-centered cubic (fcc)"
+    },
+    "exposed_crystal_plane_indices": {
+        "Pt3Co": [
+            "(111)",
+            "(200)"
+        ],
+        "Ga-doped Pt3Co": [
+            "(111)",
+            "(200)"
+        ]
+    },
+    "Characterization_methods": [
+        "PXRD",
+        "HRTEM"
+    ],
+    "Proof in the paper": "The PXRD patterns (Figure 1d) of the NWs show several diffraction peaks, which can be assigned to face-centered cubic (fcc) phases. The HRTEM image of PtCoGa nanoparticles on the surface of NWs is displayed in Figure 1e and the inset, where the spacings of the lattice measured to be 0.226 and 0.194 nm correspond to the (111) and (200) crystal facets of 4% Ga–Pt3Co, respectively, slightly larger than those of Pt3Co (0.222 and 0.192 nm).",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.9b04419"
+}

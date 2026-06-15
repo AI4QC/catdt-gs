@@ -1,0 +1,10 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": "PdAu",
+    "Characterization_methods": "STM",
+    "exposed_crystal_plane_indices": {
+        "PdAu": "(111)"
+    },
+    "Proof in the paper": "The STM images of the PdAu(111) SAA surface reveal that Pd alloys into Au by entering the surface layer via the edge dislocation present at the herringbone elbow of the Au(111) 22 × √3 reconstruction (Figure 1c).",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.9b00491"
+}

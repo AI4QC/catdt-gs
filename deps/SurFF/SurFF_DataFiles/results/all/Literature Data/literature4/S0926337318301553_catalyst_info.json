@@ -1,0 +1,30 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "RhFe",
+        "B-Rh",
+        "B-Fe",
+        "RF21"
+    ],
+    "crystal_phase": {
+        "Rh": "PDF No.#050685",
+        "FeRh alloy": "PDF No.#650986"
+    },
+    "exposed_crystal_plane_indices": {
+        "RhFe": [
+            "(111)",
+            "(200)",
+            "(220)",
+            "(311)",
+            "(100)",
+            "(110)",
+            "(200)",
+            "(211)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD"
+    ],
+    "Proof in the paper": "The peaks located at 2θ of 41.1°, 47.8°, 69.9° and 84.4° are assigned to (111), (200), (220) and (311) planes of Rh (PDF No.#050685), and peaks located at 2θ of 29.8°, 42.7°, 62.0° and 78.2° are assigned to (100), (110), (200) and (211) planes of FeRh alloy (PDF No.#650986).",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337318301553"
+}

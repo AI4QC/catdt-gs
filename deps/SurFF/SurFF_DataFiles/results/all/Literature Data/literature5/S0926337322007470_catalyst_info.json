@@ -1,0 +1,20 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Ni3Zn"
+    ],
+    "crystal_phase": {
+        "Ni3Zn": "face-centered cubic (fcc) Ni3Zn alloy"
+    },
+    "characterization_methods": [
+        "HAADF-STEM"
+    ],
+    "exposed_crystal_plane_indices": {
+        "Ni3Zn": [
+            "(111)",
+            "(200)"
+        ]
+    },
+    "Proof in the paper": "The X-ray diffraction (XRD) pattern and HAADF-STEM image with corresponding EDS elemental mappings of NiO−ZnO/Al2O3 were used to study the structure of NiO−ZnO/Al2O3 (Fig. 2). Fig. 2a shows that obvious diffraction peaks appeared for the presence of NiO and ZnO, and the absent peaks of Al2O3 suggests the formation of amorphous form. In addition, Fig. 2b presents that O element (green color) well scattered in the whole sample, and Al element (orange color) together with Ni element (blue color) were homogeneously dispersed in sheet-like morphology, which closely interacted with Zn element (red color). Finally, reaction-induced method was conducted to generate Ni3ZnC0.7/Al2O3 by reduction and reaction processes (Fig. S3). Ni and Zn contents on Ni3ZnC0.7/Al2O3 were 54.4 wt% and 28.0 wt%, respectively, under CH4/CO2 = 1/1 after stability test (100 h), as determined by inductively coupled-plasma atomic emission spectroscopy (ICP−AES).",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337322007470"
+}

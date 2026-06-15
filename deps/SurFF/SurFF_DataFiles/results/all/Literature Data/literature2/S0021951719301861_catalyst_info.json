@@ -1,0 +1,16 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": "PdCu",
+    "crystal_phase": "face-centered cubic (fcc)",
+    "exposed_crystal_plane_indices": {
+        "PdCu": [
+            "(1 1 1)"
+        ]
+    },
+    "Characterization_methods": [
+        "HRTEM",
+        "XRD"
+    ],
+    "Proof in the paper": "The lattice fringe of 0.227 nm is observed for PdCu-2 without CeO2 (Fig. 1A and B), which is ascribed to the interplanar distance of face-centered cubic (fcc) PdCu (1 1 1).",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0021951719301861"
+}

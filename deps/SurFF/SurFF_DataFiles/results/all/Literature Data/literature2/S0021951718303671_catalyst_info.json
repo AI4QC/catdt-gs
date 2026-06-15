@@ -1,0 +1,35 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Pd",
+        "PdZn1.5",
+        "PdZn6",
+        "PdZn30"
+    ],
+    "crystal_phase": {
+        "Pd": "face-centered cubic (fcc)",
+        "PdZn1.5": "β1-Pd1Zn1"
+    },
+    "Characterization_methods": [
+        "XRD",
+        "SAED",
+        "STEM-EDX"
+    ],
+    "exposed_crystal_plane_indices": {
+        "Pd": [
+            "(111)",
+            "(200)"
+        ],
+        "PdZn1.5": [
+            "(111)",
+            "(200)"
+        ],
+        "PdZn6": [
+            "(111)",
+            "(200)"
+        ],
+        "PdZn30": "β1-Pd1Zn1"
+    },
+    "Proof in the paper": "The X-ray diffraction (XRD) patterns were used to determine the bulk crystal structure of the nanoparticles within each catalyst (Section 2.2.3). SAED patterns were analyzed to identify the presence of fcc Pd and β1-Pd1Zn1 domains in the samples containing Zn (Section S3). STEM-EDX analysis showed that Pd and Zn coexist within individual nanoparticles and also showed extremely small quantities of Pd and Zn on the support as monometallic oligomers (<1 nm in diameter) (Section S4).",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0021951718303671"
+}

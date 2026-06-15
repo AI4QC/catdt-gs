@@ -1,0 +1,22 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "PtNi"
+    ],
+    "crystal_phase": {
+        "PtNi": "face-centered cubic structure"
+    },
+    "exposed_crystal_plane_indices": {
+        "PtNi": [
+            "(111)",
+            "(200)",
+            "(220)"
+        ]
+    },
+    "Characterization_methods": [
+        "X-ray diffraction (XRD)",
+        "High-resolution transmission electron microscopy (HRTEM)"
+    ],
+    "Proof in the paper": "The diffraction peaks of PtNi octahedrons and PtNi@Ti3C2 MXene are similar. The peaks at 40.1°, 46.6° and 68.1° can be index to the (111), (200) and (220) planes, in accordance with the face-centered cubic structure of Pt (JCPDS No. 04-0802). It is worth noting that the peak positions have a slight shift to higher angle due to Ni-atom induced lattice contraction, which further proves the effective formation of PtNi alloying in octahedral particles. [39] Meanwhile, the (002) planes of Ti3C2 MXene can not be detected in the PtNi@Ti3C2 MXene sample, which might be ascribed to the strong signal of coating PtNi octahedrons covers the signal from the Ti3C2 MXene substrate. XPS measurements were performed to identify the valence and chemical environment of elements for all samples.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337321002265"
+}

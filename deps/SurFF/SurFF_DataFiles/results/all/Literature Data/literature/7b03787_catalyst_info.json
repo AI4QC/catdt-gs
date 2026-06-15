@@ -1,0 +1,26 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Ir–Ni",
+        "Ir–Co"
+    ],
+    "crystal_phase": {
+        "Ir–Ni": "Bulk Ir",
+        "Ir–Co": "Bulk Ir"
+    },
+    "exposed_crystal_plane_indices": {
+        "Ir–Ni": [
+            "(111)",
+            "(200)"
+        ],
+        "Ir–Co": [
+            "(111)",
+            "(200)"
+        ]
+    },
+    "Characterization_methods": [
+        "X-ray diffraction (XRD)"
+    ],
+    "Proof in the paper": "The X-ray diffraction (XRD) patterns, reported as a function of Ir displacement extent, revealed differences between the Ni and Co nanowire templates (Figure 2 and S3). At high Ir composition (full displacement), the Ir–Ni and Ir–Co nanowires displayed nearly identical spectra, consistent with bulk Ir (Ir lattice constant of 3.84 Å). For Ir–Ni nanowires, a clear separation of Ir and Ni peaks was found at all displacement levels, with lattice constants that were consistent with bulk Ir and Ni. This data suggests that Ir and Ni phases have relatively little interaction. In contrast, Ir lattice compression was observed in all Ir–Co nanowire samples except for those with high (>50%) Ir content.",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.7b03787"
+}

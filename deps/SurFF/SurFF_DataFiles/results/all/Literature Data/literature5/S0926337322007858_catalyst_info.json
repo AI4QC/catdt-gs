@@ -1,0 +1,22 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Bi2Te3"
+    ],
+    "crystal_phase": {
+        "Bi2Te3": "Trigonal crystal system (JCPDS No. 15–0863) with R-3m space group"
+    },
+    "exposed_crystal_plane_indices": {
+        "Bi2Te3": [
+            "(001)",
+            "(100)"
+        ]
+    },
+    "Characterization_methods": [
+        "X-ray diffractometer (XRD)",
+        "High-resolution transmission electron microscopy (HRTEM)",
+        "selected area electron diffraction (SAED)"
+    ],
+    "Proof in the paper": "The X-ray diffraction (XRD) patterns in Fig. 2b of samples index well to trigonal crystal system of Bi2Te3 structure (JCPDS No. 15–0863) with R-3m space group. The main exposed crystal plane of the nanodisks are the (001) plane as surface and (100) plane on the edge, as identified from the selected area electron diffraction (SAED) pattern in the vertical direction of the nanodisks (Fig. 1d)",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337322007858"
+}

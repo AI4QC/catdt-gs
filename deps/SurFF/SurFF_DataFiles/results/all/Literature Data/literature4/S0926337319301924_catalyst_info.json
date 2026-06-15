@@ -1,0 +1,21 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "PdAg"
+    ],
+    "crystal_phase": {
+        "PdAg": "face-centered cubic (fcc)"
+    },
+    "exposed_crystal_plane_indices": {
+        "PdAg": [
+            "(111)",
+            "(200)"
+        ]
+    },
+    "Characterization_methods": [
+        "High-resolution TEM",
+        "XRD"
+    ],
+    "Proof in the paper": "High-resolution TEM image of an individual NW displayed two sets of lattice fringes with the d-spacings of 2.31 and 2.01 Å, respectively, which were ascribed to (111) and (200) planes of face-centered cubic (fcc) PdAg alloys (Fig. 1d). The corresponded Fourier transform (FT) pattern further confirmed the [110] crystalline observation direction along the NW.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337319301924"
+}

@@ -1,0 +1,44 @@
+body {
+    background: var(--bg);
+    color: var(--col);
+    font-family: Arial, Helvetica, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+@media (prefers-color-scheme: dark) {
+    body {
+        background: var(--bg-dark);
+        color: var(--col-dark);
+    }
+}
+
+#image-block {
+    margin-top: 20px;
+    border: 2px solid rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+    padding: 10px;
+    display: inline-block;
+}
+
+#result-image {
+    display: block;
+    max-width: 100%;
+    width: 400px;
+    height: 400px;
+}
+
+#params-block {
+    margin-top: 20px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: left;
+}

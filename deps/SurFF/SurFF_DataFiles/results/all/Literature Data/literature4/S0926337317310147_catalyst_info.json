@@ -1,0 +1,33 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Ni-Zn alloy",
+        "Ni-Zn IMC (t-NiZn, c-NiZn)"
+    ],
+    "crystal_phase": {
+        "Ni-rich alloy": "fcc",
+        "t-NiZn": "tetragonal L10",
+        "c-NiZn": "cubic"
+    },
+    "exposed_crystal_plane_indices": {
+        "Ni-Zn alloy": [
+            "(111)",
+            "(200)",
+            "(220)"
+        ],
+        "t-NiZn": [
+            "(101)"
+        ],
+        "c-NiZn": [
+            "(111)",
+            "(200)",
+            "(222)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD",
+        "HAADF-STEM"
+    ],
+    "Proof in the paper": "The XRD patterns of NixZnyAl (Fig. 2) show peaks due to metallic Ni at 2θ = 44.5, 51.8, and 76.4° (PDF#04-0850) for Ni3Zn0Al. In contrast, they shifted to low angles as the Ni/Zn atomic ratio decreased from 50/1 to 2/1, indicating the incorporation of Zn atoms into the metallic Ni lattice to form the Ni-rich alloy, a substitutional solid solution with a face-centered cubic (fcc) structure (space group of Fm-3m). An IMC with tetragonal L10 structure (denoted as t-NiZn, space group of I4/mmm (139)), corresponding to the peaks at 2θ = 43.5, 46.7, and 84.4°C (PDF#06-0672), formed in Ni1Zn1Al and Ni1Zn2Al, and a cubic NiZn IMC (denoted as c-NiZn, space group of Pm–3m (221)) with peaks at 2θ = 43.5, 63.8, and 80.5°C (PDF#65-3203) formed in Ni1Zn8Al. HAADF-STEM images and corresponding EDS mapping (Fig. 3) reveal that Ni and Zn atoms are uniformly distributed in Ni1Zn1Al.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337317310147"
+}

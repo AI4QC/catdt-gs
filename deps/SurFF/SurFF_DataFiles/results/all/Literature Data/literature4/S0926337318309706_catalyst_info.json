@@ -1,0 +1,21 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": "CuCo",
+    "crystal_phase": {
+        "CuCo": {
+            "Cobalt phase": "JCPDS NO. 89-4308",
+            "Copper phase": "JCPDS NO. 04-0836"
+        }
+    },
+    "exposed_crystal_plane_indices": {
+        "CuCo": [
+            "(002)",
+            "(101)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD"
+    ],
+    "Proof in the paper": "The XRD patterns were used to analyze the crystallization degree and crystal structure of the samples. As shown in Fig. 1a, one can see two different crystalline phases, which are attributed to the cobalt phase (JCPDS NO. 89-4308) and copper phase (JCPDS NO. 04-0836). The cobalt phase was not formed at 140°C and only the copper phase was generated due to different standard reduction potentials of Cu and Co [25]. When the temperature was above 140°C, an apparent cobalt phase appeared in the sample. Notably, the diffraction peaks of Cu at 43.4° and Co at 41.6° were overlapped at 200°C (marked by green circle), indicating that partial mutual insertion of cobalt and copper atoms occurred rather than physical mixing. There was no obvious mutual insertion phenomenon at other temperatures due to the different evolution rate of Cu and Co metals with hydrothermal methods at different temperature, suggesting that a suitable temperature is indispensable for the formation of mutual insertion CuCo bimetal [26]. Furthermore, the peak intensity of the (002) plane was stronger than the (101) plane in Co metal phase, which is opposite the PDF card of Co (JCPDS NO. 89-4308). This phenomenon may be assigned to orientation growth of Co nanosheets and this result can also be found in pure Co nanosheets (Fig. S2).",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337318309706"
+}

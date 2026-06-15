@@ -1,0 +1,23 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "CuYZr"
+    ],
+    "crystal_phase": {
+        "CuYZr": "Tetragonal"
+    },
+    "exposed_crystal_plane_indices": {
+        "CuYZr": [
+            "(110)",
+            "(001)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD",
+        "TEM",
+        "STEM EDX",
+        "HRTEM"
+    ],
+    "Proof in the paper": "The XRD patterns of 1%Cu–YZr and 8%Cu–YZr samples, annealed at 600 and 800°C are shown in Fig. 1(a) in the range 2θ = 20−80°. Peaks at 2θ = 30.4°, 35.5°, 50.5°, 73.05°, 74.58° correspond tetragonal (t) ZrO2 phase (JCPDS 80−0784). HRTEM images have also been taken (Fig. 3) to show that the grains are mainly single crystalline and one example of each structure of zirconia is reported in Fig. 3(a) for cubic and in Fig. 3(b) for tetragonal. The insets are the corresponding Fast Fourier Transforms (FFTs) patterns that are consistent with [011] projections of cubic and tetragonal structures.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337320306731"
+}

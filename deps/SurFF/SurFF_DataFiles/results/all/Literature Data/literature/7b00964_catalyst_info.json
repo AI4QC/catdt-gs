@@ -1,0 +1,24 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Pt73Ni27",
+        "Pt50Ni50",
+        "Pt67Ni33"
+    ],
+    "characterization_methods": [
+        "STEM-EDS",
+        "XRF",
+        "ICP-AES",
+        "XRD",
+        "HAADF STEM"
+    ],
+    "exposed_crystal_plane_indices": {
+        "Pt73Ni27": [
+            "{111}",
+            "{110}",
+            "{001}"
+        ]
+    },
+    "proof_in_the_paper": "The HAADF STEM contrasts and EDS Pt/Ni maps show a symmetric and anisotropic distribution of Pt and Ni atoms at vertexes, edges, and {111} facets. The EDS line analyses exhibit a concave shape at the {111} facets. The HAADF STEM image evidences the retention of the octahedral framework after the activating treatment.",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.7b00964"
+}

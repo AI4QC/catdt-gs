@@ -1,0 +1,27 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": "PdCu",
+    "crystal_phase": {
+        "PdCu": [
+            "fcc",
+            "bcc"
+        ]
+    },
+    "Characterization_methods": [
+        "X-ray diffraction (XRD)",
+        "High-energy X-ray diffraction (HE-XRD)",
+        "Atomic pair distribution functions (PDFs)",
+        "High-resolution transmission electron microscopy (HRTEM)"
+    ],
+    "exposed_crystal_plane_indices": {
+        "PdCu": [
+            "(111)",
+            "(200)",
+            "(220)",
+            "(100)",
+            "(110)"
+        ]
+    },
+    "Proof in the paper": "The peaks at 41.5°, 48.4°, and 71.0° correspond to 111, 200, and 220 atomic planes of the fcc structure, respectively. The peaks at 30.0° and 43.2° correspond to 100 and 110 atomic planes of the bcc structure, respectively. (39) As shown by the HR-TEM image in Figure 1h, the lattice fringe of 0.217 nm is characteristic of the (111) plane of the fcc structure.",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.8b03106"
+}

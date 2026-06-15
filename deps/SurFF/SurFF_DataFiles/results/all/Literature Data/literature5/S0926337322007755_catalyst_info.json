@@ -1,0 +1,31 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "NiTe",
+        "NiCoN",
+        "NiFeN"
+    ],
+    "crystal_phase": {
+        "NiTe": "JCPUS 89–2018",
+        "Ni3Te2": null,
+        "Ni3FeN": "JCPUS 50–1434",
+        "NiCo2N": null
+    },
+    "exposed_crystal_plane_indices": {
+        "NiTe-NiCoN": [
+            "NiCo2N (200)",
+            "Ni3Te2 (201)"
+        ],
+        "NiTe-NiFeN": [
+            "Ni3Te2 (201)",
+            "Ni3FeN (111)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD",
+        "TEM",
+        "HRTEM"
+    ],
+    "Proof in the paper": "The lattice fringes of NiTe-NiFeN in the high-resolution TEM (HRTEM) image of Fig. 2e exhibit interplanar spacing of 0.315 nm and 0.194 nm, corresponding to Ni3Te2 (201) and Ni3FeN (111) planes, respectively.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337322007755"
+}

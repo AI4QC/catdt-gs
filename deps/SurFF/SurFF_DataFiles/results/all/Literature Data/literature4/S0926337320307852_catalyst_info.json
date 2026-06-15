@@ -1,0 +1,21 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Pt-Fe"
+    ],
+    "crystal_phase": {
+        "Pt-Fe": "ordered intermetallic (L10 ordered structure)"
+    },
+    "Characterization_methods": [
+        "XRD",
+        "HR-TEM"
+    ],
+    "exposed_crystal_plane_indices": {
+        "Pt-Fe": [
+            "(002)",
+            "(110)"
+        ]
+    },
+    "Proof in the paper": "The XRD patterns of Pt/C, disordered Pt-Fe/C alloy (D-Pt-Fe/C), and the N-doped carbon encapsulated ordered Pt-Fe intermetallic (O-Pt-Fe@NC/C) are shown in Fig. 2a. It can be seen that, the peak position of both O-Pt-Fe@NC/C and D-Pt-Fe/C shifted to the higher angles compared with Pt/C, indicating the lattice contraction of Pt caused by the introduction of Fe. In addition to the peaks mentioned above, characteristic superlattice diffraction peaks such as (001), (110) and (002) located at 23.9°, 32.9° and 49.1° are observed in O-Pt-Fe@NC/C, indicating the formation L10 ordered structure. The presence of the ordered structure of Pt-Fe can be further identified by calculating the characteristic lattice spacing of 0.186 nm and 0.263 nm, confirming the L10 structure with (002) and (110) lattice planes.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337320307852"
+}

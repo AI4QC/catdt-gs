@@ -1,0 +1,21 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "2Ru1W/SiO2",
+        "2Ru/SiO2",
+        "1W2Ru/SiO2"
+    ],
+    "characterization_methods": [
+        "HRTEM",
+        "AC-HAADF-STEM"
+    ],
+    "exposed_crystal_plane_indices": {
+        "2Ru1W/SiO2": [
+            "(100)",
+            "(101)",
+            "(002)"
+        ]
+    },
+    "proof_in_the_paper": "The HRTEM images (Figures 1d and S5) clearly show the hemispherical Ru NPs with d spacings of 0.232, 0.207, and 0.217 nm corresponding to the (100), (101), and (002) facets of metallic Ru, respectively (JCPDS 06-0663).",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.2c01264"
+}

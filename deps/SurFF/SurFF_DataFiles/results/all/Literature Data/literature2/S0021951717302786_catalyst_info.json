@@ -1,0 +1,28 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Pt",
+        "PtFe0.10",
+        "PtFe0.20",
+        "PtFe0.25",
+        "PtFe0.30",
+        "PtFe1.0"
+    ],
+    "crystal_phase": {
+        "determined by XRD": true
+    },
+    "Characterization_methods": [
+        "XRD",
+        "TEM"
+    ],
+    "exposed_crystal_plane_indices": {
+        "Pt": "(111)",
+        "PtFe0.10": "(111)",
+        "PtFe0.20": "(111)",
+        "PtFe0.25": "(111)",
+        "PtFe0.30": "(111)",
+        "PtFe1.0": "(111)"
+    },
+    "Proof in the paper": "The Pt/SBA-15 catalyst shows three sharp diffraction peaks at 2θ of 39.8°, 46.4°, and 67.6°, assigned to the Pt(111), Pt(200), and Pt(220) planes, respectively. After alumina was coated onto SBA-15 to form 15AS composites, the diffraction of Pt crystallite for the Pt/15AS catalyst became broader. As for the commercial Pt/Al2O3 catalyst, it shows extremely weak diffraction. This indicates that the commercial Pt/Al2O3 catalyst has quite small Pt particles, while the Pt/SBA-15 catalyst has relatively larger Pt particles. The Pt catalysts were also characterized using TEM and the Pt particle size distribution was calculated accordingly (Figs. S2 and S3 in the Supporting Information and Fig. 3).",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0021951717302786"
+}

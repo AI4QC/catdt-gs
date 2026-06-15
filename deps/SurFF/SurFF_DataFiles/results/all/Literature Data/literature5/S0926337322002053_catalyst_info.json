@@ -1,0 +1,25 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Pd17Se15",
+        "Pd3B"
+    ],
+    "crystal_phase": {
+        "Pd17Se15": "JCPDS #29–1437",
+        "Pd3B": ""
+    },
+    "exposed_crystal_plane_indices": {
+        "Pd17Se15": [
+            "(321)"
+        ],
+        "Pd3B": [
+            "(031)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD",
+        "HAADF STEM"
+    ],
+    "Proof in the paper": "Fast Fourier-transform (FFT) patterns obtained from the selective domains correspond to the (321) plane of the Pd17Se15 and the (031) plane of the Pd3B (Fig. 2d and S3).",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337322002053"
+}

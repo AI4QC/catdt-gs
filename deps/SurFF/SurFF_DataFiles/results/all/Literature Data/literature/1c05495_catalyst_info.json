@@ -1,0 +1,16 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": "Ni2P",
+    "crystal_phase": "hexagonal structure",
+    "Characterization_methods": [
+        "X-ray diffraction (XRD)",
+        "Density functional theory (DFT) calculations"
+    ],
+    "exposed_crystal_plane_indices": {
+        "Ni2P": [
+            "(001)"
+        ]
+    },
+    "Proof in the paper": "The XRD patterns of Ni2P-Al2O3(H)xy catalysts derived from NixAly-LDH precursors with Ni/Al = 1/1–8/1 are shown in Figure S1A. It can be seen that the diffraction peaks at 40.7, 47.4, and 54.2° to the hexagonal Ni2P phase (JCPDS card 74-1385) indicate that the Ni2P crystal has formed with good crystallinity and high purity. Density functional theory (DFT) calculations were performed to model the 001 crystal surface of nickel phosphide. First, based on crystallographic data, a unit cell of bulk Ni2P was established, and then its geometry was further optimized and the structure refined under three-dimensional periodic boundary conditions. Ni2P adopts a hexagonal structure with lattice parameters, a = b = 0.5865 nm and c = 0.3361 nm. All DFT calculations are executed using the DMol3 software package.",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.1c05495"
+}

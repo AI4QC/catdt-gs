@@ -1,0 +1,20 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Pd–Au"
+    ],
+    "crystal_phase": {
+        "Pd–Au": "random Pd–Au alloy nanoparticles"
+    },
+    "Characterization_methods": [
+        "X-ray diffraction (XRD)"
+    ],
+    "exposed_crystal_plane_indices": {
+        "Pd–Au": [
+            "Au(111)",
+            "Pd(111)"
+        ]
+    },
+    "Proof in the paper": "The X-ray diffraction (XRD) patterns of SiO2-supported Pd–Au alloy catalysts with different Pd/Au ratios showed the diffraction peaks due to Au(111) and Pd(111) appearing at 2θ = 38.3 and 40.1, respectively. In the spectra of Pd–Au alloy catalysts, the peaks appeared between the two original peaks and shifted to a lower angle with a decrease in the Pd/Au atomic ratio. (Figure 1 in the report)",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.6b02767"
+}

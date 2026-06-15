@@ -1,0 +1,22 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "NiS2",
+        "Co",
+        "V"
+    ],
+    "Characterization_methods": [
+        "X-ray diffraction (XRD)",
+        "Scanning Electron Microscopy (SEM)",
+        "Transmission Electron Microscopy (TEM)",
+        "High-Resolution TEM (HRTEM)",
+        "Energy Dispersive X-ray (EDX)"
+    ],
+    "exposed_crystal_plane_indices": {
+        "NiS2": [
+            "(200)"
+        ]
+    },
+    "Proof in the paper": "The lattice fringe space of 2.76 and 2.65 Å all corresponding to the NiS2 (200) plane. A slight contraction appeared compared to that of pure NiS2 (d (200) = 2.83 Å), which was most possibly caused by the substitution of Co and V atoms for Ni in the lattice sites of the NiS2 matrix. Selected area electron diffraction (SAED) patterns further confirmed the existence of the NiS2 (200) plane. The energy dispersive X-ray (EDX) elemental mappings of NCVS-3 provided direct-viewing evidence for the uniform distribution of Ni, Co, V, and S elements.",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.1c05190"
+}

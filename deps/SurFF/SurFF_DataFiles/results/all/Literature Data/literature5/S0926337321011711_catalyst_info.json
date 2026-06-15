@@ -1,0 +1,28 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "CuCo"
+    ],
+    "crystal_phase": {
+        "CuCo": "Metal-organic frameworks (MOFs)"
+    },
+    "exposed_crystal_plane_indices": {
+        "CuCo": [
+            "(002)",
+            "(210)",
+            "(004)",
+            "(110)"
+        ]
+    },
+    "Characterization_methods": [
+        "X-ray diffraction (XRD)",
+        "transmission electron microscopy (TEM)",
+        "atomic force microscopy (AFM)",
+        "electron spin resonance (ESR) spectroscopy",
+        "N2 physisorption",
+        "UV-Vis spectroscopy",
+        "photoelectrochemical tests"
+    ],
+    "Proof in the paper": "X-ray diffraction (XRD) patterns of OVR-CuCo-MOFs NS and OV-Cu-MOFs NS are shown in Fig. 3a. Each sample displays the typical (002), (210), (004), and (110) Bragg reflections of Cu-TCPP, and the enhanced intensities of the (004) and (210) planes indicated the incorporation of cobalt dopants in the OVR-CuCo-MOF NS.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337321011711"
+}

@@ -1,0 +1,21 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "FeNi"
+    ],
+    "crystal_phase": {
+        "FeNi": "FeNi alloy (JCPDS, PDF 47–1405)"
+    },
+    "exposed_crystal_plane_indices": {
+        "FeNi": [
+            "(111)",
+            "(200)",
+            "(220)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD"
+    ],
+    "Proof in the paper": "XRD analysis implied that FeNi alloy phase was successfully generated in the FeNi/N-C-800 electrocatalyst, as verified by the appearance of three characteristic peaks at 43.6°, 50.8° and 74.7° (Fig. 2a), which can be assigned to the (111), (200) and (220) planes of FeNi alloy (JCPDS, PDF 47–1405).",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337322010086"
+}

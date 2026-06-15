@@ -1,0 +1,19 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": "Ni–Fe alloy",
+    "crystal_phase": {
+        "Ni–Fe alloy": "face-centered cubic nickel phase (JCPDS Card No. 89-7128)"
+    },
+    "Characterization_methods": [
+        "X-ray diffraction (XRD)"
+    ],
+    "exposed_crystal_plane_indices": {
+        "Ni–Fe alloy": [
+            "(111)",
+            "(200)",
+            "(220)"
+        ]
+    },
+    "Proof in the paper": "The XRD patterns (Figure 1j and Figure S3 in the Supporting Information) of these Ni1–xFex/NC samples were similar to each other, with three distinct diffraction peaks located around 44.3, 51.7, and 76.2°, which can be assigned to the (111), (200), and (220) crystal-plane reflections of a face-centered cubic nickel phase (JCPDS Card No. 89-7128).",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.5b02291"
+}

@@ -1,0 +1,19 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Pt-Au"
+    ],
+    "crystal_phase": {
+        "Pt-Au": "face-centered cubic (FCC) structure"
+    },
+    "exposed_crystal_plane_indices": {
+        "Pt-Au": [
+            "(1 1 1)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD"
+    ],
+    "Proof in the paper": "The lattice parameters of the PtxAuy/silica alloy NPs decreased as the Pt content in the alloy NPs increased, and the trend closely followed the theoretical line. These results indicate that the two different metals composing the Pt-Au alloy NPs were homogeneously mixed to form random alloys with a face-centered cubic (FCC) structure. (Fig. 2)",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0021951721003043"
+}

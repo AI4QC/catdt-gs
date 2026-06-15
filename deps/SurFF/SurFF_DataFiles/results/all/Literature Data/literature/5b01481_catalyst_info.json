@@ -1,0 +1,20 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Ni–Fe",
+        "Ni–Fe–Co"
+    ],
+    "exposed_crystal_plane_indices": {
+        "Ni–Fe": [
+            "(110)",
+            "(001)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD",
+        "SEM",
+        "XAS"
+    ],
+    "Proof in the paper": "The XRD characterization was conducted using a Rigaku Ultima IV XRD instrument with a Cu Kα source (λ = 1.541 Å) operated at 40 kV and 44 mA. 2θ/θ scans were conducted using a 0.05° step size and 5 s hold per step. XRD analysis was conducted using Rigaku’s PDXL software. SEM characterization was conducted using a Hitachi S-4800 FE-SEM instrument. EDS data was collected using EDAX Genesis on the SEM to validate sample elemental composition. XAS measurements were conducted at the X3B beamline of Brookhaven National Laboratories, and analysis was performed using the IFEFFIT suite.",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.5b01481"
+}

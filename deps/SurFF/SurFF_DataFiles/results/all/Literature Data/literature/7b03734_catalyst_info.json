@@ -1,0 +1,19 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": "PdAu",
+    "crystal_phase": "face-centered cubic (fcc) structure",
+    "exposed_crystal_plane_indices": {
+        "PdAu": [
+            "[111]",
+            "[200]",
+            "[220]",
+            "[311]",
+            "[222]"
+        ]
+    },
+    "Characterization_methods": [
+        "X-ray diffraction (XRD)"
+    ],
+    "Proof in the paper": "The diffraction pattern of Pd/C shows the signals typical of the face-centered cubic (fcc) structure of Pd (PDF 87-643) at about 40, 47, 68, 82, and 85°, which correspond to the [111], [200], [220], [311], and [222] planes, respectively. The PdAu/C samples show patterns similar to that of Pd/C, but with Bragg reflections shifted toward lower values of 2θ. This shift in peak position indicates alloy formation, as partial substitution of Pd by larger Au atoms in the fcc structure produces a lattice expansion.",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.7b03734"
+}

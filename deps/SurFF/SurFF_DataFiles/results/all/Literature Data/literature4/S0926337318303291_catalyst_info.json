@@ -1,0 +1,19 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": "Ni0.8Fe0.2",
+    "crystal_phase": {
+        "FeNi3": "PDF card: 38-0419",
+        "Ni": "PDF card: 04-0850"
+    },
+    "Characterization_methods": [
+        "X-ray diffraction (XRD)"
+    ],
+    "exposed_crystal_plane_indices": {
+        "FeNi3": [
+            "(111)",
+            "(200)"
+        ]
+    },
+    "Proof in the paper": "The X-ray diffraction (XRD) results show that the diffraction peak located at 44.2° can be assigned to (111) lattice planes of FeNi3 (PDF card: 38-0419) and (011) lattice planes of Ni (PDF card: 04-0850). Besides, the peak at 51.6° is well defined and can be assigned to the (200) lattice plane of FeNi3, confirming the phase purity of the as-prepared films on SLS.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337318303291"
+}

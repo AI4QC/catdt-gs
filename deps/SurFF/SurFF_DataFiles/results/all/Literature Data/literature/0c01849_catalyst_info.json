@@ -1,0 +1,21 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Pd/C",
+        "Sn-Pd/C"
+    ],
+    "Characterization_methods": [
+        "TEM",
+        "HAADF-STEM",
+        "XPS",
+        "CO chemisorption",
+        "in situ DRIFT-IR of CO adsorption"
+    ],
+    "exposed_crystal_plane_indices": {
+        "Pd/C": [
+            "(111)"
+        ]
+    },
+    "Proof in the paper": "The high-resolution TEM images randomly collected from different regions on the Pd/C-0 catalyst imply a truncated-cuboctahedral morphology for Pd nanoparticles and show the most exposed facet to be the (111) plane for Pd nanoparticles, which has been widely accepted as the most reactive site of Pd for alcohol oxidation.",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.0c01849"
+}

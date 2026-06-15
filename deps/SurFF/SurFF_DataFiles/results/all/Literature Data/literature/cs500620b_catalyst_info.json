@@ -1,0 +1,19 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Pd–Ir"
+    ],
+    "crystal_phase": {
+        "Pd–Ir": "alloy phase"
+    },
+    "Characterization_methods": [
+        "XRD"
+    ],
+    "exposed_crystal_plane_indices": {
+        "Pd–Ir": [
+            "(111)"
+        ]
+    },
+    "Proof in the paper": "The XRD patterns of catalysts are shown in Figure 4. Reduced monometallic catalysts (Pd/SiO2, Pd/SiO2(N), and Ir/SiO2) clearly showed the peaks of the metallic phase in addition to the broad peak of SiO2 support (∼22°). The particle size calculated by the width of the XRD peak of (111) reflection at around 40° was 4 nm for both Pd/SiO2(N) and Ir/SiO2 and 7 nm for Pd/SiO2. Reduced Pd–Ir/SiO2 at 573 K, which was used for catalytic reaction, showed the peaks located between those of Pd metal and Ir metal. In particular, the catalyst with Ir/Pd = 1 showed the (111) peak (40.4°) at the midmost positions between the simple substances (40.1 and 40.7°). The pattern suggests the formation of alloy phase; however, the overlap of two different monometallic phases cannot be ruled out.",
+    "url": "https://pubs.acs.org/doi/10.1021/cs500620b"
+}

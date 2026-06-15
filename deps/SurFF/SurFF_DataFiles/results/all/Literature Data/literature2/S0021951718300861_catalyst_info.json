@@ -1,0 +1,21 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "PdCu"
+    ],
+    "crystal_phase": {
+        "PdCu": "fcc CuPd structure (JCPDS no. 48-1551)",
+        "MgO": "cubic (JCPDS no. 75-1585)"
+    },
+    "characterization_methods": [
+        "HRTEM",
+        "SAED"
+    ],
+    "exposed_crystal_plane_indices": {
+        "PdCu": [
+            "(111)"
+        ]
+    },
+    "Proof in the paper": "The HR-TEM analysis shows the presence of lattice fringes with a d-spacing value of 0.225 nm and 0.21 nm corresponding to the (111) plane of Pd and (111) plane of CuPd. The SAED pattern shows prominent ring patterns corresponding to the fcc CuPd structure and cubic MgO.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0021951718300861"
+}

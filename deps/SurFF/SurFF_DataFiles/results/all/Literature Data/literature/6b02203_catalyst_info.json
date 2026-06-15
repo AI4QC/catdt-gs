@@ -1,0 +1,22 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "NiPS3@NiOOH"
+    ],
+    "Characterization_methods": [
+        "XRD",
+        "AFM",
+        "SEM",
+        "TEM"
+    ],
+    "exposed_crystal_plane_indices": {
+        "NiPS3": [
+            "(00l)",
+            "(130)",
+            "(131)",
+            "(202)"
+        ]
+    },
+    "Proof in the paper": "The XRD pattern of bulk NiPS3 crystals showed an intense (00l) diffraction peak along with a few weak (130), (131), and (202) peaks attributed to the cubic phase of NiPS3 (Figure 1d). The exfoliated nanosheets were further characterized by AFM, SEM, and TEM (Figure 3), revealing the presence of two-dimensional ultrathin sheets with mean lateral dimensions ranging from 300 to 500 nm. The indexed selected area electron diffraction pattern of individual layers (inset of Figure 3f) clearly reveals the cubic structure of NiPS3 with space group C12/m1, consistent with XRD.",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.6b02203"
+}

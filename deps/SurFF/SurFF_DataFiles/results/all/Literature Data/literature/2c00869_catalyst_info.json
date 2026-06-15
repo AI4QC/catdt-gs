@@ -1,0 +1,19 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Ni56.5Co35Ti8.5"
+    ],
+    "crystal_phase": {
+        "Ni56.5Co35Ti8.5": "Face-centered cubic (FCC)"
+    },
+    "exposed_crystal_plane_indices": {
+        "Ni56.5Co35Ti8.5": [
+            "(111)"
+        ]
+    },
+    "Characterization_methods": [
+        "X-ray diffraction (XRD)"
+    ],
+    "Proof in the paper": "The selected area electron diffraction verifies the library film to be in a face-centered-cubic (FCC) atomic packing structure (Figure 1d inset). All alloys are single-phase FCC structures (Figure 2a).",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.2c00869"
+}

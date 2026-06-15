@@ -1,0 +1,19 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Cu(1)Sn(4)"
+    ],
+    "crystal_phase": {
+        "Cu(1)Sn(4)": "Cu6.25Sn5 (110) (JCPDS PDF# 47-1575)"
+    },
+    "exposed_crystal_plane_indices": {
+        "Cu(1)Sn(4)": [
+            "(110)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD"
+    ],
+    "Proof in the paper": "The X-ray diffraction (XRD) patterns of the as-prepared five samples were analyzed to provide evidences of their crystal phases. The dominant diffraction peak of Cu(1)Sn(4)-N-CC becomes Cu6.25Sn5 (110) (JCPDS PDF# 47-1575), and Cu(1)Sn(4)-N-CC also exhibits the weaker intensity of Sn (220) and (221) planes, which can be deemed as the saturation of Sn2+ around growth substrate (CC).",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337319311932"
+}

@@ -1,0 +1,16 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": "PdZn",
+    "crystal_phase": "wuritze-type phase of ZnO, PdZn intermetallic phase",
+    "Characterization_methods": [
+        "XRD"
+    ],
+    "exposed_crystal_plane_indices": {
+        "PdZn": [
+            "(111)",
+            "(200)"
+        ]
+    },
+    "Proof in the paper": "The XRD pattern of the reduced catalyst is shown in Figure 1a. Well-resolved reflection peaks indicated by asterisks are ascribed to the wuritze-type phase of ZnO. No reflection of Pd metallic phase is observed; instead, two small reflection peaks at 2θ degree = 41.2° and 44.1° are detected (see the enlarged diagram in the inset), which are due to the reflections of (111) and (200) of the PdZn intermetallic phase, suggesting the formation of an intermetallic alloy after reduction. (40, 41)",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.5b01933"
+}

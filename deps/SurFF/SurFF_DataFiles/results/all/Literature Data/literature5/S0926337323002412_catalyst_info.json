@@ -1,0 +1,30 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "FeNi",
+        "HP-FexNi2−xP",
+        "Ni2P"
+    ],
+    "crystal_phase": {
+        "FeNi LDHs": "PDF# 40-0215",
+        "Ni2P": "PDF#03-0953"
+    },
+    "exposed_crystal_plane_indices": {
+        "FeNi LDHs": [
+            "(0 0 3)",
+            "(0 1 2)",
+            "(0 1 5)",
+            "(0 1 8)"
+        ],
+        "HP-FexNi2−xP": [
+            "(1 1 1)",
+            "(2 1 0)",
+            "(3 0 0)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD"
+    ],
+    "Proof in the paper": "The XRD pattern (Fig. 1h) shows sharp diffraction peaks at 11.6°, 34.6°, 39.2°, and 46.4°, which can be ascribed to (0 0 3), (0 1 2), (0 1 5), and (0 1 8) reflections from FeNi LDHs (PDF# 40-0215), respectively. The XRD diffraction pattern (Fig. 1h) of the HP-FexNi2−xP shows peaks at about 40.6°, 47.3° and 54.2° corresponding to the (1 1 1), (2 1 0) and (3 0 0) planes of Ni2P (PDF#03-0953), respectively.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337323002412"
+}

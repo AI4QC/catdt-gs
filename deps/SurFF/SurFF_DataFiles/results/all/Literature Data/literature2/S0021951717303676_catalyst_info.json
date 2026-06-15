@@ -1,0 +1,33 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Pt",
+        "Ru",
+        "Pt0.5Ru0.5"
+    ],
+    "crystal_phase": {
+        "Pt": "fcc Pt phase (JCPDS file 04-0802)",
+        "Ru": "hcp Ru phase (JCPDS file 06-0663)",
+        "Pt0.5Ru0.5": "fcc Pt phase (JCPDS file 04-0802), hcp Ru phase (JCPDS file 06-0663)"
+    },
+    "exposed_crystal_plane_indices": {
+        "Pt": [
+            "(111)",
+            "(100)"
+        ],
+        "Ru": [
+            "(101)",
+            "(002)"
+        ],
+        "Pt0.5Ru0.5": [
+            "(111)",
+            "(200)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD",
+        "HRTEM"
+    ],
+    "Proof in the paper": "The lattice fringes of Pt nanoparticles over the Pt/CNT catalyst show the inter-planar spacings of 0.226 and 0.198 nm, which match well with those of the Pt(1 1 1) and Pt(1 0 0) planes, respectively; the lattice fringes of Ru nanoparticles over the Ru/CNT catalyst show the inter-planar spacings of 0.205 and 0.214 nm, which could be ascribed to those of Ru(1 0 1) and Ru(0 0 2) planes, respectively. The bimetallic catalysts exhibit the inter-planar spacings ranging from 0.222 to 0.224 nm as well as from 0.194 to 0.195 nm, which are most likely ascribed to those of the (1 1 1) and (2 0 0) planes of PtRu alloy, respectively.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0021951717303676"
+}

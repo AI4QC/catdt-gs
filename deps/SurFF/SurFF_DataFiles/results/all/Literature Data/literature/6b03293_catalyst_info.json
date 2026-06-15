@@ -1,0 +1,18 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "CuPd"
+    ],
+    "Characterization_methods": [
+        "XRD"
+    ],
+    "exposed_crystal_plane_indices": {
+        "CuPd": [
+            "(111)",
+            "(200)",
+            "(220)"
+        ]
+    },
+    "Proof in the paper": "The XRD patterns for all of the reduced samples showed diffraction peaks at 43.3, 50.4, and 74.1° (Figure S1 in the Supporting Information), corresponding to the crystal planes of Cu (111), (200), and (220), respectively.",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.6b03293"
+}

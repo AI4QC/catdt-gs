@@ -1,0 +1,19 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "PdNi"
+    ],
+    "crystal_phase": {
+        "PdNi": "PdNi nanoalloy"
+    },
+    "Characterization_methods": [
+        "XRD"
+    ],
+    "exposed_crystal_plane_indices": {
+        "PdNi": [
+            "Pd(111)"
+        ]
+    },
+    "Proof in the paper": "The Pd(111) XRD peak was shifted to a higher angle, indicating the formation of PdNi nanoalloy (Figure 4). The Pd NPs mainly exposed the most stable (111) facets, as evidenced by XRD results.",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.6b01226"
+}

@@ -1,0 +1,35 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "RuCo"
+    ],
+    "crystal_phase": {
+        "RuCo": [
+            "hexagonal close-packed (hcp)",
+            "face-centered cubic (fcc)"
+        ]
+    },
+    "exposed_crystal_plane_indices": {
+        "RuCo-300 and RuCo-400": [
+            "(1 0 0 0)",
+            "(0 0 0 2)",
+            "(1 0 0 1)",
+            "(1 1 0 0)"
+        ],
+        "RuCo-500": [
+            "(1 0 0 0)",
+            "(0 0 0 2)",
+            "(1 0 0 1)",
+            "(1 1 0 0)",
+            "(2 0 0 0)"
+        ],
+        "RuCo-600": [
+            "(2 0 0 0)"
+        ]
+    },
+    "Characterization_methods": [
+        "X-ray diffraction (XRD)"
+    ],
+    "Proof in the paper": "RuCo-300 and RuCo-400 only present well-resolved characteristic diffractions of (1 0 0 0), (0 0 0 2), (1 0 0 1), and (1 1 0 0) crystal planes for hexagonal close-packed (hcp) metallic phase. When the reduction temperature is increased to 500°C, a weak (2 0 0 0) diffraction for the faced-centered cubic (fcc) metallic phase appears, in addition to those for the hcp phase. As for RuCo-600, only an fcc phase is formed. In all cases, no recognizable diffractions assigned to Ru species are detected, suggesting the formation of the bimetallic RuCo phase.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0021951721001615"
+}

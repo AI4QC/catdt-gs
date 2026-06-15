@@ -1,0 +1,21 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": "PdxZny",
+    "crystal_phase": {
+        "PdxZny": [
+            "PdZnβ",
+            "PdZnα"
+        ]
+    },
+    "Characterization_methods": [
+        "TEM",
+        "XRD"
+    ],
+    "exposed_crystal_plane_indices": {
+        "PdxZny": [
+            "(10-10)"
+        ]
+    },
+    "Proof in the paper": "The XRD patterns of Pd/ZnO-N catalysts with different Pd loading after reduction in H2 at 400 °C showed diffraction peaks characteristic of ZnO for Pd/ZnO-N, indicating the dominant nonpolar facets of ZnO needles are maintained even after high-temperature reduction (Figure 3). TEM images (Figure 4) confirmed that the needlelike morphology and dominant nonpolar facets of ZnO were well preserved after the reduction step. HRTEM images of the 9.1% Pd on ZnO needles showed both PdZnβ alloy phase and Pd-like phases, like either fcc metallic Pd or a solid solution of Zn in fcc Pd, a so-called PdZnα phase (Figure 5). CO-FTIR experiments were operated on the Pd/ZnO catalysts to understand the surface composites of catalysts (Figure 6).",
+    "url": "https://pubs.acs.org/doi/10.1021/cs500590t"
+}

@@ -1,0 +1,28 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "CoP",
+        "Co2P",
+        "Ni2P"
+    ],
+    "Characterization_methods": [
+        "X-ray diffraction (XRD)",
+        "Transmission electron microscopy (TEM)"
+    ],
+    "exposed_crystal_plane_indices": {
+        "CoP": [
+            "(110)",
+            "(001)"
+        ],
+        "Co2P": [
+            "(110)",
+            "(001)"
+        ],
+        "Ni2P": [
+            "(110)",
+            "(001)"
+        ]
+    },
+    "Proof in the paper": "The X-ray diffraction (XRD) patterns of metal phosphides are shown in Figure 1A. The diffraction peaks of all samples are consistent with their crystallographic standard data, which proves that the metal phosphide was successfully synthesized with high crystallinity by the phosphating reduction method. As shown by transmission electron microscopy (TEM) (Figure 1B–D), all phosphide particles are nanosized and range from 50 to 100 nm.",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.0c05497"
+}

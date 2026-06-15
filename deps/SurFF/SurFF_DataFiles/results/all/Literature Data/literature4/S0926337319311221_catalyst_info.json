@@ -1,0 +1,22 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "NiFeMo"
+    ],
+    "crystal_phase": {
+        "NiFeMo": "fcc Ni phase (JCPDS #04-0850)"
+    },
+    "exposed_crystal_plane_indices": {
+        "NiFeMo": [
+            "(1 1 1)",
+            "(2 0 0)",
+            "(2 2 0)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD",
+        "HRTEM"
+    ],
+    "Proof in the paper": "The XRD patterns, shown in Fig. 2e, exhibit three pronounced diffraction peaks at 2θ of around 44.5, 51.8, and 76.4°, which can be indexed to the (1 1 1), (2 0 0), and (2 2 0) crystalline planes of fcc Ni phase (JCPDS #04-0850). The crystalline structure of the NiFeMo IOS was further examined with HRTEM images as shown in Fig. 3a.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337319311221"
+}

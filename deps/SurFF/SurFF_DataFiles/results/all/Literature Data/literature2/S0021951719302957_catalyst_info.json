@@ -1,0 +1,21 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "PtNi"
+    ],
+    "crystal_phase": {
+        "PtNi": "face centered cubic (fcc) structure"
+    },
+    "exposed_crystal_plane_indices": {
+        "PtNi": [
+            "(111)",
+            "(200)",
+            "(220)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD"
+    ],
+    "Proof in the paper": "The PtNi CNCs possess the characteristic of face centered cubic (fcc) structure, as determined by XRD measurement (Fig. 6b). The main peaks ((111), (200), (220)) of PtNi CNCs are distributed between those of Pt (JCPDS No. 04-0802) and Ni (JCPDS No. 04-0850).",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0021951719302957"
+}

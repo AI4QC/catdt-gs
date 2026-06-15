@@ -1,0 +1,30 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Pd",
+        "Au",
+        "PdxAu10-x (where x = 1, 3, 5, 7, 9, 10)"
+    ],
+    "crystal_phase": {
+        "Pd": "face centered cubic (fcc) structure",
+        "Au": "face centered cubic (fcc) structure",
+        "PdxAu10-x": "face centered cubic (fcc) structure"
+    },
+    "Characterization_methods": [
+        "XRD (X-ray Diffraction)",
+        "TEM (Transmission Electron Microscopy)"
+    ],
+    "exposed_crystal_plane_indices": {
+        "Pd": [
+            "(111)"
+        ],
+        "Au": [
+            "(111)"
+        ],
+        "PdxAu10-x": [
+            "(111)"
+        ]
+    },
+    "Proof in the paper": "The XRD patterns were recorded and analyzed using the Levenberg-Marquardt method and deconvoluted using a pseudo-Voigt fitting. All materials exhibit diffraction peaks of the different crystallographic planes located at the characteristic positions for a face centered cubic (fcc) structure, typical of metallic Pd and Au (Fig. 2a). The apparent mean crystallite sizes (Lv) have been calculated from the diffraction peak located close to 2θ = 40°, which corresponds to the (111) crystallographic plane of metallic palladium and gold (Eq. (4)).",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337318310567"
+}

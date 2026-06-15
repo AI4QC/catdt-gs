@@ -1,0 +1,19 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Ru–Co"
+    ],
+    "crystal_phase": {
+        "Ru–Co": "Bh structure"
+    },
+    "Characterization_methods": [
+        "DFT calculations"
+    ],
+    "exposed_crystal_plane_indices": {
+        "Ru–Co": [
+            "RuCo(0001)"
+        ]
+    },
+    "Proof in the paper": "The composition of Ru/Co = 1:1 was considered to match the reported experimental conditions. (10) We considered ordered phases for the alloys because they contain a variety of adsorption sites with consistent distributions, which is essential for the systematic understanding of the relationship between the surface-adsorbate binding structure and catalytic energetics. For ten crystal structures of Ru1Co1, the formation energies were determined with respect to the most stable structure of the pure elements (Co = hcp and Ru = hcp), and the Bh structure was revealed to be the most stable phase (the only structure with a negative formation energy). (Methods section) Then, several 2 × 2 × 1 supercells of the Bh structure were optimized to model the RuCo(0001) surface, in which various atomic configurations were considered (Table S2, Supporting Information), and the S4 surface structure was found to be most thermodynamically favorable. (Methods section)",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.1c05023"
+}

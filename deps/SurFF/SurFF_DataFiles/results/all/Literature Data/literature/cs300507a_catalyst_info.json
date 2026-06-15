@@ -1,0 +1,23 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Pt/Pd/Fe"
+    ],
+    "crystal_phase": {
+        "Pt/Pd/Fe": "face-centered cubic (fcc) Pt and Pd, body-centered cubic (bcc) Fe"
+    },
+    "characterization_methods": [
+        "XRD"
+    ],
+    "exposed_crystal_plane_indices": {
+        "Pt/Pd/Fe": [
+            "(111)",
+            "(200)",
+            "(220)",
+            "(311)",
+            "(222)"
+        ]
+    },
+    "Proof in the paper": "The XRD pattern of the Pt/Pd/Fe catalyst in Figure 4 appears at 2θ values of 40.75°, 47.04°, 68.24°, 82.48°, and 86.92°, corresponding to the planes (111), (200), (220), (311), and (222) with fcc structure.",
+    "url": "https://pubs.acs.org/doi/10.1021/cs300507a"
+}

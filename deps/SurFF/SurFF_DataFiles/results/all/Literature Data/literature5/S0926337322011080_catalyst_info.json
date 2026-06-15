@@ -1,0 +1,35 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Ni-MOF",
+        "NiFe-MOF",
+        "NiCr-MOF",
+        "NiMn-MOF",
+        "NiCo-MOF",
+        "NiCu-MOF"
+    ],
+    "crystal_phase": {
+        "Characterization methods": [
+            "XRD",
+            "SEM",
+            "TEM",
+            "HRTEM"
+        ]
+    },
+    "exposed_crystal_plane_indices": {
+        "(200)": {
+            "Characterization methods": [
+                "XRD",
+                "HRTEM"
+            ]
+        }
+    },
+    "Characterization_methods": [
+        "XRD",
+        "SEM",
+        "TEM",
+        "HRTEM"
+    ],
+    "Proof in the paper": "The X-ray powder diffraction (XRD) of samples was recorded using a Phillips X′pert ProMPD diffractometer with Cu Kα radiation (λ = 1.54056 Å). The scanning electron microscopy (SEM) and transmission electron microscopy (TEM) were first performed to investigate the morphology and structure of the synthesized Ni-based MOFs. The high-resolution transmission electron microscopy (HRTEM) in Fig. 2a-b reveals that the lattice fringes spacings of Ni-MOF and NiFe-MOF are 1.02 nm and 1.03 nm, respectively, both corresponding to the (200) crystal plane.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337322011080"
+}

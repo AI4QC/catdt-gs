@@ -1,0 +1,21 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "CuxNiy (x/y = 7:1, 3:1, 1:1, 1:3, 1:7)"
+    ],
+    "crystal_phase": {
+        "CuxNiy": "face-centred cubic (fcc) structure"
+    },
+    "characterization_methods": [
+        "XRD"
+    ],
+    "exposed_crystal_plane_indices": {
+        "CuxNiy": [
+            "(111)",
+            "(200)",
+            "(220)"
+        ]
+    },
+    "Proof in the paper": "The XRD patterns of as-prepared CuxNiy/MgAlO nanocatalysts showed two obvious reflections at 2θ = 43.33–44.46° and 2θ = 50.44–51.85°, which were assigned to (111) and (200) crystal planes of face-centred cubic (fcc) structure (Fig. 1B). The XRD diffraction patterns of resultant CuNi/MgAlO-T catalysts showed three characteristic diffraction peaks at 2θ = 43.81°, 51.06°, and 75.16°, which were ascribed to the (111), (200), and (220) crystal planes of CuNi alloys, respectively (Fig. 3).",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337316308013"
+}

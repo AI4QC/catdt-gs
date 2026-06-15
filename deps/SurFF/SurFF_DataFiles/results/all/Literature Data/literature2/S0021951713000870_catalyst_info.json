@@ -1,0 +1,34 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Ni/TiO2",
+        "Ni–Ir/TiO2"
+    ],
+    "crystal_phase": {
+        "Ni/TiO2": "Metallic nickel",
+        "Ni–Ir/TiO2": "Ni–Ir alloy"
+    },
+    "characterization_methods": {
+        "Ni/TiO2": [
+            "XRD"
+        ],
+        "Ni–Ir/TiO2": [
+            "XRD",
+            "High-Resolution TEM (HRTEM)"
+        ]
+    },
+    "exposed_crystal_plane_indices": {
+        "Ni/TiO2": [
+            "(1 1 1)",
+            "(2 0 0)"
+        ],
+        "Ni–Ir/TiO2": [
+            "(1 1 1)"
+        ]
+    },
+    "Proof in the paper": {
+        "Ni/TiO2": "The XRD patterns of Ni/TiO2 and Ni–Ir/TiO2 catalysts after reduction at 400°C are shown in Fig. 1. For the Ni/TiO2 catalyst (Fig. 1a), besides the diffraction of anatase TiO2, the metallic nickel was found at 2θ of 44.6° and 52.1°, indicating only the metallic nickel present on the surface of the reduced Ni/TiO2.",
+        "Ni–Ir/TiO2": "In the case of Ni–Ir/TiO2 catalyst (Fig. 1b), the diffraction intensity of the anatase TiO2 decreases and the diffraction peak of nickel (2 0 0) at 2θ = 52.1° was rather weak and almost cannot be detected. The crystal size of Ni was about 9.1 nm from the Ni(1 1 1) at 2θ = 44.6°, which was smaller than that of the Ni/TiO2 catalyst."
+    },
+    "url": "https://www.sciencedirect.com/science/article/pii/S0021951713000870"
+}

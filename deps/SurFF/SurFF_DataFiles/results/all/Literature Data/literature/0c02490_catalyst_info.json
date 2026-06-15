@@ -1,0 +1,20 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Mn–N–C"
+    ],
+    "Characterization_methods": [
+        "X-ray absorption spectroscopy (XAS)",
+        "high-resolution scanning transmission electron microscopy (HR-STEM)",
+        "electron energy loss spectroscopy (EELS)",
+        "X-ray diffraction (XRD)"
+    ],
+    "exposed_crystal_plane_indices": {
+        "Mn–N–C": [
+            "(002)",
+            "(101)"
+        ]
+    },
+    "Proof in the paper": "The XRD patterns of the obtained catalyst show dominant peaks around 25 and 44°, which can be assigned to carbon planes (002) and (101), respectively (Figure S1b)",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.0c02490"
+}

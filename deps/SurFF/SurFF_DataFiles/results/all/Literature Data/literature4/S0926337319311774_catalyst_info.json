@@ -1,0 +1,23 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "AlFeCoNiCr"
+    ],
+    "crystal_phase": {
+        "AlFeCoNiCr": "face-center-cubic (FCC) structured Ni-based alloy, spinel oxide"
+    },
+    "Characterization_methods": [
+        "XRD",
+        "HRTEM",
+        "SAED"
+    ],
+    "exposed_crystal_plane_indices": {
+        "AlFeCoNiCr": [
+            "(111)",
+            "(311)",
+            "(440)"
+        ]
+    },
+    "Proof in the paper": "The XRD patterns of the multi-component alloy before (a) and after (b) dealloying, plane-view (c) and section-view (d) SEM images of the np-AlFeCoNiCr showing the uniform porous structure. HRTEM (e) and SAED (inset in e) images of the np-AlFeCoNiCr. Dark-field STEM image (f) and STEM-EDS mapping (g) of the sample.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337319311774"
+}

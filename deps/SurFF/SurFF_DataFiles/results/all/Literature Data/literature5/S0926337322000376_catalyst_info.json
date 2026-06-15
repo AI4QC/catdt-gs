@@ -1,0 +1,27 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Fe2O3",
+        "NiFe-LDHs"
+    ],
+    "crystal_phase": {
+        "Fe2O3": "JCPDS No. 39-1346",
+        "NiFe-LDHs": "JCPDS No. 49-0188"
+    },
+    "exposed_crystal_plane_indices": {
+        "Fe2O3": [
+            "(311)"
+        ],
+        "NiFe-LDHs": [
+            "(015)"
+        ]
+    },
+    "Characterization_methods": [
+        "X-ray diffraction (XRD)",
+        "Raman spectroscopy",
+        "High-resolution transmission electron microscopy (HRTEM)",
+        "Fast Fourier transformation (FFT)"
+    ],
+    "Proof in the paper": "The characteristic peaks of Fe2O3/NiFe-LDHs in Fig. S1 are well matched with standard Fe2O3 (JCPDS No. 39-1346) and NiFe-LDHs (JCPDS No. 49-0188). The transmission electron microscopy (TEM) images in Fig. 1c–d show 3D nanosheets are consisted of nanoparticles with 5∼15 nm in diameters. Interestingly, high-resolution TEM (HRTEM) image in Fig. 1f shows a high density of heterointerfaces, where NiFe-LDHs with (015) nanofacets are intimately contacted with Fe2O3 with (311) facets. The fast Fourier transformation image in Fig. 1g confirms the presence of various lattice planes, consisted with the XRD results of Fe2O3/NiFe-LDHs.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337322000376"
+}

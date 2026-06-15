@@ -1,0 +1,22 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Pd-Ni"
+    ],
+    "crystal_phase": {
+        "Pd-Ni": "mixture of Ni (200) face-centered cubic, and Ni (111) face centered cubic phases; Pd-Ni alloy"
+    },
+    "Characterization_methods": [
+        "X-ray powder diffraction (XRD)",
+        "High-resolution (HR) TEM imaging"
+    ],
+    "exposed_crystal_plane_indices": {
+        "Pd-Ni": [
+            "Ni (111)",
+            "Ni (200)",
+            "Pd (111)"
+        ]
+    },
+    "Proof in the paper": "The X-ray powder diffraction (XRD) patterns (Figure 2a) suggested that PdNi particles (nominal composition of 5 wt %Pd-10 wt %Ni/HZSM-5) contained a mixture of Ni (200) face-centered cubic, and Ni (111) face centered cubic phases (48% and 52%, respectively); a small peak corresponding to the presence of a Pd-Ni alloy at a peak of ∼42.5° was also detected in the XRD pattern. The HRTEM image revealed that Pd-Ni was of high crystallinity and was composed of Pd-Ni alloy facets with a lattice distance of 0.21 nm. Single- or twin-crystallinity particles contained exposed Ni (111), Ni (200), and Pd (111), which was in agreement with XRD patterns (Figure 2a).",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.6b00520"
+}

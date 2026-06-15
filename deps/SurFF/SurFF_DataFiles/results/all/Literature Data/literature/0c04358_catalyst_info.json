@@ -1,0 +1,23 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Fe–Co"
+    ],
+    "crystal_phase": {
+        "Fe–Co": [
+            "Fe–Co mixed oxide (CoFe2O4)",
+            "Fe–Co mixed carbide (Co2FeC)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD",
+        "TEM-EDS"
+    ],
+    "exposed_crystal_plane_indices": {
+        "Fe–Co mixed oxide": [
+            "(111)"
+        ]
+    },
+    "Proof in the paper": "The XRD patterns at room temperature (R.T. at the bottom of Figure 4a) indicate that the as-prepared FeK/NC and FeCoK/NC are composed of Fe3O4 and metallic Fe as the main components. However, in the case of FeK/Co–NC, an Fe–Co mixed oxide (CoFe2O4) and a mixed carbide (Co2FeC) were found to initially form. This is in accordance with the TEM-EDS observation (Figure 3), showing a high degree of Fe–Co alloy formation.",
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.0c04358"
+}

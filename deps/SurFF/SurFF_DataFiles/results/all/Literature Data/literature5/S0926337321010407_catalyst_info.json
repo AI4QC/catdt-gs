@@ -1,0 +1,24 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "NiSe2",
+        "Ni3Se4"
+    ],
+    "crystal_phase": {
+        "NiSe2": "NiSe2 (JCPDS no. 88–1711)",
+        "Ni3Se4": "Ni3Se4 (JCPDS no. 89–2020)"
+    },
+    "exposed_crystal_plane_indices": {
+        "NiSe2": [
+            "(210)"
+        ],
+        "Ni3Se4": [
+            "(-514)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD",
+        "HRTEM"
+    ],
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337321010407"
+}

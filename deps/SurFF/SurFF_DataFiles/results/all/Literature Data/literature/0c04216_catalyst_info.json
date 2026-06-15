@@ -1,0 +1,36 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Cu–Ni–Zn"
+    ],
+    "crystal_phase": {
+        "Cu–Ni alloy": "Cu–Ni alloy",
+        "Cu–Zn alloy": "Cu–Zn alloy",
+        "Cu–Ni–Zn alloy": "Cu–Ni–Zn alloy"
+    },
+    "exposed_crystal_plane_indices": {
+        "Cu–Ni alloy": [
+            "(111)",
+            "(200)",
+            "(220)"
+        ],
+        "Cu–Zn alloy": [
+            "(111) α-brass",
+            "(550) γ-brass"
+        ],
+        "Cu–Ni–Zn alloy": [
+            "(111)",
+            "(200)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD",
+        "HR-TEM"
+    ],
+    "Proof in the paper": [
+        "The peaks at 43.3, 50.4, and 74.1° were assigned to the (111), (200), and (220) planes, respectively, of pure Cu0 (JCPDS file no. 4-0836), and the peaks at 44.5, 51.8, and 76.3° were ascribed to the (111), (200), and (220) planes of pure Ni0 (JCPDS file no. 4-0850), respectively. The peaks ascribed to pure Cu0 in the XRD pattern of the bimetallic 20C–5N/Z catalyst shifted slightly toward the higher 2θ values of 43.4, 50.5, and 74.3° compared with those of pure Cu0. This peak shifting indicated the formation of a Cu–Ni alloy.",
+        "The high-magnification HR-TEM images of the trimetallic catalysts illustrated that the dTEM-spacings of the metallic phases were 0.213 and 0.125 nm, which corresponded to the Cu–Zn (111) α-brass alloy (JCPDS file no. 50-1333) (20C–2N–2Z/Z) and Cu–Zn (550) γ-brass alloy (JCPDS file no. 25-1228) planes (20C–5N–2Z/Z), respectively.",
+        "The d-spacings of the Cu–Zn and Cu–Ni alloys were significantly different than those of pure Cu (0.129, 0.208, and 0.180 nm for the (220), (111), and (200) planes, respectively, Table S2). The rearranged d-spacings of the metal NPs in the bi- and trimetallic catalysts indicated the formation of alloys, which agreed well with the XRD results."
+    ],
+    "url": "https://pubs.acs.org/doi/10.1021/acscatal.0c04216"
+}

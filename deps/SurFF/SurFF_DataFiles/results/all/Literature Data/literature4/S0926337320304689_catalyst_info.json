@@ -1,0 +1,27 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Cu",
+        "Pd-Cu"
+    ],
+    "crystal_phase": {
+        "Cu": "not specified",
+        "Pd-Cu": "body-centred cubic"
+    },
+    "exposed_crystal_plane_indices": {
+        "Cu": [
+            "(111)",
+            "(200)"
+        ],
+        "Pd-Cu": [
+            "(111)",
+            "(200)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD",
+        "XPS"
+    ],
+    "Proof in the paper": "The XRD patterns of all Cu/SS electrodes prepared in different type and concentration of surfactants were presented in Supplementary Data (Fig. S3). The three major peaks at 2θ 43.3°, 50.4°, and 74.1° were assigned to the ordering planes of Cu(111), Cu(200), and Cu(220), respectively (Fig. 2a). The intensity of metallic Cu peaks sharply decreased with increasing Pd plating time (from 1 to 10 min), which implied the corrosion of Cu facets. Since PdCl2 is a relatively strong oxidant (Pd2+ + 2e− ⇌ Pd; E° = 0.951 V) in acidic electrolyte, Pd deposition might lead to Cu oxidation via the electrodeless mechanism (i.e., Pd2+ + Cu + H2O → Pd + Cu2O + 2H+; ΔG° = -23.79 kCal). Consequently, the small Cu crystallite seeds aided the accumulation of Pd particles, while a thin and passivating film of cuprous oxide developed on the smooth facets of the large Cu crystals.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337320304689"
+}

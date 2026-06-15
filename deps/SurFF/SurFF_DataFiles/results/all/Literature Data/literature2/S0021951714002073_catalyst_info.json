@@ -1,0 +1,21 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Ag3In",
+        "Ag0.75In0.25"
+    ],
+    "crystal_phase": {
+        "Ag3In": "ordered (Cu3Au structure type with Pm3¯m space group)",
+        "Ag0.75In0.25": "disordered (Fm3¯m)"
+    },
+    "Characterization_methods": [
+        "PXRD"
+    ],
+    "exposed_crystal_plane_indices": {
+        "Ag3In": [
+            "(1 1 0)"
+        ]
+    },
+    "Proof in the paper": "The ordered structure of Ag3In belongs to the Cu3Au structure type with Pm3¯m space group. The In atoms occupy the corner positions (Wyckoff no. 1a) forming a primitive lattice and the Ag atoms occupy half of the octahedral holes (Wyckoff no. 3c), and hence, a change in the Bravais lattice occurs from F to P due to the lowering of the lattice symmetry. The lowering in symmetry generates several extra low intensity peaks in the PXRD patterns of the samples synthesized at higher reaction times. Among these, the one peak that corresponds to (1 1 0) plane observed at around 2θ = 30.6° is shown in Fig. 2. (Source: 'discussion' section of the report)",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0021951714002073"
+}

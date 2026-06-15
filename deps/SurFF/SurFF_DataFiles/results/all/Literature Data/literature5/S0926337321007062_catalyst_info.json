@@ -1,0 +1,21 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "NiFe-LDH"
+    ],
+    "crystal_phase": {
+        "NiFe-LDH": "Layer double hydroxide (PDF#40-0215)"
+    },
+    "exposed_crystal_plane_indices": {
+        "NiFe-LDH": [
+            "(015)",
+            "(006)"
+        ]
+    },
+    "Characterization_methods": [
+        "X-ray diffraction (XRD)",
+        "High-resolution TEM (HRTEM)"
+    ],
+    "Proof in the paper": "High-resolution TEM (HRTEM) was then used to precisely characterize the unique surface of the oriented tiny NSs. The thickness of these tiny NSs is less than 2 nm (Fig. 1d, Fig. S2). Two fringes with a lattice spacing of 0.22 and 0.38 nm together with the crystal plane angle of 120 ° are observed at the top surface of the tiny NSs, which correspond to the (015) and (006) planes of NiFe-LDH, respectively.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337321007062"
+}

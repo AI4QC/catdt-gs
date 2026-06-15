@@ -1,0 +1,24 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Cu-SiO2",
+        "Ni-SiO2",
+        "NiCu-SiO2"
+    ],
+    "crystal_phase": {
+        "CuO": "monoclinic phase",
+        "NiO": "JCPDS 22-1189",
+        "Cu-Ni alloy": "fcc"
+    },
+    "exposed_crystal_plane_indices": {
+        "Cu-Ni alloy": [
+            "(111)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD",
+        "HRTEM"
+    ],
+    "Proof in the paper": "The XRD patterns of the representative in situ reduced Cu, Ni, and Ni-decorated Cu catalysts (Fig. 3B) showed the diffraction peaks positioned between Ni0 and Cu0 for both bimetallic 10Ni80Cu-SiO2 and 10Ni/80Cu-SiO2 catalysts, indicating the formation of Cu-Ni alloy. Moreover, both NiCu-SiO2 bimetallic catalysts also gave much weaker XRD peaks compared to those in the pattern of the monometallic Cu catalysts, referring to a better dispersion of Cu particles with the introduction of Ni by the formation of Cu-Ni alloys. The mean crystalline sizes of CuO, NiO, Cu0, Ni0, and Cu-Ni alloy in the representative samples mentioned above were calculated by the Scherrer equation, and the results were compiled in Table 5. The HRTEM images and particle size distribution of reduced 80Cu-SiO2, 90Cu-SiO2, 10Ni80Cu-SiO2, and 10Ni/80Cu-SiO2 catalysts (Fig. 5) showed lattice fringes of about 0.2062–0.2070 nm, which located just right between 0.2034 nm for metallic Ni(111) and 0.2088 nm for metallic Cu(111), indicating the formation of face-centred cubic (fcc) Cu-Ni alloy in both catalysts.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337317307592"
+}

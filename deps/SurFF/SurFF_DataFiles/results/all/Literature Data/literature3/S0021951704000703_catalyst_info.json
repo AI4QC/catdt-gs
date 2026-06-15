@@ -1,0 +1,19 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "PtRuRhNi"
+    ],
+    "crystal_phase": {
+        "PtRuRhNi": "Pt fcc structure"
+    },
+    "Characterization_methods": [
+        "High-resolution TEM (HRTEM)"
+    ],
+    "exposed_crystal_plane_indices": {
+        "PtRuRhNi": [
+            "(111)"
+        ]
+    },
+    "Proof in the paper": "The d spacing of the (111) plane in the PtRuRhNi nanoparticle is reduced to d111∼0.224 nm, compared to d111∼0.228 nm in the pure Pt, indicative of good alloy formation between Pt and other elements such as Ru, Ni, and Rh. The crystalline plane of the PtRuRhNi nanoparticles can be observed in a high-resolution TEM image, as shown in Fig. 1b.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0021951704000703"
+}

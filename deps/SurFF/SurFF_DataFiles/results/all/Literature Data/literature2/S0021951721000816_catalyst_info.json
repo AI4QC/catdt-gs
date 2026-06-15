@@ -1,0 +1,21 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "PtNi"
+    ],
+    "crystal_phase": {
+        "PtNi": "Face-centered cubic (FCC) structure"
+    },
+    "exposed_crystal_plane_indices": {
+        "PtNi": [
+            "{1 1 1}"
+        ]
+    },
+    "Characterization_methods": [
+        "HR-TEM",
+        "PXRD",
+        "on-axis TKD"
+    ],
+    "Proof in the paper": "The HR-TEM images show distinct difference in lattice distance among Pt7Ni3 octahedra, Pt5Ni5 octahedra, and Pt4Ni6 octahedra. According to HR-TEM images and the calculated results, the lattice distances of three samples are 0.219 nm for Pt7Ni3 octahedra, 0.215 nm for Pt5Ni5 octahedra, and 0.211 nm for Pt4Ni6 octahedra, depending on their alloying composition. The results of powder X-ray diffraction display the characteristic patterns for the (1 1 1) and (2 0 0) facets and reveal PtNi octahedra to be in a face-centered cubic (FCC) structure. For further analysis, the intensity ratio for (1 1 1) versus (2 0 0) pattern provides the evidence of preferred orientation of PtNi octahedra, which are measured to be in the range of 2.6 ~ 3.5 for three samples, being larger than that (~2.2) of the bulk Pt alloys. The combination of XRD scans and HRTEM images thus reconfirms that all as-prepared PtNi alloys are mainly enclosed by {1 1 1} planes and exhibit the octahedral morphology.",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0021951721000816"
+}

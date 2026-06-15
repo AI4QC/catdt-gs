@@ -1,0 +1,26 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Pd–Ni"
+    ],
+    "crystal_phase": {
+        "Pd–Ni": "face-centered cubic (fcc)"
+    },
+    "exposed_crystal_plane_indices": {
+        "Pd–Ni": [
+            "(111)",
+            "(200)",
+            "(220)",
+            "(311)",
+            "(331)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD",
+        "HRTEM",
+        "SAED",
+        "HAADF"
+    ],
+    "Proof in the paper": "The X-ray powder diffraction (XRD) obtained on the series of as-prepared Pd−Ni nanowires has revealed that the NWs are composed of homogeneous alloys with a face-centered cubic (fcc) crystal structure. The selected area electron diffraction (SAED) pattern shows continuous rings that can be indexed to the (111), (200), (220), (311), and (331) reflections for the calculated fcc Pd0.90Ni0.10 alloy.",
+    "url": "https://pubs.acs.org/doi/10.1021/cs500125y"
+}

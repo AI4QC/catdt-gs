@@ -1,0 +1,32 @@
+{
+    "is_metal_catalyst": "Yes",
+    "chemical_composition": [
+        "Ni/LSCF",
+        "Ni-LSCF",
+        "RuNi/LSCF"
+    ],
+    "crystal_phase": {
+        "Ni/LSCF": "Perovskite structure with orthorhombic symmetry (La0.7Sr0.3Fe0.7Co0.3O3, JPCD 01–089–1268)",
+        "Ni-LSCF": "Perovskite structure with orthorhombic symmetry (La0.7Sr0.3Fe0.7Co0.3O3, JPCD 01–089–1268)",
+        "RuNi/LSCF": "Perovskite structure with orthorhombic symmetry (La0.7Sr0.3Fe0.7Co0.3O3, JPCD 01–089–1268)"
+    },
+    "exposed_crystal_plane_indices": {
+        "Ni/LSCF": [
+            "(112)",
+            "(204)"
+        ],
+        "Ni-LSCF": [
+            "(112)",
+            "(204)"
+        ],
+        "RuNi/LSCF": [
+            "(112)",
+            "(204)"
+        ]
+    },
+    "Characterization_methods": [
+        "XRD"
+    ],
+    "Proof in the paper": "The diffractograms of the fresh support and the catalytic systems are shown in Fig. 1. Two crystalline phases with different relative intensities are appreciated for the bare LSCF oxide. The predominant crystalline structure is related to a perovskite structure with orthorhombic symmetry (La0.7Sr0.3Fe0.7Co0.3O3, JPCD 01–089–1268). The secondary phase corresponds to the formation of lanthanum oxide (La2O3, JPCD 01–083–1344).",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0926337321008122"
+}
