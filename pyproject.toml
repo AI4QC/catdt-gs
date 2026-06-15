@@ -1,0 +1,51 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "catdt"
+version = "0.1.0"
+description = "CatDT: Catalysis Digital Twin"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "Apache-2.0" }
+authors = [
+  { name = "szl666" },
+  { name = "sherrylixuecheng" }
+]
+dependencies = [
+  "ase>=3.22",
+  "camel-ai>=0.2",
+  "loguru>=0.7",
+  "moviepy>=1.0",
+  "numpy>=1.24",
+  "openai>=1.0",
+  "scipy>=1.10",
+  "matplotlib>=3.7",
+  "networkx>=3.0",
+  "plotly>=5.0",
+  "pydantic>=2.0",
+  "python-dotenv>=1.0",
+  "pyyaml>=6.0",
+  "torch>=2.1",
+  "tqdm>=4.65",
+  "pandas>=2.0"
+]
+
+[project.optional-dependencies]
+reconstruction = [
+  "pymatgen>=2024.0",
+  "lmdb>=1.4",
+  "torch-geometric>=2.5",
+  "transformers>=4.40",
+  "mp-api>=0.40"
+]
+visualization = [
+  "ovito>=3.8",
+  "pillow>=10.0",
+  "catplot>=0.3"
+]
+dev = [
+  "pytest>=8.0",
+  "ruff>=0.5"
+]

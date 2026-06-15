@@ -1,0 +1,52 @@
+{
+  "project": {
+    "name": "CatDT",
+    "description": "Catalysis Digital Twin - Multi-scale heterogeneous catalysis simulation platform",
+    "repository": "https://github.com/your-org/catdt"
+  },
+  "deps": {
+    "surff": "deps/SurFF",
+    "adsorbdiff": "deps/AdsorbDiff",
+    "surface_sampling": "deps/surface-sampling",
+    "fairchem": "deps/fairchem",
+    "catmap": "deps/catmap",
+    "catplot": "deps/catplot"
+  },
+  "defaults": {
+    "mc_temperature_k": 500.0,
+    "mc_total_sweeps": 100,
+    "mc_energy_model": "CHGNet",
+    "neb_n_frames": 11,
+    "neb_fmax": 0.05,
+    "neb_max_steps": 400,
+    "fairchem_model": "uma-s-1p1",
+    "relax_fmax": 0.05,
+    "relax_max_steps": 300,
+    "adsorption_num_sites": 5,
+    "surff_top_n": 3,
+    "output_base_dir": "output",
+    "device": "cuda"
+  },
+  "mechanism_search": {
+    "max_depth": 8,
+    "beam_width": 8,
+    "delta_keep_eV": 0.10,
+    "delta_prune_eV": 0.30,
+    "max_state_evaluations": 40,
+    "exploration_mode": "agent_guided",
+    "energy_backend": "thermal_uma"
+  },
+  "visualization": {
+    "auto_viz": true,
+    "renderer": "tachyon",
+    "quality": "high",
+    "trajectory_fps": 5,
+    "energy_diagram_style": "material",
+    "supercell_expand": [2, 2, 1]
+  },
+  "env_vars_required": {
+    "full_pipeline": ["OPENAI_API_KEY"],
+    "electrochemical": ["MP_API_KEY"],
+    "optional": ["OPENAI_BASE_URL", "OPENAI_MODEL", "OPENAI_TEMPERATURE"]
+  }
+}

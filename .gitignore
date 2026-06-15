@@ -1,0 +1,95 @@
+# Large data files
+*.zip
+*.tar.gz
+*.tar
+*.pkl
+*.pt
+*.pth
+*.model
+*.ckpt
+
+# PDF documentation (can be downloaded separately)
+*.pdf
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Environment
+.env
+.venv
+env/
+venv/
+ENV/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Test outputs (keep structure but not data)
+test_*_output/
+complete_example_output/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Large files (>100MB, use Git LFS or download separately)
+# See LARGE_FILES.md for details
+deps/SurFF/SurFF_DataFiles/ocp/data/relax/all/relax_all.lmdb
+deps/SurFF/SurFF_DataFiles/ocp/data/train/train_element_2.lmdb
+deps/SurFF/SurFF_DataFiles/ocp/data/train/train_element_3.lmdb
+deps/SurFF/SurFF_DataFiles/ocp/data/test/id/test_element_3_id.lmdb
+deps/SurFF/SurFF_DataFiles/ocp/checkpoints/*/best_checkpoint.pt
+deps/SurFF/SurFF_DataFiles/ocp/checkpoints/*/checkpoint.pt
+deps/SurFF/SurFF_DataFiles/Data/Surface/Traj/all_images_element_*_ref_energy.json
+deps/SurFF/SurFF_DataFiles/Data/Surface/Traj/relax_all.lmdb
+deps/SurFF/SurFF_DataFiles/Data/Surface/Traj/train_element_*.lmdb
+deps/SurFF/SurFF_DataFiles/Data/Surface/Traj/test_element_3_id.lmdb
+deps/SurFF/SurFF_DataFiles/Data/saved_model/*/best_checkpoint.pt
+deps/SurFF/SurFF_DataFiles/Data/saved_model/*/checkpoint.pt
+deps/SurFF/SurFF_DataFiles/Data/dataset_generation/LMDB/element_*_all.lmdb
+data/ocp/data/relax/all/relax_all.lmdb
+data/ocp/data/train/train_element_2.lmdb
+data/ocp/data/train/train_element_3.lmdb
+data/ocp/data/test/id/test_element_3_id.lmdb
+data/Data/Surface/Traj/all_images_element_*_ref_energy.json
+data/Data/Surface/Traj/relax_all.lmdb
+data/Data/Surface/Traj/train_element_*.lmdb
+data/Data/Surface/Traj/test_element_3_id.lmdb
+data/Data/saved_model/*/best_checkpoint.pt
+data/Data/saved_model/*/checkpoint.pt
+data/Data/dataset_generation/LMDB/element_*_all.lmdb
+
+# Claude session files
+.claude/
+
+# Git worktrees
+.worktrees/
+
+# Git worktrees
+.worktrees/
