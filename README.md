@@ -1,17 +1,13 @@
 # CatDT - Catalysis Digital Twin
 
-**AI-Driven Multi-Scale Simulation Platform for Heterogeneous Catalysis**
+**A self-evolving multi-agent system (MAS) for autonomous heterogeneous catalysis**
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Thermocatalysis-Gas--Solid-orange?style=for-the-badge" alt="Gas-Solid">
-  <img src="https://img.shields.io/badge/Electrocatalysis-Liquid--Solid-blue?style=for-the-badge" alt="Liquid-Solid">
   <img src="https://img.shields.io/badge/AI--Driven-8_Agents-green?style=for-the-badge" alt="AI-Driven">
   <img src="https://img.shields.io/badge/Python-3.10+-blue?style=for-the-badge&logo=python" alt="Python">
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Gas--Solid-Beta_Testing-yellow?style=flat-square" alt="Gas-Solid Status">
-  <img src="https://img.shields.io/badge/Liquid--Solid-In_Development-orange?style=flat-square" alt="Liquid-Solid Status">
   <img src="https://img.shields.io/badge/License-Apache_2.0-blue?style=flat-square" alt="License">
   <img src="https://img.shields.io/badge/Framework-CAMEL-purple?style=flat-square" alt="CAMEL">
 </p>
@@ -24,14 +20,7 @@
 > Input: **one bulk structure + one natural-language reaction description**.
 > Output: **reconstructed surfaces, validated NEB endpoints, activation barriers, microkinetic rates, and a reproducible report** — all orchestrated by LLM agents calling deterministic scientific tools.
 
-CatDT currently supports two digital-twin tracks:
-
-| Thermocatalysis (Gas-Solid) | Electrocatalysis (Liquid-Solid) |
-|---|---|
-| Temperature-driven | Potential/pH-driven |
-| Gas reactants on solid catalysts | Electrolyte + electrified interface |
-| NEB + UMA barriers, CatMAP/KMC kinetics | Constant-potential coupling + electrochemical KMC |
-| **Status: beta usable** | **Status: under active development** |
+CatDT is an autonomous digital-twin pipeline for heterogeneous catalysis: from a bulk crystal and a natural-language reaction description it predicts surfaces, reconstruction, mechanisms, and transition-state barriers (NEB/UMA or slow-growth MD), and closes the loop with CatMAP microkinetics.
 
 ```python
 from camel_agents.workflow import CatDTCamelWorkflow
@@ -58,7 +47,7 @@ The architecture principle is strict:
 
 The **[`skill/`](skill/)** directory contains a ready-to-use **AI coding agent skill** that solves this. Install it in any skill-compatible coding agent (Claude Code, Codex, OpenCode, etc.) and the agent can:
 
-- **Intelligently route** any catalysis request — "帮我算CO在Cu(111)上的吸附能" or "find NEB barrier for *CO→*CHO" — to the correct module(s)
+- **Intelligently route** any catalysis request — "compute the CO adsorption energy on Cu(111)" or "find NEB barrier for *CO→*CHO" — to the correct module(s)
 - **Auto-configure parameters** from natural language (element → bulk structure, adsorbate auto-prefixing, default T/model selection)
 - **Chain modules** for partial pipelines without running the full multi-agent workflow
 - **Generate runnable scripts** from 9 ready-to-adapt templates covering every module
@@ -86,14 +75,14 @@ See [`skill/SKILL.md`](skill/SKILL.md) for the full routing table, intent catalo
 - [Digital Twin Workflow](#digital-twin-workflow)
 - [8-Agent Multi-Agent System](#8-agent-multi-agent-system)
   - [Agent 1 — SurFF Surface Initializer](#agent-1--surff-surface-initializer)
-  - [Agent 2 — AdsorbDiff Adsorption Controller](#agent-2--adsorbdiff-adsorption-controller)
-  - [Agent 3 — VSSR-MC Reconstruction Manager](#agent-3--vssr-mc-reconstruction-manager)
+  - [Agent 2 — VSSR-MC Reconstruction Manager](#agent-2--vssr-mc-reconstruction-manager)
+  - [Agent 3 — AdsorbDiff Adsorption Controller](#agent-3--adsorbdiff-adsorption-controller)
   - [Agent M1 — UniMech Mechanism Search Coordinator](#agent-m1--unimech-mechanism-search-coordinator)
   - [Agent 4 — Pathway & Endpoint Designer](#agent-4--pathway--endpoint-designer)
   - [Agent 5 — Validation Auditor (Hard Gate)](#agent-5--validation-auditor-hard-gate)
   - [Agent 6 — KMC Executor](#agent-6--kmc-executor)
   - [Agent 7 — Orchestration & Visualization](#agent-7--orchestration--visualization)
-  - [UMA / CP-MACE Free Energy Tools (Not Agents)](#uma--cp-mace-free-energy-tools-not-agents)
+  - [Free Energy Tools (Not Agents)](#free-energy-tools-not-agents)
 - [Agent-Tool Architecture: How It Actually Works](#agent-tool-architecture-how-it-actually-works)
   - [Tool Registry Facade](#tool-registry-facade)
   - [28 CAMEL FunctionTools](#28-camel-functiontools)
@@ -111,7 +100,6 @@ See [`skill/SKILL.md`](skill/SKILL.md) for the full routing table, intent catalo
 - [Installation](#installation)
 - [Quick Start](#quick-start)
 - [Testing & Validation](#testing--validation)
-- [Current Status & Roadmap](#current-status--roadmap)
 - [FAQ](#frequently-asked-questions)
 - [References](#references)
 - [Citation](#citation)
@@ -122,7 +110,7 @@ See [`skill/SKILL.md`](skill/SKILL.md) for the full routing table, intent catalo
 ## Motivation: Beyond Adsorption Energies
 
 <p align="center">
-  <img src="assets/background/BG.svg" alt="Background and motivation for CatDT" width="920">
+  <img src="assets/background/fig1.png" alt="CatDT paradigm: from traditional catalysis computation to the autonomous digital twin" width="920">
 </p>
 
 ### The Core Scientific Problem
@@ -131,8 +119,7 @@ Most computational catalysis studies optimize adsorption energies on preselected
 
 - facets redistribute under temperature and pressure,
 - adsorbate coverage shifts and cooperative effects emerge,
-- surface composition can reconstruct entirely,
-- electrochemical fields alter bonding and barrier landscapes simultaneously.
+- surface composition can reconstruct entirely.
 
 **If the structure is wrong, barriers and kinetics computed on it are wrong.**
 
@@ -140,10 +127,9 @@ Most computational catalysis studies optimize adsorption energies on preselected
 
 | Common Assumption | Real Operating Behavior |
 |---|---|
-| Clean static slab | Dynamic reconstructed surface under T, P, or U |
+| Clean static slab | Dynamic reconstructed surface under T, P |
 | Single low-index facet | Multi-facet, condition-dependent exposure |
 | Fixed adsorbate sites | Nontrivial site switching / cooperative effects |
-| Post-hoc potential correction | Field-driven structure + energy co-evolution |
 | One handcrafted mechanism | Competing pathways with different selectivity |
 | Manual NEB endpoint construction | Brittle, error-prone, not scalable |
 
@@ -152,10 +138,10 @@ Most computational catalysis studies optimize adsorption energies on preselected
 CatDT makes this pipeline executable end-to-end:
 
 1. **Generate realistic exposed surfaces** from bulk crystal (SurFF Wulff prediction)
-2. **Place adsorbates** with ML-guided conditional sampling (AdsorbDiff)
-3. **Reconstruct surfaces** under operating conditions (VSSR-MC at T or U/pH)
+2. **Reconstruct surfaces** under operating conditions (VSSR-MC at temperature)
+3. **Place adsorbates** with ML-guided conditional sampling (AdsorbDiff)
 4. **Design and validate NEB endpoints** with LLM reasoning + deterministic geometry checks
-5. **Compute barriers** with two-phase CI-NEB on UMA force field
+5. **Compute barriers** with two-phase CI-NEB on the UMA force field (or slow-growth MD)
 6. **Run microkinetics** (CatMAP) for TOF, selectivity, and sensitivity analysis
 7. **Accumulate experience** from success/failure histories (Memento casebank)
 
@@ -165,10 +151,10 @@ This motivates a **tool-centric multi-agent architecture**, not pure prompt chai
 
 ## Digital Twin Workflow
 
-CatDT is a **single unified digital twin** that handles both gas-solid and liquid-solid catalytic interfaces. The same 8-agent orchestration drives both — only the tool/backend configuration differs per interface type.
+CatDT is a **single unified digital twin** of a working catalyst. An 8-agent orchestration drives the full pipeline; deterministic scientific tools do the computation.
 
 <p align="center">
-  <img src="assets/flowcharts/fig2a.svg" alt="CatDT Digital Twin Workflow" width="900">
+  <img src="assets/flowcharts/fig2a.svg" alt="CatDT hub-and-spoke multi-agent architecture" width="900">
 </p>
 
 ### Unified Execution Flow
@@ -178,13 +164,11 @@ Bulk Crystal (user input: POSCAR) + Reaction Description (natural language)
     │
     ├─ Agent 1: SurFF surface prediction → Wulff shape, ranked facets + slabs
     │
-    ├─ Agent 3a: VSSR-MC clean-slab reconstruction under operating conditions
-    │     Gas-solid: thermal MC at T (CHGNet / UMA)
-    │     Liquid-solid: Pourbaix MC at U, pH (NFFPourbaix / UMAPourbaixCalculator)
+    ├─ Agent 2a: VSSR-MC clean-slab reconstruction (MC at temperature T, CHGNet / UMA)
     │
-    ├─ Agent 2: AdsorbDiff adsorption on reconstructed surface
+    ├─ Agent 3: AdsorbDiff adsorption on reconstructed surface
     │
-    ├─ Agent 3b: VSSR-MC reconstruction with adsorbate present
+    ├─ Agent 2b: VSSR-MC reconstruction with adsorbate present
     │
     ├─ [Optional] Agent M1: UniMech mechanism search → competing pathways
     │
@@ -192,26 +176,12 @@ Bulk Crystal (user input: POSCAR) + Reaction Description (natural language)
     │     Tool-computed baseline → LLM designs → programmatic gate → Memento learning
     │
     ├─ Barrier computation (deterministic tool, not agent)
-    │     Gas-solid: UMA two-phase CI-NEB → Ea_fwd, Ea_rev, E_rxn
-    │     Liquid-solid: CP-MACE slow-growth MD at constant potential
+    │     UMA two-phase CI-NEB, or slow-growth MD (CP-MACE) → Ea_fwd, Ea_rev, E_rxn
     │
     ├─ Agent 6: CatMAP microkinetics → TOF, selectivity, coverage
-    │     Liquid-solid: electrochemical KMC → current density, Faradaic efficiency
     │
     └─ Agent 7: Orchestration, visualization, final report
 ```
-
-### Interface-Specific Tool Backends
-
-| Dimension | Gas-Solid | Liquid-Solid |
-|---|---|---|
-| Driving variable | Temperature (T) | Potential (U) + pH |
-| Reconstruction calculator | CHGNet (`EnsembleNFFSurface`) or UMA (`UMASurfaceCalculator`) | CHGNet (`NFFPourbaix`) or UMA (`UMAPourbaixCalculator`) |
-| Pourbaix data | N/A | Materials Project via `generate_pourbaix_atoms()` |
-| Intermediate stability | Adsorption energy | Adsorption energy + CHE correction |
-| **Barrier tool** | **UMA (NEB + FIRE)** | **CP-MACE (slow-growth MD at U, pH)** |
-| Kinetics | CatMAP thermal TOF | Electrochemical KMC (current/FE) |
-| Agent4 constraints | Thermal | PCET, potential window |
 
 ---
 
@@ -226,9 +196,9 @@ CatDT has **8 agents** defined in `camel_agents/prompts.py`. Agent 1–7 handle 
 ├────────────────────────────────────────────────────────────────────┤
 │                                                                    │
 │  Agent 1  ─── generate_surfaces ─────────────► SurFF               │
-│  Agent 3a ─── reconstruct clean slab ────────► VSSR-MC (CHGNet/UMA)│
-│  Agent 2  ─── adsorb on reconstructed surface► AdsorbDiff          │
-│  Agent 3b ─── reconstruct with adsorbate ────► VSSR-MC (CHGNet/UMA)│
+│  Agent 2a ─── reconstruct clean slab ────────► VSSR-MC (CHGNet/UMA)│
+│  Agent 3  ─── adsorb on reconstructed surface► AdsorbDiff          │
+│  Agent 2b ─── reconstruct with adsorbate ────► VSSR-MC (CHGNet/UMA)│
 │                                                                    │
 │  Agent 4 ◄──────── feedback ────────► Agent 5                      │
 │    │  LLM pathway design                │  LLM + programmatic      │
@@ -240,10 +210,10 @@ CatDT has **8 agents** defined in `camel_agents/prompts.py`. Agent 1–7 handle 
 │    └──────────── iterative loop (max 10) ──────┘                   │
 │                        │ PASS                                      │
 │                        ▼                                           │
-│  ┌─ UMA / CP-MACE Free Energy Tools (NOT agents) ──────────────┐  │
+│  ┌─ Free Energy Tools (NOT agents) ────────────────────────────┐  │
 │  │  run_neb_for_steps ──────────────────► BarrierPredictor      │  │
 │  │  compute_adsorption_energies ────────► FairchemPredictor     │  │
-│  │  (GS: NEB + UMA  |  LS: slow-growth MD + CP-MACE)           │  │
+│  │  (NEB + UMA, or slow-growth MD + CP-MACE)                   │  │
 │  │  If Ea > threshold → Feedback to Agent 5                     │  │
 │  └──────────────────────────────────────────────────────────────┘  │
 │                        │                                           │
@@ -280,19 +250,71 @@ result = predictor.predict(structure="POSCAR_Cu", top_n=3)
 
 **Failure mode handled:** Unrealistic facet ranking or missing dominant exposed planes.
 
-### Agent 2 — AdsorbDiff Adsorption Controller
+### Agent 2 — VSSR-MC Reconstruction Manager
 
-**Role:** Adsorption Site Planner (runs between Agent 3a and 3b)
-**Scientific problem:** High-symmetry placement misses realistic adsorption minima. Agent 2 operates on the **already-reconstructed surface** from Agent 3a, so adsorption sites reflect the true operating surface topology (steps, kinks, adatoms) rather than idealized low-index planes.
+**Role:** Surface Reconstruction Sampler (two-step: 2a clean → 2b with adsorbate)
+**Scientific problem:** Operating surfaces are dynamic, not static slabs. The catalyst surface reconstructs under operating conditions, and adsorbates further modify the reconstructed surface. A two-step process captures both effects: first reconstruct the clean surface, then adsorb, then reconstruct again with the adsorbate present.
+**Tool:** `simulate_surface_reconstruction` → `core/reconstruction/vssr_mc_predictor.py`
+**Energy models:** CHGNet (NFF framework, default) or UMA (FairChem framework), configurable via `mc_energy_model`
+
+```python
+from core.reconstruction.vssr_mc_predictor import VSSRMCPredictor
+
+# Reconstruction with CHGNet:
+predictor = VSSRMCPredictor(model_type="CHGNetNFF")
+# Step 2a: reconstruct clean slab
+result_2a = predictor.sample(
+    surface=clean_slab,
+    adsorbates=["Cu"],
+    temperature=500.0,       # K
+    total_sweeps=50,
+)
+# Step 3: place adsorbate on reconstructed surface (Agent 3)
+# Step 2b: reconstruct with adsorbate, using external indices
+result_2b = predictor.sample(
+    surface=slab_with_adsorbate,
+    adsorbates=["Cu"],
+    temperature=500.0,
+    total_sweeps=100,
+    surface_indices=top_layer_cu_indices,    # correctly identify metal surface
+    adsorbate_indices=co_atom_indices,       # keep adsorbate free but not "surface"
+)
+
+# Reconstruction with UMA:
+predictor_uma = VSSRMCPredictor(model_type="UMA")
+# Same two-step flow, UMA provides energy/forces via FAIRChemCalculator
+```
+
+**Two-step reconstruction flow:**
+1. **Step 2a** (clean): Reconstruct the bare surface under operating conditions. No adsorbate → z-coordinate layer detection works correctly. Surface forms realistic defects (steps, kinks, adatoms).
+2. **Step 3** (adsorb): AdsorbDiff places adsorbates on the reconstructed surface (more realistic adsorption sites than on idealized clean slab).
+3. **Step 2b** (with adsorbate): Reconstruct again with adsorbate present. External `surface_indices` and `adsorbate_indices` ensure correct constraint handling — metal atoms free for MC, adsorbate atoms free but not misidentified as "surface layer".
+
+**What happens:** Semi-grand-canonical MC explores compositional/configurational space. Each sweep proposes atom addition/removal/swap, accepted by the Metropolis criterion based on surface excess energy at the operating temperature.
+
+**Energy model selection:**
+
+| Mode | CHGNet | UMA |
+|------|--------|-----|
+| Surface MC | `EnsembleNFFSurface` | `UMASurfaceCalculator` |
+
+**Output:** `lowest_energy_reconstructed_structure.vasp` + MC trajectory GIF + energy/acceptance history. Both `surface_energy` (excess) and `total_energy` (absolute, from ML model) are recorded.
+
+**Failure mode handled:** MC trajectory stagnation or physically implausible reconstruction candidates.
+
+### Agent 3 — AdsorbDiff Adsorption Controller
+
+**Role:** Adsorption Site Planner (runs between Agent 2a and 2b)
+**Scientific problem:** High-symmetry placement misses realistic adsorption minima. Agent 3 operates on the **already-reconstructed surface** from Agent 2a, so adsorption sites reflect the true operating surface topology (steps, kinks, adatoms) rather than idealized low-index planes.
 **Tool:** `predict_adsorption_sites` → `core/reconstruction/adsorbdiff_predictor.py`
 
 ```python
-# What Agent 2 does internally (via tool call):
+# What Agent 3 does internally (via tool call):
 from core.reconstruction.adsorbdiff_predictor import AdsorbDiffPredictor
 
 predictor = AdsorbDiffPredictor(adsorbdiff_root="deps/AdsorbDiff")
 result = predictor.predict(
-    surface=reconstructed_surface,  # from Agent 3a, not the pristine slab
+    surface=reconstructed_surface,  # from Agent 2a, not the pristine slab
     adsorbate="*CO",       # Must use * prefix for AdsorbDiff DB
     num_sites=5,
 )
@@ -306,83 +328,13 @@ result = predictor.predict(
 
 **Failure mode handled:** Low-diversity adsorption set that misses stable non-symmetric configurations.
 
-### Agent 3 — VSSR-MC Reconstruction Manager
-
-**Role:** Surface Reconstruction Sampler (two-step: 3a clean → 3b with adsorbate)
-**Scientific problem:** Operating surfaces are dynamic, not static slabs. The catalyst surface reconstructs under operating conditions, and adsorbates further modify the reconstructed surface. A two-step process captures both effects: first reconstruct the clean surface, then adsorb, then reconstruct again with the adsorbate present.
-**Tool:** `simulate_surface_reconstruction` → `core/reconstruction/vssr_mc_predictor.py`
-**Energy models:** CHGNet (NFF framework, default) or UMA (FairChem framework), configurable via `mc_energy_model`
-
-```python
-from core.reconstruction.vssr_mc_predictor import VSSRMCPredictor
-
-# THERMAL MODE (Gas-Solid) with CHGNet:
-predictor = VSSRMCPredictor(model_type="CHGNetNFF")
-# Step 3a: reconstruct clean slab
-result_3a = predictor.sample(
-    surface=clean_slab,
-    adsorbates=["Cu"],
-    temperature=500.0,       # K
-    total_sweeps=50,
-)
-# Step 2: place adsorbate on reconstructed surface (Agent 2)
-# Step 3b: reconstruct with adsorbate, using external indices
-result_3b = predictor.sample(
-    surface=slab_with_adsorbate,
-    adsorbates=["Cu"],
-    temperature=500.0,
-    total_sweeps=100,
-    surface_indices=top_layer_cu_indices,    # correctly identify metal surface
-    adsorbate_indices=co_atom_indices,       # keep adsorbate free but not "surface"
-)
-
-# THERMAL MODE with UMA:
-predictor_uma = VSSRMCPredictor(model_type="UMA")
-# Same two-step flow, UMA provides energy/forces via FAIRChemCalculator
-
-# ELECTROCHEMICAL MODE (Liquid-Solid) — Pourbaix grand potential:
-predictor_echem = VSSRMCPredictor(
-    model_type="CHGNetNFF",  # or "UMA"
-    potential_she=1.23,      # V vs. SHE
-    ph=14.0,                 # Alkaline conditions
-)
-result = predictor_echem.sample(
-    surface=surface,
-    adsorbates=["O", "OH", "H"],
-    temperature=300.0,
-    total_sweeps=100,
-)
-# Calculator: NFFPourbaix (CHGNet) or UMAPourbaixCalculator (UMA)
-# Grand potential: Ω = -(ΔG₁ + ΔG₂)
-# ΔG₂ includes -n_e·U and -2.3·n_H·kT·pH terms (Nernst)
-# Pourbaix atom data from Materials Project via generate_pourbaix_atoms()
-```
-
-**Two-step reconstruction flow:**
-1. **Step 3a** (clean): Reconstruct the bare surface under operating conditions. No adsorbate → z-coordinate layer detection works correctly. Surface forms realistic defects (steps, kinks, adatoms).
-2. **Step 2** (adsorb): AdsorbDiff places adsorbates on the reconstructed surface (more realistic adsorption sites than on idealized clean slab).
-3. **Step 3b** (with adsorbate): Reconstruct again with adsorbate present. External `surface_indices` and `adsorbate_indices` ensure correct constraint handling — metal atoms free for MC, adsorbate atoms free but not misidentified as "surface layer".
-
-**What happens:** Semi-grand-canonical MC explores compositional/configurational space. Each sweep proposes atom addition/removal/swap, accepts by Metropolis criterion based on surface excess energy (thermal) or grand potential Ω (electrochemical).
-
-**Energy model selection (4 combinations):**
-
-| Mode | CHGNet | UMA |
-|------|--------|-----|
-| **Gas-Solid** (thermal) | `EnsembleNFFSurface` | `UMASurfaceCalculator` |
-| **Liquid-Solid** (U, pH) | `NFFPourbaix` | `UMAPourbaixCalculator` |
-
-**Output:** `lowest_energy_reconstructed_structure.vasp` + MC trajectory GIF + energy/acceptance history. Both `surface_energy` (excess) and `total_energy` (absolute, from ML model) are recorded.
-
-**Failure mode handled:** MC trajectory stagnation or physically implausible reconstruction candidates.
-
 ### Agent M1 — UniMech Mechanism Search Coordinator
 
 **Role:** Mechanism Search Coordinator (activated when `enable_mechanism_search=True`)
 **Scientific problem:** Manual pathway design assumes a single "obvious" mechanism. Most catalytic reactions have **competing pathways** with different selectivities (e.g., CO hydrogenation: direct dissociation vs. H-assisted vs. formyl pathway). Agent M1 discovers these automatically.
 **Tools:** `initialize_mechanism_context`, `generate_candidate_steps`, `run_mechanism_search`, `extract_pathway_shortlist`
 
-Agent M1 sits between Agent 3 (surface reconstruction) and Agent 4/5 (NEB endpoint design). It systematically explores the reaction network and hands a shortlist of promising pathways to Agent 4/5 for barrier calculation.
+Agent M1 sits between Agent 2 (surface reconstruction) and Agent 4/5 (NEB endpoint design). It systematically explores the reaction network and hands a shortlist of promising pathways to Agent 4/5 for barrier calculation.
 
 **Three exploration modes:**
 
@@ -395,16 +347,16 @@ Agent M1 sits between Agent 3 (surface reconstruction) and Agent 4/5 (NEB endpoi
 **How it works:**
 
 ```
-Reconstructed surface (from Agent 3) + reaction description
+Reconstructed surface (from Agent 2) + reaction description
     ↓
 CandidateGeneratorRouter
     └─ RDKit Bond Operations (element-agnostic)
        Operations: dissociation, hydrogenation, association,
-                   Eley-Rideal, PCET, isomerization, desorption
+                   Eley-Rideal, isomerization, desorption
     ↓
 MechanismSearchEngine (beam search + sibling pruning)
     ├─ Expand frontier nodes → generate children
-    ├─ Evaluate via FreeEnergyRouter (UMA thermal or CHE electrochemical)
+    ├─ Evaluate via FreeEnergyRouter (UMA)
     ├─ Prune: delta_keep=0.10 eV (keep siblings), delta_prune=0.30 eV (remove)
     └─ Stop: max_depth=8, max_evaluations=40
     ↓
@@ -521,7 +473,7 @@ report = tools.programmatic_validation(
 ```
 
 **Gate semantics:**
-- **PASS** → free energy tool execution proceeds (NEB/UMA or CP-MACE)
+- **PASS** → free energy tool execution proceeds (NEB/UMA or slow-growth MD)
 - **FAIL** → structured feedback returns to Agent 4 for redesign (iterative loop)
 - Programmatic FATAL always overrides LLM PASS
 
@@ -545,9 +497,7 @@ result = kmc.run()
 # Output: TOF, coverage, selectivity, rate-controlling step
 ```
 
-**DT-specific behavior:**
-- Gas-Solid: CatMAP thermal microkinetics → TOF, selectivity
-- Liquid-Solid: electrochemical KMC → current density, Faradaic efficiency
+**Output:** CatMAP microkinetics → TOF, selectivity, coverage, rate-controlling step.
 
 **Feedback loop:** If Ea > threshold, Agent 6 feeds back to Agent 5 for pathway redesign.
 
@@ -557,7 +507,7 @@ result = kmc.run()
 **Scientific problem:** Results must be inspectable, reproducible, and reusable; agents must be coordinated.
 **Tools:** `generate_final_report`, visualization code
 
-Agent 7 is the **central coordinator** (shown in the center of both DT flowcharts):
+Agent 7 is the **central coordinator** (shown at the center of the architecture flowchart):
 - Coordinates all other agents through the workflow state machine
 - Generates visualizations (structures, energy diagrams, trajectory animations)
 - Produces the final video report and pickled `CompletePathwayResult`
@@ -569,11 +519,11 @@ Generates:
 - MC trajectory GIF, pathway animation GIF
 - Full checkpoint chain for reproducibility
 
-### UMA / CP-MACE Free Energy Tools (Not Agents)
+### Free Energy Tools (Not Agents)
 
 A critical distinction in CatDT architecture: **barrier and free energy calculations are tools, not agents.** They are deterministic computations called by the orchestration layer between Agent 5 (validation gate) and Agent 6 (KMC).
 
-**Gas-Solid: UMA Model Tool**
+**Primary: UMA two-phase CI-NEB**
 
 ```python
 # Two-phase CI-NEB barrier calculation (deterministic tool, no LLM):
@@ -604,16 +554,15 @@ Ea_fwd = max(0.0, E_TS - E_initial)
 Ea_rev = max(0.0, E_TS - E_final)
 ```
 
-**Liquid-Solid: CP-MACE Tool**
+**Alternative: slow-growth MD barrier tool (CP-MACE)**
 
 ```
-ALL calculations at working potential (U, pH)
 ΔG(T) = ΔE + ΔZPE - TΔS
-Potential-dependent barriers from slow-growth MD (not NEB)
-Output: Electrochemical free energy diagram
+Barriers from constrained (slow-growth) molecular dynamics rather than NEB
+Output: free energy diagram with per-step activation barriers
 ```
 
-CP-MACE applies CHE (Computational Hydrogen Electrode) corrections and evaluates barriers under constant electrochemical potential — a fundamentally different computational approach from the gas-solid NEB path.
+The CP-MACE-backed slow-growth MD tool drives a chosen reaction coordinate slowly while integrating the constraint force, giving an alternative barrier estimate where a static NEB endpoint pair is ill-defined.
 
 ---
 
@@ -682,8 +631,8 @@ class CatDTTools(
 | Tool | Mixin Source | Scientific Backend | Used By |
 |---|---|---|---|
 | `generate_surfaces` | SimulationToolsMixin | SurFF (EquiformerV2) | Agent 1 |
-| `predict_adsorption_sites` | SimulationToolsMixin | AdsorbDiff (PaiNN diffusion) | Agent 2 |
-| `simulate_surface_reconstruction` | SimulationToolsMixin | VSSR-MC | Agent 3 |
+| `predict_adsorption_sites` | SimulationToolsMixin | AdsorbDiff (PaiNN diffusion) | Agent 3 |
+| `simulate_surface_reconstruction` | SimulationToolsMixin | VSSR-MC | Agent 2 |
 | `build_steps_payload` | Agent45WorkflowToolsMixin | Geometry engine | Agent 4 |
 | `programmatic_validation` | Agent45WorkflowToolsMixin | Geometry checks | Agent 5 |
 | `run_agent45_energy_gate` | Agent45WorkflowToolsMixin | FairchemPredictor (UMA) | Agent 5 |
@@ -776,12 +725,12 @@ The core innovation of CatDT is the **Agent4/5 iterative loop** — an LLM-drive
 │  9. TOOL: record_agent45_memento_case                             │
 │     └─ Persist iteration outcome (reward signal) for future       │
 │                                                                   │
-│  10. If PASS: free energy tool runs (NEB/UMA or CP-MACE), then   │
+│  10. If PASS: free energy tool runs (NEB/UMA or slow-growth MD),  │
 │      Agent 6 KMC. If FAIL: Agent4 refines (→ step 5)            │
 └───────────────────────────────────────────────────────────────────┘
 ```
 
-**Concrete collaboration scenario (Gas-Solid, success path):**
+**Concrete collaboration scenario (success path):**
 
 ```
 Iteration 1:
@@ -821,7 +770,7 @@ Agent7 reports both attempts with traceable audit history
 ## Memento Reinforcement Loop
 
 <p align="center">
-  <img src="assets/rl/fig2b.svg" alt="Memento-enhanced Agent4/5 loop" width="860">
+  <img src="assets/rl/fig4a.svg" alt="Memory-augmented reinforcement loop for Agents 4 and 5" width="860">
 </p>
 
 CatDT's memory system has three tiers:
@@ -898,7 +847,7 @@ retrieval = tools.retrieve_agent45_memento_cases(
 The retrieved cases are injected directly into Agent4's prompt:
 
 ```
-【历史案例记忆（Memento 检索）】
+[Historical case memory (Memento retrieval)]
 query=iteration=1; reaction_type=hydrogenation; transitions=['*co->*cho', '*cho->*choh']
 
 Positive cases (reuse these patterns):
@@ -910,28 +859,9 @@ Negative cases (avoid these failure patterns):
     issues=element count mismatch after removal; endpoint unstable
 ```
 
-**3. EVALUATE — Validation + NEB provide reward signal:**
+**3. EVALUATE — Validation + NEB provide the reward signal:**
 
-```python
-# Validation
-validation_passed = (state.validation_report.status.upper() == "PASS")
-
-# NEB (only if validation passed)
-if validation_passed and config.calculate_barriers:
-    state.neb_results = tools.run_neb_for_steps(
-        steps=state.step_structures,
-        output_dir=neb_dir,
-        n_frames=config.neb_n_frames,
-        fmax=0.05,
-        max_steps=config.neb_max_steps,
-    )
-
-# Compute reward
-iter_reward = 1.0 if validation_passed else 0.0
-if validation_passed and state.neb_results:
-    converged = sum(1 for v in state.neb_results.values() if v.converged)
-    iter_reward = 0.7 + 0.3 * (converged / len(state.neb_results))
-```
+If Agent 5 returns PASS and `calculate_barriers` is set, `run_neb_for_steps` executes and the per-iteration reward is computed from validation pass plus NEB convergence fraction (formula above).
 
 **4. WRITE — Persist case to casebank for future retrieval:**
 
@@ -1026,9 +956,9 @@ class EvolvablePolicy:
 ```
 
 **Strategy hints in Agent4 prompt:**
-- `balanced`: "探索与稳健性，优先最小必要改动与可计算性" (balance exploration and robustness)
-- `conservative`: "保持几何连续与低风险映射" (preserve geometric continuity)
-- `exploratory`: "允许替代步骤设计" (allow alternative step designs)
+- `balanced`: balance exploration and robustness — prefer minimal necessary changes and computability
+- `conservative`: preserve geometric continuity and low-risk mappings
+- `exploratory`: allow alternative step designs
 
 The selected strategy is persisted to `evolvability_policy.json` and adapts over multiple workflow runs.
 
@@ -1052,9 +982,9 @@ As the casebank grows, Agent4/5 gain operational experience across reaction fami
 |---|---|---|---|---|
 | `core/surface/surff_predictor.py` | `SurFFPredictor` | 836 | SurFF (EquiformerV2) | Wulff shape + facet ranking + slab generation |
 | `core/reconstruction/adsorbdiff_predictor.py` | `AdsorbDiffPredictor` | 934 | AdsorbDiff (PaiNN) | Diffusion-based adsorption site sampling |
-| `core/reconstruction/vssr_mc_predictor.py` | `VSSRMCPredictor` | 200+ | VSSR-MC + CHGNet/UMA | Two-step reconstruction, 4-way calculator (CHGNet/UMA × thermal/Pourbaix) |
-| `core/reconstruction/uma_surface_calculator.py` | `UMASurfaceCalculator`, `UMAPourbaixCalculator` | 200+ | UMA (FairChem) | ASE Calculator adapter wrapping FAIRChemCalculator for VSSR-MC |
-| `core/reconstruction/cp_mace_predictor.py` | `CPMACEPredictor` | — | CP-MACE | Crystal potential energy evaluation |
+| `core/reconstruction/vssr_mc_predictor.py` | `VSSRMCPredictor` | 200+ | VSSR-MC + CHGNet/UMA | Two-step surface reconstruction (CHGNet or UMA calculator) |
+| `core/reconstruction/uma_surface_calculator.py` | `UMASurfaceCalculator` | 200+ | UMA (FairChem) | ASE Calculator adapter wrapping FAIRChemCalculator for VSSR-MC |
+| `core/reconstruction/cp_mace_predictor.py` | `CPMACEPredictor` | — | CP-MACE | Energy/force backend for the slow-growth MD barrier tool |
 | `core/pathway/pathway_predictor.py` | `PathwayPredictor` | 1030 | Fairchem + NEB | Full pathway: adsorption + barriers + RDS |
 | `core/pathway/barrier_predictor.py` | `BarrierPredictor` | 2000+ | UMA (FIRE + CI-NEB) | Two-phase NEB barrier computation |
 | `core/pathway/fairchem_predictor.py` | `FairchemPredictor` | 250+ | UMA-S-1P1 | ML structure relaxation + energy |
@@ -1062,7 +992,7 @@ As the casebank grows, Agent4/5 gain operational experience across reaction fami
 | `core/pathway/llm_neb_controller.py` | `LLMNEBController` | 200+ | OpenAI API | LLM-guided NEB endpoint preparation |
 | `core/pathway/search_engine.py` | `MechanismSearchEngine` | 487 | Beam search | UniMech pathway discovery engine |
 | `core/pathway/candidate_generators.py` | `SystematicCRNExplorer` | 993 | RDKit | Bond-operation-based reaction network enumeration |
-| `core/pathway/free_energy_router.py` | `FreeEnergyRouter` | — | UMA/CHE | Energy evaluation routing for mechanism search |
+| `core/pathway/free_energy_router.py` | `FreeEnergyRouter` | — | UMA | Energy evaluation routing for mechanism search |
 | `core/pathway/pruning_policy.py` | `PruningPolicy` | — | Rule-based | Sibling comparison + beam selection |
 | `core/kmc/catmap_predictor.py` | `CatMAPPredictor` | 200+ | CatMAP | Microkinetic modeling (TOF, selectivity) |
 | `core/viz/visualization_manager.py` | `CatalysisVisualizationManager` | 540 | ASE + Matplotlib | Automated surface/pathway/energy visualization |
@@ -1078,7 +1008,7 @@ As the casebank grows, Agent4/5 gain operational experience across reaction fami
 | **fairchem** | FairChem ML models + OCP Calculator | `FairchemPredictor`, `BarrierPredictor` — UMA relaxation + NEB |
 | **fairchem_models** | Pre-downloaded model weights (`uma-s-1p1.pt`) | All ML-based energy/force evaluations |
 | **catmap** | CatMAP microkinetic modeling | `CatMAPPredictor` — TOF, selectivity, coverage |
-| **CP-MACE** | Crystal potential MACE model | Electrochemical VSSR-MC energy evaluation |
+| **CP-MACE** | Crystal potential MACE model | Energy/force backend for the slow-growth MD barrier tool |
 | **pMuTT** | Thermodynamic property computation | Gas/adsorbate thermodynamic corrections |
 | **catplot** | Catalysis visualization library | Energy diagram styling |
 | **Memento** | Case-based reasoning framework (conceptual basis) | Agent45 casebank design inspiration |
@@ -1128,8 +1058,8 @@ catdt/
 │   ├── mechanism_search.py             # UniMech mechanism search orchestrator
 │   ├── mechanism_schemas.py            # CatalyticStateRecord, ElementaryStepCandidate
 │   ├── policy.py                       # Evolvable bandit policy for strategy selection
-│   ├── gas_solid_digital_twin.py       # High-level GasSolidDigitalTwin API
-│   ├── visualized_digital_twin.py      # Visualization-enhanced GasSolidDigitalTwin
+│   ├── gas_solid_digital_twin.py       # High-level digital-twin API
+│   ├── visualized_digital_twin.py      # Visualization-enhanced digital twin
 │   ├── camel_model_backend.py          # OpenAI-compatible LLM backend for CAMEL
 │   ├── adaptive_parameters.py          # Runtime parameter tuning
 │   ├── cross_run_cache.py              # Cross-run result caching
@@ -1156,8 +1086,7 @@ catdt/
 │   ├── reconstruction/
 │   │   ├── adsorbdiff_predictor.py     # AdsorbDiff diffusion-based adsorption
 │   │   ├── vssr_mc_predictor.py        # VSSR-MC surface reconstruction
-│   │   ├── cp_mace_predictor.py        # CP-MACE crystal potential
-│   │   └── electrochemical_surface_predictor.py
+│   │   └── cp_mace_predictor.py        # CP-MACE slow-growth MD barrier backend
 │   ├── pathway/
 │   │   ├── pathway_predictor.py        # Full pathway analysis (adsorption + barriers + RDS)
 │   │   ├── barrier_predictor.py        # Two-phase CI-NEB barrier computation
@@ -1239,9 +1168,11 @@ pip install camel-ai pydantic
 # Set OpenAI-compatible API for CAMEL agents
 export OPENAI_API_KEY="your-api-key"
 export OPENAI_BASE_URL="https://api.openai.com/v1"  # Or compatible endpoint
-export OPENAI_MODEL="claude-opus-4-6"                 # Default model
+export OPENAI_MODEL="gpt-5.5"                         # Default model
 export OPENAI_MAX_TOKENS=4096
 ```
+
+**Default per-agent model routing** (configurable, matching the paper): Agents 1, 2, 3, and 6 use **DeepSeek V4 Pro** for high-throughput surface, adsorption, reconstruction, and kinetics control; Agents 4, 5, and M1 use **GPT-5.5** for geometry design, validation, and mechanism reasoning; Agent 7 uses GPT-5.5 (via Codex) for orchestration and structured output.
 
 ### Verify Installation
 
@@ -1261,7 +1192,7 @@ from camel_agents.workflow import CatDTCamelWorkflow
 
 wf = CatDTCamelWorkflow()
 
-# Gas-solid (thermal) with default CHGNet:
+# Run with default CHGNet:
 result = wf.run({
     "bulk_structure_path": "examples/co_oxidation_pt/POSCAR_Cu",
     "reaction_description": "CO hydrogenation to CH4 with explicit elementary pathway",
@@ -1275,20 +1206,6 @@ result = wf.run({
     "neb_max_steps": 400,
     "kmc_temperature_k": 500.0,
     "gas_pressures": {"CO_g": 1.0, "H2_g": 1.0},
-})
-
-# Liquid-solid (electrochemical) with Pourbaix mode:
-result_echem = wf.run({
-    "bulk_structure_path": "POSCAR_Pt",
-    "reaction_description": "OER on Pt in alkaline conditions",
-    "adsorbate_elements_for_mc": ["O", "OH", "H"],
-    "mc_temperature_k": 300.0,
-    "mc_total_sweeps": 100,
-    "mc_energy_model": "UMA",
-    "potential_she": 1.23,           # V vs. SHE — enables Pourbaix mode
-    "ph": 14.0,                      # alkaline
-    "mp_api_key": "your_mp_key",     # Materials Project API for Pourbaix data
-    "calculate_barriers": True,
 })
 
 print(result["validation_status"])       # "PASS"
@@ -1478,38 +1395,6 @@ pytest test/ -v
 
 ---
 
-## Current Status & Roadmap
-
-### Feature Status
-
-| Feature | Gas-Solid | Liquid-Solid |
-|---|---|---|
-| SurFF surface generation | ✅ Working | ✅ Same backend |
-| AdsorbDiff adsorption | ✅ Working | ✅ Same backend |
-| VSSR-MC thermal reconstruction | ✅ Working | 🚧 Electrochemical mode |
-| Agent4/5 pathway design loop | ✅ Working (iterative) | 🚧 PCET constraints |
-| Memento casebank | ✅ Working (cross-run) | ✅ Same infrastructure |
-| NEB barrier computation | ✅ Working (CI-NEB) | 🚧 Constant-potential NEB |
-| CatMAP microkinetics | ✅ Working | 🚧 Electrochemical KMC |
-| Checkpoint/resume | ✅ Working | ✅ Same infrastructure |
-| Visualization + reporting | ✅ Working | 🚧 Electrochemical report |
-| Evolvable policy | ✅ Working | ✅ Same infrastructure |
-
-### Roadmap
-
-| Priority | Milestone |
-|---|---|
-| P0 | Tighten Agent4/5 endpoint consistency under multi-reaction benchmarks |
-| P0 | Improve NEB throughput and convergence diagnostics |
-| P1 | Stabilize cross-family memory transfer with Memento loop |
-| P1 | Complete liquid-solid electrochemical VSSR-MC path |
-| P2 | Constant-potential NEB + electrochemical kinetics integration |
-| P2 | Unified reporting for both DT tracks with consistent artifact schema |
-| P3 | Stricter Memento reward shaping with downstream kinetics quality metrics |
-| P3 | Broader benchmark suites (HER/OER/ORR/NRR/CO2RR) |
-
----
-
 ## Frequently Asked Questions
 
 ### Why must scientific logic be tools, not prompts?
@@ -1518,62 +1403,38 @@ Prompt-only execution is hard to verify and reproduce for scientific workloads. 
 
 ### Why does Agent 5 gate the free energy tools?
 
-NEB and slow-growth MD calculations are expensive (minutes to hours on GPU) and extremely sensitive to endpoint quality. A single atom overlap or element mismatch causes NEB to crash or produce meaningless barriers. Agent 5 is the hard gate that prevents invalid runs from wasting compute. The free energy tools (UMA/NEB for gas-solid, CP-MACE/slow-growth for liquid-solid) only execute after Agent 5 PASS.
+NEB and slow-growth MD calculations are expensive (minutes to hours on GPU) and extremely sensitive to endpoint quality. A single atom overlap or element mismatch causes NEB to crash or produce meaningless barriers. Agent 5 is the hard gate that prevents invalid runs from wasting compute. The free energy tools (UMA/NEB, or CP-MACE slow-growth MD) only execute after Agent 5 PASS.
 
 ### Does Memento mean LLM fine-tuning?
 
 No. Memento is **zero-parameter memory-based adaptation**. Cases are stored as JSONL and retrieved via token/transition similarity scoring. No model weights are updated. The LLM reads historical cases as in-context examples.
-
-### Are Gas-Solid and Liquid-Solid different agent sets?
-
-No. Both use the **same 8 agents**. Differences are in tool/backend configuration and scientific constraints per DT track.
 
 ### What are the minimal required user inputs?
 
 - Bulk structure file path (POSCAR/VASP format)
 - Natural-language reaction description (can include explicit intermediate pathway)
 
-### Why are the prompts in Chinese?
-
-The Agent4/5 task prompts are written in Chinese for the research team's workflow. The prompts are reaction-agnostic and can be translated without loss of functionality. Agent role definitions and tool interfaces are in English.
-
-### What ML models are used?
-
-- **SurFF**: EquiformerV2 for surface energy prediction
-- **AdsorbDiff**: PaiNN for denoising diffusion adsorption sampling
-- **UMA** (uma-s-1p1): Universal ML Accelerator for structure relaxation, energy, and NEB forces
-- **CP-MACE**: Crystal potential MACE for electrochemical energy evaluation
-
----
-
 ## References
 
 1. SurFF: Yin et al., *Nature Computational Science* (2025) — ML surface energy prediction
 2. AdsorbDiff: Kolluru & Kitchin, ICML (2024) — Diffusion-based adsorption site sampling
 3. VSSR-MC: Du et al., *Nature Computational Science* (2023) — Virtual surface site relaxation MC
-4. Electrochemical VSSR-MC: Du et al., *ACS Central Science* (2025) — Grand-potential MC
-5. CP-MACE: Wang et al., *JCTC* (2025) — Crystal potential ML model
-6. CAMEL: Li et al. (2023) — Communicative Agents for Mind Exploration of Large Scale LLM Society
-7. CatMAP: Medford et al. (2015) — Microkinetic modeling framework
-
----
-
-## Contact & Support
-
-- Repository: `https://github.com/AI4QC/catdt`
-- Issues: Use GitHub Issues with reproducible logs and key artifacts
-- Include: Python/CUDA/PyTorch versions, API backend, relevant `output/` paths
+4. CP-MACE: Wang et al., *JCTC* (2025) — Crystal potential ML model
+5. CAMEL: Li et al. (2023) — Communicative Agents for Mind Exploration of Large Scale LLM Society
+6. CatMAP: Medford et al. (2015) — Microkinetic modeling framework
 
 ---
 
 ## Citation
 
 ```bibtex
-@software{catdt2026,
-  title   = {CatDT: Catalysis Digital Twin},
-  author  = {CatDT Contributors},
+@article{catdt2026,
+  title   = {Autonomous heterogeneous catalyst discovery with a self-evolving multi-agent digital twin},
+  author  = {Song, Zhilong and Zhang, Zongmin and Cheng, Lixue},
   year    = {2026},
-  url     = {https://github.com/AI4QC/catdt}
+  eprint  = {2606.05050},
+  archivePrefix = {arXiv},
+  url     = {https://arxiv.org/abs/2606.05050}
 }
 ```
 
@@ -1584,22 +1445,3 @@ The Agent4/5 task prompts are written in Chinese for the research team's workflo
 CatDT is licensed under Apache-2.0. Third-party components in `deps/` retain their own licenses.
 
 ---
-
-## Contributing
-
-Contributions are welcome. Recommended areas:
-
-- **Pathway/validation robustness** — improve Agent4/5 endpoint quality across reaction families
-- **Liquid-solid backend** — electrochemical VSSR-MC, constant-potential NEB, CHE corrections
-- **Memento improvements** — stricter reward shaping, embedding-based retrieval, casebank pruning
-- **Testing** — broader benchmark suites, cross-reaction generalization metrics
-- **Visualization** — interactive dashboards, Jupyter notebook integration
-
----
-
-## Project Status
-
-> 🚧 **Work in progress.** This repository is under active development. The code,
-> APIs, directory structure, and documentation are incomplete and may change at
-> any time without notice. It is released for transparency alongside the
-> accompanying manuscript.
