@@ -1,0 +1,841 @@
+<?xml version="1.0"?>
+<ctml>
+  <validate species="yes" reactions="yes"/>
+
+  <!-- phase gas     -->
+  <phase id="gas" dim="3">
+    <elementArray datasrc="elements.xml">Ar N H</elementArray>
+    <speciesArray datasrc="#species_data">N2 NH3 H2 Ar</speciesArray>
+    <thermo model="IdealGas"/>
+    <kinetics model="GasKinetics"/>
+    <transport model="None"/>
+  </phase>
+
+  <!-- phase bulk     -->
+  <phase id="bulk" dim="3">
+    <elementArray datasrc="elements.xml">Ru</elementArray>
+    <speciesArray datasrc="#species_data">RU(B)</speciesArray>
+    <note>Ru Metal</note>
+    <thermo model="StoichSubstance">
+      <density units="g/cm3">12.4</density>
+    </thermo>
+    <transport model="None"/>
+    <kinetics model="none"/>
+  </phase>
+
+  <!-- phase terrace     -->
+  <phase id="terrace" dim="2">
+    <elementArray datasrc="elements.xml">Ru N H</elementArray>
+    <speciesArray datasrc="#species_data">N2(T) N(T) H(T) NH3(T) NH2(T) NH(T) RU(T)</speciesArray>
+    <reactionArray datasrc="#reaction_data">
+      <include min="r_0000" max="r_0006"/>
+    </reactionArray>
+    <note>Ru(0001)</note>
+    <thermo model="SurfaceCoverage">
+      <site_density units="mol/cm2">2.1671e-09</site_density>
+    </thermo>
+    <interactionArray datasrc="#interaction_data">
+      <include min="i_0000" max="i_0004"/>
+    </interactionArray>
+    <bepArray datasrc="#bep_data">NH-H N-H</bepArray>
+    <kinetics model="Interface"/>
+    <transport model="None"/>
+    <phaseArray>gas bulk</phaseArray>
+  </phase>
+
+  <!-- phase step     -->
+  <phase id="step" dim="2">
+    <elementArray datasrc="elements.xml">Ru N H</elementArray>
+    <speciesArray datasrc="#species_data">N2(S) N(S) H(S) NH3(S) NH2(S) NH(S) RU(S)</speciesArray>
+    <reactionArray datasrc="#reaction_data">
+      <include min="r_0007" max="r_0013"/>
+    </reactionArray>
+    <note>Ru(0001) with atoms deleted</note>
+    <thermo model="SurfaceCoverage">
+      <site_density units="mol/cm2">4.4385e-10</site_density>
+    </thermo>
+    <interactionArray datasrc="#interaction_data">
+      <include min="i_0005" max="i_0009"/>
+    </interactionArray>
+    <bepArray datasrc="#bep_data">NH2-H NH-H N-H</bepArray>
+    <kinetics model="Interface"/>
+    <transport model="None"/>
+    <phaseArray>gas bulk</phaseArray>
+  </phase>
+
+  <!-- species definitions     -->
+  <speciesData id="species_data">
+
+    <!-- species N2    -->
+    <species name="N2">
+      <atomArray>N:2 </atomArray>
+      <thermo>
+        <NASA Tmin="300.0" Tmax="642.8571428571429" P0="100000.0">
+           <floatArray size="7" name="coeffs">
+             3.395631990E+00,   1.115707690E-03,  -4.301993780E-06,   6.807142400E-09, 
+             -3.290331280E-12,  -1.254662980E+02,   3.556110740E+00</floatArray>
+        </NASA>
+        <NASA Tmin="642.8571428571429" Tmax="1000.0" P0="100000.0">
+           <floatArray size="7" name="coeffs">
+             4.050329990E+00,  -2.967785410E-03,   5.323485010E-06,  -3.351812240E-09, 
+             7.584467180E-13,  -2.101102640E+02,   6.858228490E-01</floatArray>
+        </NASA>
+      </thermo>
+    </species>
+
+    <!-- species NH3    -->
+    <species name="NH3">
+      <atomArray>N:1 H:3 </atomArray>
+      <thermo>
+        <NASA Tmin="300.0" Tmax="542.8571428571429" P0="100000.0">
+           <floatArray size="7" name="coeffs">
+             4.564972420E+00,  -6.832837840E-03,   2.685237030E-05,  -3.402416930E-08, 
+             1.600374990E-11,  -8.535999720E+03,  -1.758331900E+00</floatArray>
+        </NASA>
+        <NASA Tmin="542.8571428571429" Tmax="1000.0" P0="100000.0">
+           <floatArray size="7" name="coeffs">
+             3.160968430E+00,   3.362370390E-03,  -1.214236990E-06,   6.829575290E-10, 
+             -2.544349660E-13,  -8.379626290E+03,   4.185658790E+00</floatArray>
+        </NASA>
+      </thermo>
+    </species>
+
+    <!-- species H2    -->
+    <species name="H2">
+      <atomArray>H:2 </atomArray>
+      <thermo>
+        <NASA Tmin="300.0" Tmax="614.2857142857142" P0="100000.0">
+           <floatArray size="7" name="coeffs">
+             3.505970420E+00,  -7.325197850E-05,   3.371722590E-07,  -6.912640390E-10, 
+             5.337189020E-13,   1.687351940E+03,  -4.298852730E+00</floatArray>
+        </NASA>
+        <NASA Tmin="614.2857142857142" Tmax="1000.0" P0="100000.0">
+           <floatArray size="7" name="coeffs">
+             3.393701340E+00,   7.194112420E-04,  -1.753197190E-06,   1.753493360E-09, 
+             -5.375683350E-13,   1.699990880E+03,  -3.821319980E+00</floatArray>
+        </NASA>
+      </thermo>
+    </species>
+
+    <!-- species N2(T)    -->
+    <species name="N2(T)">
+      <atomArray>N:2 </atomArray>
+      <thermo>
+        <NASA Tmin="300.0" Tmax="514.2857142857143" P0="100000.0">
+           <floatArray size="7" name="coeffs">
+             6.394780240E-01,   2.766667360E-02,  -7.645720310E-05,   1.017648790E-07, 
+             -5.198233870E-11,  -6.830229340E+03,  -2.437398330E+00</floatArray>
+        </NASA>
+        <NASA Tmin="514.2857142857143" Tmax="1000.0" P0="100000.0">
+           <floatArray size="7" name="coeffs">
+             3.854786580E+00,   2.451553390E-03,  -1.122904130E-06,   2.836620170E-10, 
+             -6.814515450E-14,  -7.163751400E+03,  -1.581130120E+01</floatArray>
+        </NASA>
+      </thermo>
+    </species>
+
+    <!-- species N(T)    -->
+    <species name="N(T)">
+      <atomArray>N:1 </atomArray>
+      <thermo>
+        <NASA Tmin="300.0" Tmax="557.1428571428571" P0="100000.0">
+           <floatArray size="7" name="coeffs">
+             -4.894442790E+00,   5.767676210E-02,  -1.344715820E-04,   1.522875950E-07, 
+             -6.828213240E-11,  -1.057531560E+04,   1.756062040E+01</floatArray>
+        </NASA>
+        <NASA Tmin="557.1428571428571" Tmax="1000.0" P0="100000.0">
+           <floatArray size="7" name="coeffs">
+             6.598464900E-01,   1.782290790E-02,  -2.524998560E-05,   1.695811380E-08, 
+             -4.435079130E-12,  -1.120632580E+04,  -6.042105370E+00</floatArray>
+        </NASA>
+      </thermo>
+    </species>
+
+    <!-- species H(T)    -->
+    <species name="H(T)">
+      <atomArray>H:1 </atomArray>
+      <thermo>
+        <NASA Tmin="300.0" Tmax="557.1428571428571" P0="100000.0">
+           <floatArray size="7" name="coeffs">
+             -1.800795900E+00,   1.416088580E-02,  -1.495487120E-05,   2.222050000E-09, 
+             3.926688600E-12,  -6.100896590E+03,   7.139128870E+00</floatArray>
+        </NASA>
+        <NASA Tmin="557.1428571428571" Tmax="1000.0" P0="100000.0">
+           <floatArray size="7" name="coeffs">
+             -1.453700740E+00,   1.342293260E-02,  -1.768619080E-05,   1.125877510E-08, 
+             -2.826810620E-12,  -6.167462270E+03,   5.421303510E+00</floatArray>
+        </NASA>
+      </thermo>
+    </species>
+
+    <!-- species NH3(T)    -->
+    <species name="NH3(T)">
+      <atomArray>N:1 H:3 </atomArray>
+      <thermo>
+        <NASA Tmin="300.0" Tmax="428.57142857142856" P0="100000.0">
+           <floatArray size="7" name="coeffs">
+             1.018558000E+00,   2.224674800E-02,  -4.370286770E-05,   5.857634690E-08, 
+             -3.390825290E-11,  -1.421400380E+04,  -4.229509560E+00</floatArray>
+        </NASA>
+        <NASA Tmin="428.57142857142856" Tmax="1000.0" P0="100000.0">
+           <floatArray size="7" name="coeffs">
+             1.639045810E+00,   1.543670080E-02,  -1.640555890E-05,   1.081269170E-08, 
+             -2.960894470E-12,  -1.425742160E+04,  -6.585989390E+00</floatArray>
+        </NASA>
+      </thermo>
+    </species>
+
+    <!-- species NH2(T)    -->
+    <species name="NH2(T)">
+      <atomArray>N:1 H:2 </atomArray>
+      <thermo>
+        <NASA Tmin="300.0" Tmax="585.7142857142858" P0="100000.0">
+           <floatArray size="7" name="coeffs">
+             -2.435052810E+00,   3.718137540E-02,  -7.252850560E-05,   7.309049530E-08, 
+             -2.956669160E-11,  -1.175577220E+04,   8.409950250E+00</floatArray>
+        </NASA>
+        <NASA Tmin="585.7142857142858" Tmax="1000.0" P0="100000.0">
+           <floatArray size="7" name="coeffs">
+             5.916317350E-01,   1.712797860E-02,  -2.171396790E-05,   1.472634820E-08, 
+             -3.953436960E-12,  -1.212814820E+04,  -4.693752290E+00</floatArray>
+        </NASA>
+      </thermo>
+    </species>
+
+    <!-- species NH(T)    -->
+    <species name="NH(T)">
+      <atomArray>N:1 H:1 </atomArray>
+      <thermo>
+        <NASA Tmin="300.0" Tmax="600.0" P0="100000.0">
+           <floatArray size="7" name="coeffs">
+             -3.666887970E+00,   3.982782410E-02,  -8.187333300E-05,   8.249622400E-08, 
+             -3.286921120E-11,  -1.462571910E+04,   1.350474650E+01</floatArray>
+        </NASA>
+        <NASA Tmin="600.0" Tmax="1000.0" P0="100000.0">
+           <floatArray size="7" name="coeffs">
+             1.063545640E-01,   1.527125120E-02,  -2.097761900E-05,   1.430589400E-08, 
+             -3.795820540E-12,  -1.509675560E+04,  -2.891979430E+00</floatArray>
+        </NASA>
+      </thermo>
+    </species>
+
+    <!-- species TS1_NH3(T)    -->
+    <species name="TS1_NH3(T)">
+      <atomArray>N:1 H:3 </atomArray>
+      <thermo>
+        <NASA Tmin="300.0" Tmax="671.4285714285714" P0="100000.0">
+           <floatArray size="7" name="coeffs">
+             1.671833130E-01,   2.032998040E-02,  -2.271578930E-05,   1.396055190E-08, 
+             -3.421368910E-12,  -2.513625500E+03,  -1.917757630E+00</floatArray>
+        </NASA>
+        <NASA Tmin="671.4285714285714" Tmax="1000.0" P0="100000.0">
+           <floatArray size="7" name="coeffs">
+             8.082560770E-01,   1.716142340E-02,  -1.702221080E-05,   9.632653820E-09, 
+             -2.291120230E-12,  -2.615257190E+03,  -4.867435690E+00</floatArray>
+        </NASA>
+      </thermo>
+    </species>
+
+    <!-- species TS2_NH2(T)    -->
+    <species name="TS2_NH2(T)">
+      <atomArray>N:1 H:2 </atomArray>
+      <thermo>
+        <NASA Tmin="300.0" Tmax="628.5714285714287" P0="100000.0">
+           <floatArray size="7" name="coeffs">
+             -2.546261490E+00,   3.396218370E-02,  -5.724125690E-05,   4.946324720E-08, 
+             -1.735275470E-11,  -5.761707020E+03,   8.789590110E+00</floatArray>
+        </NASA>
+        <NASA Tmin="628.5714285714287" Tmax="1000.0" P0="100000.0">
+           <floatArray size="7" name="coeffs">
+             -2.293975180E-01,   1.988249700E-02,  -2.469703400E-05,   1.552437280E-08, 
+             -3.874910990E-12,  -6.070669160E+03,  -1.434482210E+00</floatArray>
+        </NASA>
+      </thermo>
+    </species>
+
+    <!-- species TS3_NH(T)    -->
+    <species name="TS3_NH(T)">
+      <atomArray>N:1 H:1 </atomArray>
+      <thermo>
+        <NASA Tmin="300.0" Tmax="542.8571428571429" P0="100000.0">
+           <floatArray size="7" name="coeffs">
+             -1.550325790E+00,   2.805684820E-02,  -5.920446470E-05,   6.504664200E-08, 
+             -2.938633340E-11,  -2.390096550E+03,   4.708770840E+00</floatArray>
+        </NASA>
+        <NASA Tmin="542.8571428571429" Tmax="1000.0" P0="100000.0">
+           <floatArray size="7" name="coeffs">
+             4.367750070E-01,   1.329920490E-02,  -1.719381390E-05,   1.083599130E-08, 
+             -2.708299560E-12,  -2.609124940E+03,  -3.670942730E+00</floatArray>
+        </NASA>
+      </thermo>
+    </species>
+
+    <!-- species TS4_N2(T)    -->
+    <species name="TS4_N2(T)">
+      <atomArray>N:2 </atomArray>
+      <thermo>
+        <NASA Tmin="300.0" Tmax="528.5714285714286" P0="100000.0">
+           <floatArray size="7" name="coeffs">
+             -1.426183000E+00,   3.779383010E-02,  -9.641467810E-05,   1.181875380E-07, 
+             -5.691779300E-11,   2.187262620E+04,   3.575019080E+00</floatArray>
+        </NASA>
+        <NASA Tmin="528.5714285714286" Tmax="1000.0" P0="100000.0">
+           <floatArray size="7" name="coeffs">
+             2.324310890E+00,   9.282795710E-03,  -1.358355460E-05,   9.380823350E-09, 
+             -2.514205020E-12,   2.147000720E+04,  -1.214771920E+01</floatArray>
+        </NASA>
+      </thermo>
+    </species>
+
+    <!-- species RU(T)    -->
+    <species name="RU(T)">
+      <atomArray>Ru:1 </atomArray>
+      <thermo>
+        <NASA Tmin="300.0" Tmax="657.1428571428571" P0="100000.0">
+           <floatArray size="7" name="coeffs">
+             0.000000000E+00,   0.000000000E+00,   0.000000000E+00,   0.000000000E+00, 
+             0.000000000E+00,   0.000000000E+00,   0.000000000E+00</floatArray>
+        </NASA>
+        <NASA Tmin="657.1428571428571" Tmax="1000.0" P0="100000.0">
+           <floatArray size="7" name="coeffs">
+             0.000000000E+00,   0.000000000E+00,   0.000000000E+00,   0.000000000E+00, 
+             0.000000000E+00,   0.000000000E+00,   0.000000000E+00</floatArray>
+        </NASA>
+      </thermo>
+    </species>
+
+    <!-- species N2(S)    -->
+    <species name="N2(S)">
+      <atomArray>N:2 </atomArray>
+      <thermo>
+        <NASA Tmin="300.0" Tmax="542.8571428571429" P0="100000.0">
+           <floatArray size="7" name="coeffs">
+             -2.336635470E+00,   4.016613990E-02,  -8.992000360E-05,   1.009284810E-07, 
+             -4.566230830E-11,  -8.756455530E+03,   7.186675870E+00</floatArray>
+        </NASA>
+        <NASA Tmin="542.8571428571429" Tmax="1000.0" P0="100000.0">
+           <floatArray size="7" name="coeffs">
+             1.004030060E+00,   1.573275580E-02,  -2.150068740E-05,   1.411269590E-08, 
+             -3.636536150E-12,  -9.129659450E+03,  -6.949447170E+00</floatArray>
+        </NASA>
+      </thermo>
+    </species>
+
+    <!-- species N(S)    -->
+    <species name="N(S)">
+      <atomArray>N:1 </atomArray>
+      <thermo>
+        <NASA Tmin="300.0" Tmax="557.1428571428571" P0="100000.0">
+           <floatArray size="7" name="coeffs">
+             -2.584987460E+00,   2.931094260E-02,  -6.782768990E-05,   7.632524960E-08, 
+             -3.403681270E-11,  -1.229981550E+04,   9.385302370E+00</floatArray>
+        </NASA>
+        <NASA Tmin="557.1428571428571" Tmax="1000.0" P0="100000.0">
+           <floatArray size="7" name="coeffs">
+             2.181268190E-01,   9.273511070E-03,  -1.312694690E-05,   8.810761240E-09, 
+             -2.303213570E-12,  -1.261940400E+04,  -2.536741480E+00</floatArray>
+        </NASA>
+      </thermo>
+    </species>
+
+    <!-- species H(S)    -->
+    <species name="H(S)">
+      <atomArray>H:1 </atomArray>
+      <thermo>
+        <NASA Tmin="300.0" Tmax="557.1428571428571" P0="100000.0">
+           <floatArray size="7" name="coeffs">
+             -1.800795900E+00,   1.416088580E-02,  -1.495487120E-05,   2.222050000E-09, 
+             3.926688600E-12,  -6.100896590E+03,   7.139128870E+00</floatArray>
+        </NASA>
+        <NASA Tmin="557.1428571428571" Tmax="1000.0" P0="100000.0">
+           <floatArray size="7" name="coeffs">
+             -1.453700740E+00,   1.342293260E-02,  -1.768619080E-05,   1.125877510E-08, 
+             -2.826810620E-12,  -6.167462270E+03,   5.421303510E+00</floatArray>
+        </NASA>
+      </thermo>
+    </species>
+
+    <!-- species NH3(S)    -->
+    <species name="NH3(S)">
+      <atomArray>N:1 H:3 </atomArray>
+      <thermo>
+        <NASA Tmin="300.0" Tmax="428.57142857142856" P0="100000.0">
+           <floatArray size="7" name="coeffs">
+             9.760733270E-01,   2.299970910E-02,  -4.714411230E-05,   6.472018920E-08, 
+             -3.782202570E-11,  -1.711832770E+04,  -4.184145930E+00</floatArray>
+        </NASA>
+        <NASA Tmin="428.57142857142856" Tmax="1000.0" P0="100000.0">
+           <floatArray size="7" name="coeffs">
+             1.709243740E+00,   1.508772970E-02,  -1.580651260E-05,   1.036592680E-08, 
+             -2.836019680E-12,  -1.717094690E+04,  -6.983454890E+00</floatArray>
+        </NASA>
+      </thermo>
+    </species>
+
+    <!-- species NH2(S)    -->
+    <species name="NH2(S)">
+      <atomArray>N:1 H:2 </atomArray>
+      <thermo>
+        <NASA Tmin="300.0" Tmax="585.7142857142858" P0="100000.0">
+           <floatArray size="7" name="coeffs">
+             -2.134846310E+00,   3.561044340E-02,  -6.865945300E-05,   6.851219020E-08, 
+             -2.748425190E-11,  -1.830490030E+04,   7.458510090E+00</floatArray>
+        </NASA>
+        <NASA Tmin="585.7142857142858" Tmax="1000.0" P0="100000.0">
+           <floatArray size="7" name="coeffs">
+             6.884294740E-01,   1.698266050E-02,  -2.164601000E-05,   1.471183170E-08, 
+             -3.949644230E-12,  -1.865370290E+04,  -4.776417690E+00</floatArray>
+        </NASA>
+      </thermo>
+    </species>
+
+    <!-- species NH(S)    -->
+    <species name="NH(S)">
+      <atomArray>N:1 H:1 </atomArray>
+      <thermo>
+        <NASA Tmin="300.0" Tmax="585.7142857142858" P0="100000.0">
+           <floatArray size="7" name="coeffs">
+             -3.585767720E+00,   4.041824720E-02,  -8.509525220E-05,   8.779477900E-08, 
+             -3.583003050E-11,  -1.355174350E+04,   1.306765420E+01</floatArray>
+        </NASA>
+        <NASA Tmin="585.7142857142858" Tmax="1000.0" P0="100000.0">
+           <floatArray size="7" name="coeffs">
+             2.325084780E-01,   1.508405260E-02,  -2.099162780E-05,   1.448631390E-08, 
+             -3.883624260E-12,  -1.401964240E+04,  -3.452564480E+00</floatArray>
+        </NASA>
+      </thermo>
+    </species>
+
+    <!-- species TS1_NH3(S)    -->
+    <species name="TS1_NH3(S)">
+      <atomArray>N:1 H:3 </atomArray>
+      <thermo>
+        <NASA Tmin="300.0" Tmax="671.4285714285714" P0="100000.0">
+           <floatArray size="7" name="coeffs">
+             -3.735258850E-02,   2.050539110E-02,  -2.185776720E-05,   1.228035740E-08, 
+             -2.565756060E-12,  -8.998774510E+03,  -5.703391240E-01</floatArray>
+        </NASA>
+        <NASA Tmin="671.4285714285714" Tmax="1000.0" P0="100000.0">
+           <floatArray size="7" name="coeffs">
+             4.553691670E-01,   1.831309430E-02,  -1.857144400E-05,   1.058848390E-08, 
+             -2.517042740E-12,  -9.082387820E+03,  -2.878229360E+00</floatArray>
+        </NASA>
+      </thermo>
+    </species>
+
+    <!-- species TS2_NH2(S)    -->
+    <species name="TS2_NH2(S)">
+      <atomArray>N:1 H:2 </atomArray>
+      <thermo>
+        <NASA Tmin="300.0" Tmax="542.8571428571429" P0="100000.0">
+           <floatArray size="7" name="coeffs">
+             -1.036866380E+00,   3.059227750E-02,  -6.425523050E-05,   7.269128830E-08, 
+             -3.348352010E-11,  -5.225805530E+03,   2.680487290E+00</floatArray>
+        </NASA>
+        <NASA Tmin="542.8571428571429" Tmax="1000.0" P0="100000.0">
+           <floatArray size="7" name="coeffs">
+             1.261160930E+00,   1.346290820E-02,  -1.538915060E-05,   9.593374110E-09, 
+             -2.451577130E-12,  -5.477825450E+03,  -7.000310800E+00</floatArray>
+        </NASA>
+      </thermo>
+    </species>
+
+    <!-- species TS3_NH(S)    -->
+    <species name="TS3_NH(S)">
+      <atomArray>N:1 H:1 </atomArray>
+      <thermo>
+        <NASA Tmin="300.0" Tmax="514.2857142857143" P0="100000.0">
+           <floatArray size="7" name="coeffs">
+             -2.970965180E+00,   3.842249320E-02,  -9.527920060E-05,   1.196926560E-07, 
+             -5.970204310E-11,  -3.974178700E+03,   1.033999250E+01</floatArray>
+        </NASA>
+        <NASA Tmin="514.2857142857143" Tmax="1000.0" P0="100000.0">
+           <floatArray size="7" name="coeffs">
+             4.639475770E-01,   1.118458450E-02,  -1.300682210E-05,   7.709667620E-09, 
+             -1.867166950E-12,  -4.326655790E+03,  -3.909468460E+00</floatArray>
+        </NASA>
+      </thermo>
+    </species>
+
+    <!-- species TS4_N2(S)    -->
+    <species name="TS4_N2(S)">
+      <atomArray>N:2 </atomArray>
+      <thermo>
+        <NASA Tmin="300.0" Tmax="542.8571428571429" P0="100000.0">
+           <floatArray size="7" name="coeffs">
+             -3.717450940E+00,   4.782817680E-02,  -1.151885670E-04,   1.344290160E-07, 
+             -6.200443840E-11,  -2.254825680E+03,   1.296040080E+01</floatArray>
+        </NASA>
+        <NASA Tmin="542.8571428571429" Tmax="1000.0" P0="100000.0">
+           <floatArray size="7" name="coeffs">
+             9.062880020E-01,   1.387645820E-02,  -1.992731780E-05,   1.354580840E-08, 
+             -3.581295640E-12,  -2.768384920E+03,  -6.582360000E+00</floatArray>
+        </NASA>
+      </thermo>
+    </species>
+
+    <!-- species RU(S)    -->
+    <species name="RU(S)">
+      <atomArray>Ru:1 </atomArray>
+      <thermo>
+        <NASA Tmin="300.0" Tmax="657.1428571428571" P0="100000.0">
+           <floatArray size="7" name="coeffs">
+             0.000000000E+00,   0.000000000E+00,   0.000000000E+00,   0.000000000E+00, 
+             0.000000000E+00,   0.000000000E+00,   0.000000000E+00</floatArray>
+        </NASA>
+        <NASA Tmin="657.1428571428571" Tmax="1000.0" P0="100000.0">
+           <floatArray size="7" name="coeffs">
+             0.000000000E+00,   0.000000000E+00,   0.000000000E+00,   0.000000000E+00, 
+             0.000000000E+00,   0.000000000E+00,   0.000000000E+00</floatArray>
+        </NASA>
+      </thermo>
+    </species>
+
+    <!-- species RU(B)    -->
+    <species name="RU(B)">
+      <atomArray>Ru:1 </atomArray>
+      <thermo>
+        <NASA Tmin="300.0" Tmax="657.1428571428571" P0="100000.0">
+           <floatArray size="7" name="coeffs">
+             0.000000000E+00,   0.000000000E+00,   0.000000000E+00,   0.000000000E+00, 
+             0.000000000E+00,   0.000000000E+00,   0.000000000E+00</floatArray>
+        </NASA>
+        <NASA Tmin="657.1428571428571" Tmax="1000.0" P0="100000.0">
+           <floatArray size="7" name="coeffs">
+             0.000000000E+00,   0.000000000E+00,   0.000000000E+00,   0.000000000E+00, 
+             0.000000000E+00,   0.000000000E+00,   0.000000000E+00</floatArray>
+        </NASA>
+      </thermo>
+    </species>
+
+    <!-- species Ar    -->
+    <species name="Ar">
+      <atomArray>Ar:1 </atomArray>
+      <thermo>
+        <Shomate Tmin="298.0" Tmax="6000.0" P0="100000.0">
+           <floatArray size="7" name="coeffs">
+             2.078600000E+01,   2.825911000E-07,  -1.464191000E-07,   1.092131000E-08, 
+             -3.661371000E-08,  -6.197350000E+00,   1.799990000E+02</floatArray>
+        </Shomate>
+      </thermo>
+    </species>
+  </speciesData>
+  <reactionData id="reaction_data" motz_wise="true">
+
+    <!-- reaction r_0000    -->
+    <reaction id="r_0000" reversible="yes" type="surface">
+      <equation>H2 + 2 RU(T) [=] 2 H(T) + 2 RU(B)</equation>
+      <rateCoeff>
+        <Arrhenius type="stick" species="H2">
+           <A>5.000000E-01</A>
+           <b>0</b>
+           <E units="kcal/mol">0.000000</E>
+        </Arrhenius>
+      </rateCoeff>
+      <reactants>H2:1.0 RU(T):2.0</reactants>
+      <products>H(T):2.0 RU(B):2.0</products>
+    </reaction>
+
+    <!-- reaction r_0001    -->
+    <reaction id="r_0001" reversible="yes" type="surface">
+      <equation>N2 + RU(T) [=] N2(T) + RU(B)</equation>
+      <rateCoeff>
+        <Arrhenius type="stick" species="N2">
+           <A>5.000000E-01</A>
+           <b>0</b>
+           <E units="kcal/mol">0.000000</E>
+        </Arrhenius>
+      </rateCoeff>
+      <reactants>N2:1.0 RU(T):1</reactants>
+      <products>N2(T):1.0 RU(B):1</products>
+    </reaction>
+
+    <!-- reaction r_0002    -->
+    <reaction id="r_0002" reversible="yes" type="surface">
+      <equation>NH3 + RU(T) [=] NH3(T) + RU(B)</equation>
+      <rateCoeff>
+        <Arrhenius type="stick" species="NH3">
+           <A>5.000000E-01</A>
+           <b>0</b>
+           <E units="kcal/mol">0.000000</E>
+        </Arrhenius>
+      </rateCoeff>
+      <reactants>NH3:1.0 RU(T):1</reactants>
+      <products>NH3(T):1.0 RU(B):1</products>
+    </reaction>
+
+    <!-- reaction r_0003    -->
+    <reaction id="r_0003" reversible="yes" type="surface">
+      <equation>NH3(T) + RU(T) [=] NH2(T) + H(T) + RU(B)</equation>
+      <rateCoeff>
+        <Arrhenius>
+           <A>9.600000E+16</A>
+           <b>1</b>
+           <E units="kcal/mol">14.200000</E>
+        </Arrhenius>
+      </rateCoeff>
+      <reactants>NH3(T):1.0 RU(T):1</reactants>
+      <products>NH2(T):1.0 H(T):1 RU(B):1</products>
+    </reaction>
+
+    <!-- reaction r_0004    -->
+    <reaction id="r_0004" reversible="yes" type="surface">
+      <equation>NH2(T) + RU(T) [=] NH(T) + H(T) + RU(B)</equation>
+      <rateCoeff>
+        <Arrhenius>
+           <A>4.807490E+17</A>
+           <b>1</b>
+           <E units="kcal/mol">10.631700</E>
+        </Arrhenius>
+      </rateCoeff>
+      <reactants>NH2(T):1.0 RU(T):1</reactants>
+      <products>NH(T):1.0 H(T):1 RU(B):1</products>
+    </reaction>
+
+    <!-- reaction r_0005    -->
+    <reaction id="r_0005" reversible="yes" type="surface">
+      <equation>NH(T) + RU(T) [=] N(T) + H(T) + RU(B)</equation>
+      <rateCoeff>
+        <Arrhenius>
+           <A>4.807490E+17</A>
+           <b>1</b>
+           <E units="kcal/mol">23.183300</E>
+        </Arrhenius>
+      </rateCoeff>
+      <reactants>NH(T):1.0 RU(T):1</reactants>
+      <products>N(T):1.0 H(T):1 RU(B):1</products>
+    </reaction>
+
+    <!-- reaction r_0006    -->
+    <reaction id="r_0006" reversible="yes" type="surface">
+      <equation>2 N(T) + RU(B) [=] N2(T) + RU(T)</equation>
+      <rateCoeff>
+        <Arrhenius>
+           <A>4.807490E+17</A>
+           <b>1</b>
+           <E units="kcal/mol">91.488900</E>
+        </Arrhenius>
+      </rateCoeff>
+      <reactants>N(T):2.0 RU(B):1</reactants>
+      <products>N2(T):1.0 RU(T):1</products>
+    </reaction>
+
+    <!-- reaction r_0007    -->
+    <reaction id="r_0007" reversible="yes" type="surface">
+      <equation>H2 + 2 RU(S) [=] 2 H(S) + 2 RU(B)</equation>
+      <rateCoeff>
+        <Arrhenius type="stick" species="H2">
+           <A>5.000000E-01</A>
+           <b>0</b>
+           <E units="kcal/mol">0.000000</E>
+        </Arrhenius>
+      </rateCoeff>
+      <reactants>H2:1.0 RU(S):2.0</reactants>
+      <products>H(S):2.0 RU(B):2.0</products>
+    </reaction>
+
+    <!-- reaction r_0008    -->
+    <reaction id="r_0008" reversible="yes" type="surface">
+      <equation>N2 + RU(S) [=] N2(S) + RU(B)</equation>
+      <rateCoeff>
+        <Arrhenius type="stick" species="N2">
+           <A>5.000000E-01</A>
+           <b>0</b>
+           <E units="kcal/mol">0.000000</E>
+        </Arrhenius>
+      </rateCoeff>
+      <reactants>N2:1.0 RU(S):1</reactants>
+      <products>N2(S):1.0 RU(B):1</products>
+    </reaction>
+
+    <!-- reaction r_0009    -->
+    <reaction id="r_0009" reversible="yes" type="surface">
+      <equation>NH3 + RU(S) [=] NH3(S) + RU(B)</equation>
+      <rateCoeff>
+        <Arrhenius type="stick" species="NH3">
+           <A>5.000000E-01</A>
+           <b>0</b>
+           <E units="kcal/mol">0.000000</E>
+        </Arrhenius>
+      </rateCoeff>
+      <reactants>NH3:1.0 RU(S):1</reactants>
+      <products>NH3(S):1.0 RU(B):1</products>
+    </reaction>
+
+    <!-- reaction r_0010    -->
+    <reaction id="r_0010" reversible="yes" type="surface">
+      <equation>NH3(S) + RU(S) [=] NH2(S) + H(S) + RU(B)</equation>
+      <rateCoeff>
+        <Arrhenius>
+           <A>2.347260E+18</A>
+           <b>1</b>
+           <E units="kcal/mol">13.395800</E>
+        </Arrhenius>
+      </rateCoeff>
+      <reactants>NH3(S):1.0 RU(S):1</reactants>
+      <products>NH2(S):1.0 H(S):1 RU(B):1</products>
+    </reaction>
+
+    <!-- reaction r_0011    -->
+    <reaction id="r_0011" reversible="yes" type="surface">
+      <equation>NH2(S) + RU(S) [=] NH(S) + H(S) + RU(B)</equation>
+      <rateCoeff>
+        <Arrhenius>
+           <A>2.347260E+18</A>
+           <b>1</b>
+           <E units="kcal/mol">18.498900</E>
+        </Arrhenius>
+      </rateCoeff>
+      <reactants>NH2(S):1.0 RU(S):1</reactants>
+      <products>NH(S):1.0 H(S):1 RU(B):1</products>
+    </reaction>
+
+    <!-- reaction r_0012    -->
+    <reaction id="r_0012" reversible="yes" type="surface">
+      <equation>N(S) + H(S) + RU(B) [=] NH(S) + RU(S)</equation>
+      <rateCoeff>
+        <Arrhenius>
+           <A>2.347260E+18</A>
+           <b>1</b>
+           <E units="kcal/mol">25.894500</E>
+        </Arrhenius>
+      </rateCoeff>
+      <reactants>N(S):1.0 H(S):1 RU(B):1</reactants>
+      <products>NH(S):1.0 RU(S):1</products>
+    </reaction>
+
+    <!-- reaction r_0013    -->
+    <reaction id="r_0013" reversible="yes" type="surface">
+      <equation>2 N(S) + RU(B) [=] N2(S) + RU(S)</equation>
+      <rateCoeff>
+        <Arrhenius>
+           <A>2.347260E+18</A>
+           <b>1</b>
+           <E units="kcal/mol">45.088200</E>
+        </Arrhenius>
+      </rateCoeff>
+      <reactants>N(S):2.0 RU(B):1</reactants>
+      <products>N2(S):1.0 RU(S):1</products>
+    </reaction>
+  </reactionData>
+  <interactionData id="interaction_data">
+
+    <!-- interaction i_0000    -->
+    <interaction id="i_0000">
+      <speciesArray datasrc="#species_data">N(T) N(T)</speciesArray>
+      <floatArray name="strength" units="kcal/mol">-5.260000000E+01, </floatArray>
+      <floatArray name="coverage_threshold">0.000000000E+00,   1.000000000E+00, </floatArray>
+    </interaction>
+
+    <!-- interaction i_0001    -->
+    <interaction id="i_0001">
+      <speciesArray datasrc="#species_data">N(T) H(T)</speciesArray>
+      <floatArray name="strength" units="kcal/mol">-1.770000000E+01, </floatArray>
+      <floatArray name="coverage_threshold">0.000000000E+00,   1.000000000E+00, </floatArray>
+    </interaction>
+
+    <!-- interaction i_0002    -->
+    <interaction id="i_0002">
+      <speciesArray datasrc="#species_data">H(T) N(T)</speciesArray>
+      <floatArray name="strength" units="kcal/mol">-1.770000000E+01, </floatArray>
+      <floatArray name="coverage_threshold">0.000000000E+00,   1.000000000E+00, </floatArray>
+    </interaction>
+
+    <!-- interaction i_0003    -->
+    <interaction id="i_0003">
+      <speciesArray datasrc="#species_data">H(T) H(T)</speciesArray>
+      <floatArray name="strength" units="kcal/mol">-3.000000000E+00, </floatArray>
+      <floatArray name="coverage_threshold">0.000000000E+00,   1.000000000E+00, </floatArray>
+    </interaction>
+
+    <!-- interaction i_0004    -->
+    <interaction id="i_0004">
+      <speciesArray datasrc="#species_data">NH2(T) N(T)</speciesArray>
+      <floatArray name="strength" units="kcal/mol">-2.070000000E+01, </floatArray>
+      <floatArray name="coverage_threshold">0.000000000E+00,   1.000000000E+00, </floatArray>
+    </interaction>
+
+    <!-- interaction i_0005    -->
+    <interaction id="i_0005">
+      <speciesArray datasrc="#species_data">N(S) N(S)</speciesArray>
+      <floatArray name="strength" units="kcal/mol">-5.260000000E+01, </floatArray>
+      <floatArray name="coverage_threshold">0.000000000E+00,   1.000000000E+00, </floatArray>
+    </interaction>
+
+    <!-- interaction i_0006    -->
+    <interaction id="i_0006">
+      <speciesArray datasrc="#species_data">N(S) H(S)</speciesArray>
+      <floatArray name="strength" units="kcal/mol">-1.770000000E+01, </floatArray>
+      <floatArray name="coverage_threshold">0.000000000E+00,   1.000000000E+00, </floatArray>
+    </interaction>
+
+    <!-- interaction i_0007    -->
+    <interaction id="i_0007">
+      <speciesArray datasrc="#species_data">H(S) N(S)</speciesArray>
+      <floatArray name="strength" units="kcal/mol">-1.770000000E+01, </floatArray>
+      <floatArray name="coverage_threshold">0.000000000E+00,   1.000000000E+00, </floatArray>
+    </interaction>
+
+    <!-- interaction i_0008    -->
+    <interaction id="i_0008">
+      <speciesArray datasrc="#species_data">H(S) H(S)</speciesArray>
+      <floatArray name="strength" units="kcal/mol">-3.000000000E+00, </floatArray>
+      <floatArray name="coverage_threshold">0.000000000E+00,   1.000000000E+00, </floatArray>
+    </interaction>
+
+    <!-- interaction i_0009    -->
+    <interaction id="i_0009">
+      <speciesArray datasrc="#species_data">NH2(S) N(S)</speciesArray>
+      <floatArray name="strength" units="kcal/mol">-2.070000000E+01, </floatArray>
+      <floatArray name="coverage_threshold">0.000000000E+00,   1.000000000E+00, </floatArray>
+    </interaction>
+  </interactionData>
+  <bepData id="bep_data">
+
+    <!-- bep NH-H    -->
+    <bep id="NH-H">
+      <alpha>0.52</alpha>
+      <beta units="kcal/mol">19.780000</beta>
+      <direction>cleavage</direction>
+      <cleavage_reactions>
+        <reactionArray datasrc="#reaction_data">
+           <include min="r_0004" max="r_0004"/>
+        </reactionArray>
+        <reactionArray datasrc="#reaction_data">
+           <include min="r_0011" max="r_0011"/>
+        </reactionArray>
+      </cleavage_reactions>
+      <synthesis_reactions/>
+    </bep>
+
+    <!-- bep N-H    -->
+    <bep id="N-H">
+      <alpha>0.29</alpha>
+      <beta units="kcal/mol">23.230000</beta>
+      <direction>cleavage</direction>
+      <cleavage_reactions>
+        <reactionArray datasrc="#reaction_data">
+           <include min="r_0005" max="r_0005"/>
+        </reactionArray>
+      </cleavage_reactions>
+      <synthesis_reactions>
+        <reactionArray datasrc="#reaction_data">
+           <include min="r_0012" max="r_0012"/>
+        </reactionArray>
+      </synthesis_reactions>
+    </bep>
+
+    <!-- bep NH2-H    -->
+    <bep id="NH2-H">
+      <alpha>0.71</alpha>
+      <beta units="kcal/mol">23.690000</beta>
+      <direction>cleavage</direction>
+      <cleavage_reactions>
+        <reactionArray datasrc="#reaction_data">
+           <include min="r_0010" max="r_0010"/>
+        </reactionArray>
+      </cleavage_reactions>
+      <synthesis_reactions/>
+    </bep>
+  </bepData>
+</ctml>

@@ -1,0 +1,6 @@
+include *.md
+include requirement.txt
+recursive-include catplot *.py
+recursive-include tests *.py
+recursive-include examples *.ipynb
+

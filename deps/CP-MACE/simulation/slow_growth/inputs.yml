@@ -1,0 +1,9 @@
+save_dir: result
+save_freq: 1
+steps: 100
+read_velocity: True
+force_threshold: 0.15
+fermi_threshold: 0.04
+T_init: 300.
+integrator: NoseHoover
+integrator_config: {"timestep": 1, "temperature": 300., "ttime": 40., "constraints": [[0,137,204,1.36091]], "increm": 0.001, "Mne": 660.74, "eta_length":2, "targetmu": -3.36}

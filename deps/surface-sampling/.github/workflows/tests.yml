@@ -1,0 +1,55 @@
+name: Tests
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+jobs:
+  build-linux:
+    runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 5
+
+    steps:
+    # 1. Checkout repository
+    - name: Checkout source
+      uses: actions/checkout@v4
+
+    # 2. Set up micromamba environment
+    - name: Setup micromamba with test environment
+      uses: mamba-org/setup-micromamba@v1
+      with:
+        environment-file: environment.yml
+        environment-name: test-env
+        create-args: ""
+        init-shell: bash
+        generate-run-shell: true
+
+    # 3. Install local and dev dependencies using uv
+    - name: Install Python dependencies with uv
+      shell: micromamba-shell {0}
+      run: |
+        uv pip install -e '.[dev]'
+
+    # 4. Set up environment variables for LAMMPS
+    - name: Configure LAMMPS paths
+      shell: micromamba-shell {0}
+      run: |
+        echo "LAMMPS_POTENTIALS=$GITHUB_WORKSPACE/mcmc/potentials" >> $GITHUB_ENV
+        echo "LAMMPS_COMMAND=$(which lmp)" >> $GITHUB_ENV
+        echo "ASE_LAMMPSRUN_COMMAND=$(which lmp)" >> $GITHUB_ENV
+
+    # 5. Display environment variables for debugging
+    - name: Print LAMMPS paths
+      shell: micromamba-shell {0}
+      run: |
+        echo "LAMMPS_POTENTIALS = $LAMMPS_POTENTIALS"
+        echo "LAMMPS_COMMAND = $LAMMPS_COMMAND"
+        echo "ASE_LAMMPSRUN_COMMAND = $ASE_LAMMPSRUN_COMMAND"
+
+    # 6. Run test suite
+    - name: Run tests with pytest
+      shell: micromamba-shell {0}
+      run: |
+        pytest --capture=no --cov --cov-report=xml
