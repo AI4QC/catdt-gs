@@ -22,7 +22,7 @@ from ase.io import read
 # 初始化预测器（使用本地模型）
 predictor = FairchemPredictor(
     fairchem_root="deps/fairchem",
-    model_path="/home/zhilong/下载/uma-s-1p1.pt",  # 使用本地模型
+    model_path="/path/to/uma-s-1p1.pt",  # 使用本地模型
     use_gpu=True,
     verbose=True,
 )
@@ -107,7 +107,7 @@ from ase.io import write
 # 1. 初始化预测器
 predictor = FairchemPredictor(
     fairchem_root="deps/fairchem",
-    model_path="/home/zhilong/下载/uma-s-1p1.pt",
+    model_path="/path/to/uma-s-1p1.pt",
     use_gpu=True,
 )
 
@@ -163,7 +163,7 @@ configs = adsorbdiff.predict(surface="slab.vasp", adsorbate="*O", num_sites=10)
 # 使用 Fairchem 优化这些配置
 predictor = FairchemPredictor(
     fairchem_root="deps/fairchem",
-    model_path="/home/zhilong/下载/uma-s-1p1.pt",
+    model_path="/path/to/uma-s-1p1.pt",
 )
 
 for i, config in enumerate(configs.atoms_list):
@@ -222,7 +222,7 @@ for i, config in enumerate(configs.atoms_list):
 
 ## 📝 完整工作示例
 
-见 `/home/zhilong/workspace/catdt/test/test_pathway_predictor.py` 的 test 1.1 部分
+见 `test/test_pathway_predictor.py` 的 test 1.1 部分
 
 ## 联系和支持
 

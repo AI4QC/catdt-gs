@@ -15,7 +15,7 @@ pathway 模块提供了完整的催化反应路径分析功能，包括：
 ### 1. 克隆 Fairchem 库
 
 ```bash
-cd /home/zhilong/workspace/catdt/deps
+cd $CATDT_ROOT/deps
 git clone https://github.com/facebookresearch/fairchem.git
 ```
 

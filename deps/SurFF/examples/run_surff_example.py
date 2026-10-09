@@ -4,7 +4,7 @@ SurFF 示例脚本
 
 运行方式：
     conda activate catdt
-    cd /home/zhilong/workspace/catdt/SurFF
+    cd $CATDT_ROOT/deps/SurFF
     python examples/run_surff_example.py
 
 功能:

@@ -4,7 +4,7 @@ AdsorbDiff 示例脚本
 
 运行方式：
     conda activate catdt
-    cd /home/zhilong/workspace/catdt/AdsorbDiff
+    cd $CATDT_ROOT/deps/AdsorbDiff
     python examples/run_example.py
 """
 

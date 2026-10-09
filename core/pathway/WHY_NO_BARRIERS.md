@@ -25,7 +25,7 @@ result = predictor.predict_pathway(
 我已经创建了一个包含能垒计算的完整示例：
 
 ```bash
-cd /home/zhilong/workspace/catdt
+cd $CATDT_ROOT
 python test/test_complete_pathway_with_barriers.py
 ```
 
@@ -48,7 +48,7 @@ from pathway.pathway_predictor import PathwayPredictor
 
 predictor = PathwayPredictor(
     fairchem_root="deps/fairchem",
-    model_path="/home/zhilong/下载/uma-s-1p1.pt",
+    model_path="/path/to/uma-s-1p1.pt",
     use_gpu=True,
 )
 
@@ -78,7 +78,7 @@ from pathway.fairchem_predictor import FairchemPredictor
 # 初始化
 fairchem = FairchemPredictor(
     fairchem_root="deps/fairchem",
-    model_path="/home/zhilong/下载/uma-s-1p1.pt",
+    model_path="/path/to/uma-s-1p1.pt",
 )
 
 barrier = BarrierPredictor(fairchem_predictor=fairchem)
@@ -176,7 +176,7 @@ RUN_SLOW_TESTS=1 python test/test_pathway_predictor.py
 运行以下命令生成包含能垒的完整结果：
 
 ```bash
-cd /home/zhilong/workspace/catdt
+cd $CATDT_ROOT
 python test/test_complete_pathway_with_barriers.py
 ```
 

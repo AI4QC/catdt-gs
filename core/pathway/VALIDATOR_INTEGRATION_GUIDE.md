@@ -205,7 +205,7 @@ REACTION_TEMPLATES = {
 
 ```bash
 # 运行内置快速测试
-cd /home/zhilong/workspace/catdt
+cd $CATDT_ROOT
 python core/pathway/initial_final_validator.py
 
 # 预期输出：

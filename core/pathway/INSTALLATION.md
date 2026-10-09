@@ -6,7 +6,7 @@
 
 ```bash
 # 进入 deps 目录
-cd /home/zhilong/workspace/catdt/deps
+cd $CATDT_ROOT/deps
 
 # 如果还没有克隆 fairchem（已经克隆过可跳过）
 git clone https://github.com/facebookresearch/fairchem.git
@@ -32,7 +32,7 @@ huggingface-cli login
 ### 3. 验证安装
 
 ```bash
-cd /home/zhilong/workspace/catdt
+cd $CATDT_ROOT
 python -c "
 import sys
 sys.path.insert(0, 'core')
