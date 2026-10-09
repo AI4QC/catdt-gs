@@ -73,9 +73,21 @@ def _patch_unified_model_token_limit() -> None:
     UnifiedModelType.token_limit = property(_patched_token_limit)  # type: ignore[assignment]
 
 
+def _uses_max_completion_tokens(model_name: Optional[str]) -> bool:
+    name = str(model_name or "").strip().lower()
+    return name.startswith("gpt-5")
+
+
 def _build_model_config(temperature: float, **kwargs: Any) -> Dict[str, Any]:
+    model_name = str(kwargs.pop("model_name", "") or "")
     model_config: Dict[str, Any] = {"temperature": temperature}
-    for key in ("max_tokens", "top_p", "frequency_penalty", "presence_penalty", "seed"):
+    max_tokens = kwargs.get("max_tokens")
+    if max_tokens is not None:
+        if _uses_max_completion_tokens(model_name):
+            model_config["max_completion_tokens"] = max_tokens
+        else:
+            model_config["max_tokens"] = max_tokens
+    for key in ("top_p", "frequency_penalty", "presence_penalty", "seed"):
         if key in kwargs and kwargs[key] is not None:
             model_config[key] = kwargs[key]
     return model_config
@@ -101,6 +113,10 @@ def get_camel_model_backend(
     **kwargs: Any,
 ):
     """Create a strict CAMEL model backend (no fallback)."""
+    if os.getenv("CATDT_LLM_BACKEND", "").strip().lower() == "codex":
+        # local codex-api (codex login) instead of an OpenAI-compatible HTTP API
+        from camel_agents.codex_backend import codex_backend_from_env
+        return codex_backend_from_env()
     _patch_unified_model_token_limit()
     model_name = str(model or os.getenv("OPENAI_MODEL", "gpt-5.4") or "").strip()
     if not model_name:
@@ -133,7 +149,7 @@ def get_camel_model_backend(
         token_counter=_build_token_counter(model_name),
         timeout=float(request_timeout),
         max_retries=int(max_retries),
-        model_config_dict=_build_model_config(temperature, **kwargs),
+        model_config_dict=_build_model_config(temperature, model_name=model_name, **kwargs),
     )
 
     # Some API mirrors (e.g. AICodeMirror) return content=null in non-stream

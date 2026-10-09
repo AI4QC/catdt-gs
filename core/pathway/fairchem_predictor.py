@@ -11,8 +11,8 @@ Fairchem 提供了多个预训练模型（如 UMA、eSCN、GemNet 等）用于�
     # 初始化预测器
     predictor = FairchemPredictor(
         fairchem_root="/path/to/fairchem",
-        model_name="uma-s-1p1",  # 或 "uma-m-1p1"
-        use_gpu=True,
+        use_gpu=True,  # 势函数由 core/fairchem_config.py 统一选择
+                       # (CATDT_FAIRCHEM_MODEL / _TASK / _MODEL_PATH)
     )
 
     # 方式1: 预测单个结构的能量
@@ -39,6 +39,10 @@ Fairchem 提供了多个预训练模型（如 UMA、eSCN、GemNet 等）用于�
     for ads, energy in pathway_result.adsorbate_energies.items():
         print(f"{ads}: {energy:.3f} eV")
 
+更换势函数（单一配置入口，见 core/fairchem_config.py）:
+    CATDT_FAIRCHEM_MODEL=esen-sm-conserving-all-oc25 CATDT_FAIRCHEM_TASK=oc25 python run.py
+    # 或指定本地权重: CATDT_FAIRCHEM_MODEL_PATH=/abs/path/model.pt
+
 作者: Claude
 """
 
@@ -58,6 +62,40 @@ from ase import Atoms
 from ase.io import read, write
 from ase.optimize import LBFGS, BFGS
 
+# 势函数的唯一配置入口（CATDT_FAIRCHEM_MODEL / _TASK / _MODEL_PATH）。
+# 允许本文件被当作顶层脚本导入（此时 core/ 不在 sys.path 上）。
+try:
+    from core.fairchem_config import (
+        DEFAULT_FAIRCHEM_MODEL,
+        DEFAULT_FAIRCHEM_TASK,
+        local_checkpoint_candidates,
+        resolve_fairchem_model,
+    )
+except ImportError:  # pragma: no cover - fallback for direct-script execution
+    _REPO_ROOT = str(Path(__file__).resolve().parents[2])
+    if _REPO_ROOT not in sys.path:
+        sys.path.insert(0, _REPO_ROOT)
+    from core.fairchem_config import (
+        DEFAULT_FAIRCHEM_MODEL,
+        DEFAULT_FAIRCHEM_TASK,
+        local_checkpoint_candidates,
+        resolve_fairchem_model,
+    )
+
+# 单位换算: 1 eV = 8065.54429 cm^-1
+EV_TO_CM1 = 8065.54429
+
+# 原子参考能量 (eV) - 用于计算吸附能
+# 单一数据源：pathway_predictor 等模块从这里导入，请勿在别处复制
+ATOMIC_REFERENCE_ENERGIES = {
+    "H": -3.477,
+    "C": -7.282,
+    "N": -8.083,
+    "O": -7.204,
+    "F": -4.891,
+    "S": -4.659,
+}
+
 
 @dataclass
 class EnergyResult:
@@ -71,6 +109,9 @@ class EnergyResult:
     converged: bool
     optimization_steps: int
     output_file: Optional[str] = None
+    # 优化后的 Atoms 对象（relax=False 或优化失败时为 None），
+    # 供工作流通过 getattr(result, "relaxed_atoms", None) 读取
+    relaxed_atoms: Optional[Atoms] = None
 
     def __repr__(self):
         return (f"EnergyResult(structure={self.structure_name}, "
@@ -171,11 +212,15 @@ class FairchemPredictor:
         使用的模型名称。可选:
         - "uma-s-1p1": UMA small model (快速)
         - "uma-m-1p1": UMA medium model (更准确)
-        - 或提供本地模型文件的完整路径
+        - fairchem 预训练注册表中的任意名称，如 "esen-sm-conserving-all-oc25"
+        环境变量 ``CATDT_FAIRCHEM_MODEL`` 会覆盖此参数（单一配置入口）。
     model_path : str, optional
-        本地模型文件路径。如果提供，将使用本地模型而不是从 Hugging Face 下载
+        本地模型文件路径。如果提供，将使用本地模型而不是从 Hugging Face 下载。
+        环境变量 ``CATDT_FAIRCHEM_MODEL_PATH`` 会覆盖此参数；若只设置了
+        ``CATDT_FAIRCHEM_MODEL``，此参数会被忽略（否则会静默加载旧势函数）。
     task_name : str, default="oc20"
-        任务类型。催化应用使用 "oc20"
+        任务类型。催化应用使用 "oc20"（OC25 系列模型用 "oc25"）。
+        环境变量 ``CATDT_FAIRCHEM_TASK`` 会覆盖此参数。
     use_gpu : bool, default=True
         是否使用 GPU
     device : str, optional
@@ -190,33 +235,39 @@ class FairchemPredictor:
         是否输出详细信息
     """
 
-    # 原子参考能量 (eV) - 用于计算吸附能
-    ATOMIC_REFERENCE_ENERGIES = {
-        "H": -3.477,
-        "C": -7.282,
-        "N": -8.083,
-        "O": -7.204,
-        "F": -4.891,
-        "S": -4.659,
-    }
+    # 原子参考能量 (eV) - 引用模块级单一数据源
+    ATOMIC_REFERENCE_ENERGIES = ATOMIC_REFERENCE_ENERGIES
 
     def __init__(
         self,
         fairchem_root: str,
-        model_name: str = "uma-s-1p1",
+        model_name: str = DEFAULT_FAIRCHEM_MODEL,
         model_path: Optional[str] = None,
-        task_name: str = "oc20",
+        task_name: str = DEFAULT_FAIRCHEM_TASK,
         use_gpu: bool = True,
         device: Optional[str] = None,
         inference_mode: str = "default",
         work_dir: Optional[str] = None,
         keep_files: bool = True,
         verbose: bool = True,
+        count_force_calls: Optional[bool] = None,
     ):
+        # Opt-in single-point accounting for SI Table S25 (median force calls
+        # per barrier). None = follow CATDT_COUNT_FORCE_CALLS; False = never.
+        # See core/pathway/uma_call_counter.py.
+        self.count_force_calls = count_force_calls
         self.fairchem_root = os.path.abspath(fairchem_root)
-        self.model_name = model_name
-        self.model_path = os.path.abspath(model_path) if model_path else None
-        self.task_name = task_name
+        # 势函数选择统一由 core.fairchem_config 解析（单一配置入口）。
+        # 未设置任何 CATDT_FAIRCHEM_* 时，结果与调用方传入的参数完全一致。
+        self._model_config = resolve_fairchem_model(
+            model_name=model_name,
+            task_name=task_name,
+            model_path=model_path,
+            context="FairchemPredictor",
+        )
+        self.model_name = self._model_config.model_name
+        self.model_path = self._model_config.model_path
+        self.task_name = self._model_config.task_name
         env_device = str(os.getenv("CATDT_FAIRCHEM_DEVICE", "")).strip().lower()
         requested_device = str(device or ("cuda" if use_gpu else "cpu")).strip().lower()
         resolved_device = env_device or requested_device or "cuda"
@@ -344,13 +395,9 @@ class FairchemPredictor:
                 )
         else:
             # 优先使用本地模型，避免网络下载阻塞；失败后再尝试 HuggingFace。
-            local_checkpoints = [
-                f"deps/fairchem_models/{self.model_name}.pt",  # 本地UMA模型
-                "deps/fairchem_models/uma-s-1p1.pt",
-                "deps/fairchem_models/uma-m-1p1.pt",
-                "data/ocp/checkpoints/2024-04-12-11-03-28/best_checkpoint.pt",
-                "data/ocp/checkpoints/2024-03-03-23-57-52/best_checkpoint.pt",
-            ]
+            # 只接受确实属于 self.model_name 的本地 checkpoint —— 否则请求
+            # 非默认势函数时会静默加载 uma-s-1p1.pt（旧实现的静默失败陷阱）。
+            local_checkpoints = local_checkpoint_candidates(self.model_name)
             existing_checkpoints = []
             for checkpoint in local_checkpoints:
                 if os.path.exists(checkpoint):
@@ -440,7 +487,11 @@ class FairchemPredictor:
                             f"Please either:\n"
                             f"  (1) Log in to HuggingFace: huggingface-cli login\n"
                             f"  (2) Provide a local compatible model via model_path parameter\n"
-                            f"  (3) Set calculate_barriers=False to skip NEB calculations"
+                            f"      (or set CATDT_FAIRCHEM_MODEL_PATH=/abs/path/to/model.pt)\n"
+                            f"  (3) Set calculate_barriers=False to skip NEB calculations\n"
+                            f"Potential selection: {self._model_config.describe()}\n"
+                            f"Note: CatDT refuses to substitute a different potential "
+                            f"(e.g. {DEFAULT_FAIRCHEM_MODEL}) for the one requested."
                         )
 
                     raise RuntimeError(
@@ -455,12 +506,34 @@ class FairchemPredictor:
                     )
 
         # 创建计算器
-        self._calculator = FAIRChemCalculator(
-            self._predictor,
-            task_name=self.task_name
-        )
+        # 可选的单点计数封装（SI 表 S25 的 "median force calls per barrier"）。
+        # 默认关闭：count_force_calls=None 时只看 CATDT_COUNT_FORCE_CALLS；
+        # 未开启则与原实现完全一致，返回裸 FAIRChemCalculator，数值不受影响。
+        # 见 core/pathway/uma_call_counter.py。
+        self._calculator = None
+        try:
+            from core.pathway.uma_call_counter import make_calculator as _make_uma_calculator
 
-        self.logger.info("Model loaded successfully")
+            self._calculator = _make_uma_calculator(
+                FAIRChemCalculator,
+                self._predictor,
+                task_name=self.task_name,
+                count=getattr(self, "count_force_calls", None),
+            )
+        except Exception as exc_counter:  # pragma: no cover - defensive
+            self.logger.warning(
+                "UMA call counter unavailable (%s); using plain FAIRChemCalculator",
+                exc_counter,
+            )
+        if self._calculator is None:
+            self._calculator = FAIRChemCalculator(
+                self._predictor,
+                task_name=self.task_name
+            )
+
+        self.logger.info(
+            "Model loaded successfully: %s", self._model_config.describe()
+        )
 
     def _relax_adsorbate_in_vacuum(
         self,
@@ -481,7 +554,15 @@ class FairchemPredictor:
         if not hasattr(self, "_vacuum_energy_cache"):
             self._vacuum_energy_cache: Dict[str, Tuple[float, Optional[List[float]], Optional[Atoms]]] = {}
 
+        # 缓存键：化学式 + 排序后的成对距离多重集（保留两位小数）。
+        # 仅用化学式会让同分异构体冲突（如 *CH2OH 与 *CH3O 都是 "CH3O"），
+        # 距离多重集可区分不同的成键拓扑/构型。
         formula_key = adsorbate_atoms.get_chemical_formula() or "_empty"
+        if len(adsorbate_atoms) > 1:
+            dist_matrix = adsorbate_atoms.get_all_distances(mic=False)
+            iu = np.triu_indices(len(adsorbate_atoms), k=1)
+            dist_sig = ",".join(f"{d:.2f}" for d in sorted(dist_matrix[iu]))
+            formula_key = f"{formula_key}|{dist_sig}"
         cached = self._vacuum_energy_cache.get(formula_key)
         if cached is not None:
             gas_energy, freq_list, relaxed_atoms = cached
@@ -532,7 +613,7 @@ class FairchemPredictor:
                     "Single-point vacuum calc also failed for %s: %s",
                     formula_key, exc2,
                 )
-                self._vacuum_energy_cache[formula_key] = (float("nan"), None, None)
+                # 不缓存失败结果（NaN），下次调用时重试
                 if compute_vibrations:
                     return float("nan"), None, None
                 return float("nan")
@@ -555,7 +636,9 @@ class FairchemPredictor:
                 )
                 freq_list_cm = None
 
-        self._vacuum_energy_cache[formula_key] = (gas_energy, freq_list_cm, relaxed_atoms)
+        # 只缓存有效结果，NaN/None 不缓存（避免失败被永久固化）
+        if gas_energy is not None and not np.isnan(gas_energy):
+            self._vacuum_energy_cache[formula_key] = (gas_energy, freq_list_cm, relaxed_atoms)
         if compute_vibrations:
             return gas_energy, freq_list_cm, relaxed_atoms
         return gas_energy
@@ -592,8 +675,8 @@ class FairchemPredictor:
                 # Negative or imaginary values indicate saddle modes; drop.
                 if val <= 0:
                     continue
-                # Convert eV → cm^-1 (1 eV = 8065.54 cm^-1)
-                freq_cm = val * 8065.54429
+                # Convert eV → cm^-1
+                freq_cm = val * EV_TO_CM1
                 if freq_cm < 20.0:  # drop rigid-body near-zero modes
                     continue
                 out.append(freq_cm)
@@ -671,6 +754,49 @@ class FairchemPredictor:
 
         return prepared_atoms
 
+    def _placement_slab(self, atoms: Atoms) -> Tuple[Atoms, bool]:
+        """The cell adsorbate configurations will really be built in.
+
+        ``_prepare_slab_for_adsorbate_placement`` may tile the slab in xy so that
+        fairchem's ``Slab`` accepts it, but the tiled slab is only *used* when
+        ``Slab`` accepts it: ``Slab.__init__`` asserts ``|a| >= 8``, ``|b| >= 8``,
+        a tagged surface and at least one constraint, and on failure
+        ``predict_adsorption_energy`` falls back to manual placement on the
+        un-tiled slab. A slab with three or fewer distinct z layers (e.g. a
+        3-layer fcc(111) cell) gets no ``tag=0`` atom, hence no ``FixAtoms``,
+        hence the assertion fires and no tiling takes effect; a stepped slab has
+        sub-surface atoms, passes, and the tiled cell is used.
+
+        Returns ``(atoms_for_placement, tiled)``. ``tiled`` is True only when the
+        returned cell is a supercell of the input, in which case the clean-surface
+        reference has to be evaluated in that same supercell — subtracting the
+        un-tiled slab leaves ``(n_tiles - 1) * E_slab`` in the adsorption energy.
+        """
+        try:
+            from fairchem.data.oc.core import Slab
+        except ImportError:
+            return atoms, False
+
+        prepared = self._prepare_slab_for_adsorbate_placement(atoms)
+        if len(prepared) == len(atoms):
+            return prepared, False
+        try:
+            Slab(slab_atoms=prepared)
+        except Exception as exc:
+            self.logger.info(
+                "Tiled slab rejected by fairchem Slab (%s); adsorbates will be "
+                "placed on the un-tiled %d-atom cell.", exc, len(atoms),
+            )
+            return atoms, False
+        return prepared, True
+
+    def _clean_reference_energy(self, slab_atoms: Atoms) -> float:
+        """Single-point energy of a clean slab, for use as the adsorption reference."""
+        self._load_model()
+        probe = slab_atoms.copy()
+        probe.calc = self._calculator
+        return float(probe.get_potential_energy())
+
     def _get_binding_atom_info(
         self,
         config: Atoms,
@@ -739,9 +865,12 @@ class FairchemPredictor:
         max_steps: int,
     ) -> Atoms:
         """
-        使用xy方向软约束优化结构
+        使用xy方向硬约束优化结构
 
-        通过在每几步后重置结合原子的xy位置来实现软约束
+        先将结合原子移动到目标xy位置，然后用 FixCartesian 固定其 xy 坐标
+        （只允许 z 方向移动）进行优化。注意：约束下得到的能量不是无约束
+        局部极小值的能量，调用方应通过 atoms.info["constrained_fallback"]
+        识别此情况。
 
         Parameters
         ----------
@@ -800,6 +929,9 @@ class FairchemPredictor:
 
         # 恢复原始约束
         atoms.set_constraint(original_constraints)
+
+        # 标记：该结构来自 xy 约束优化，其能量不是无约束局部极小值
+        atoms.info["constrained_fallback"] = True
 
         return atoms
 
@@ -1019,7 +1151,7 @@ class FairchemPredictor:
                     physical_adsorption_energy, adsorption_energy,
                 )
             if gas_phase_freq_cm:
-                gas_phase_freq_ev = [f / 8065.54429 for f in gas_phase_freq_cm]
+                gas_phase_freq_ev = [f / EV_TO_CM1 for f in gas_phase_freq_cm]
         except Exception as exc:
             self.logger.warning(
                 "Gas-phase reference unavailable for %s (manual): %s",
@@ -1114,10 +1246,12 @@ class FairchemPredictor:
                 opt = BFGS(atoms)
 
             try:
-                opt.run(fmax=fmax, steps=max_steps)
-                converged = True
+                converged = bool(opt.run(fmax=fmax, steps=max_steps))
                 optimization_steps = opt.get_number_of_steps()
-                self.logger.info(f"Converged in {optimization_steps} steps")
+                self.logger.info(
+                    f"{'Converged' if converged else 'Did NOT converge'} "
+                    f"in {optimization_steps} steps"
+                )
             except Exception as e:
                 self.logger.warning(f"Optimization failed: {e}")
                 optimization_steps = max_steps
@@ -1161,6 +1295,7 @@ class FairchemPredictor:
             converged=converged,
             optimization_steps=optimization_steps,
             output_file=output_file,
+            relaxed_atoms=atoms if relax else None,
         )
 
     def predict_adsorption_energy(
@@ -1265,11 +1400,26 @@ class FairchemPredictor:
             adsorbate_atoms = adsorbate.copy()
 
         # 3. 计算吸附质参考能量
+        # 未知元素不能静默按 0 eV 计入：将原子参考系吸附能标记为 NaN
+        # （physical_adsorption_energy 走真空参考路径，不受影响）
         adsorbate_symbols = adsorbate_atoms.get_chemical_symbols()
-        adsorbate_ref_energy = sum([
-            self.ATOMIC_REFERENCE_ENERGIES.get(sym, 0.0)
-            for sym in adsorbate_symbols
-        ])
+        unknown_elements = sorted({
+            sym for sym in adsorbate_symbols
+            if sym not in self.ATOMIC_REFERENCE_ENERGIES
+        })
+        if unknown_elements:
+            self.logger.error(
+                "No atomic reference energy for element(s) %s — "
+                "atomic-reference adsorption_energy will be NaN; "
+                "use physical_adsorption_energy (vacuum reference) instead.",
+                ", ".join(unknown_elements),
+            )
+            adsorbate_ref_energy = float("nan")
+        else:
+            adsorbate_ref_energy = sum(
+                self.ATOMIC_REFERENCE_ENERGIES[sym]
+                for sym in adsorbate_symbols
+            )
 
         # 如果提供了固定吸附位点，直接使用手动放置方法
         if fixed_site_position is not None:
@@ -1371,9 +1521,27 @@ class FairchemPredictor:
                 max_steps=max_steps,
             )
 
+        # 4b. The configurations above were built on `slab_atoms`, which
+        # `_prepare_slab_for_adsorbate_placement` may have tiled in xy. The clean
+        # reference must be the same cell, otherwise E_ads carries an extra
+        # (n_tiles - 1) * E_slab. Only this branch uses the tiled slab; every
+        # manual-placement fallback above keeps the un-tiled `surface_energy`.
+        slab_reference_energy = surface_energy
+        if len(slab_atoms) != len(surface_result.final_structure):
+            slab_reference_energy = self._clean_reference_energy(slab_atoms)
+            self.logger.info(
+                "  Adsorbate placed on a tiled %d-atom slab; clean reference "
+                "re-evaluated in the same cell: %.3f eV (un-tiled %d atoms: %.3f eV)",
+                len(slab_atoms), slab_reference_energy,
+                len(surface_result.final_structure), surface_energy,
+            )
+
         # 5. 优化所有配置
         all_energies = []
         all_configs = []
+        # 记录每个成功配置在 configs 中的原始索引：失败的配置会被跳过，
+        # 之后用 best_idx 反查初始结构时必须用原始索引（否则会错位）
+        all_orig_indices = []
 
         for i, config in enumerate(configs):
             self.logger.info(f"Relaxing configuration {i+1}/{len(configs)}...")
@@ -1387,6 +1555,7 @@ class FairchemPredictor:
                 )
                 all_energies.append(result.energy)
                 all_configs.append(result.final_structure)
+                all_orig_indices.append(i)
             except Exception as e:
                 self.logger.warning(f"Failed to relax configuration {i+1}: {e}")
                 continue
@@ -1400,7 +1569,7 @@ class FairchemPredictor:
         best_config = all_configs[best_idx]
 
         # 7. 计算吸附能: E_ads = E(ads+surf) - E(surf) - E(ads_ref)
-        adsorption_energy = best_energy - surface_energy - adsorbate_ref_energy
+        adsorption_energy = best_energy - slab_reference_energy - adsorbate_ref_energy
 
         # 7b. Physical adsorption energy: relax the adsorbate in a vacuum box
         # and reference against that. Yields E_ads consistent with the "gas
@@ -1422,14 +1591,14 @@ class FairchemPredictor:
                 isinstance(gas_phase_energy, float) and (gas_phase_energy != gas_phase_energy)
             ):
                 physical_adsorption_energy = float(
-                    best_energy - surface_energy - gas_phase_energy
+                    best_energy - slab_reference_energy - gas_phase_energy
                 )
                 self.logger.info(
                     "  Physical E_ads = %.3f eV  (atomic-ref E_ads = %.3f eV)",
                     physical_adsorption_energy, adsorption_energy,
                 )
             if gas_phase_freq_cm:
-                gas_phase_freq_ev = [f / 8065.54429 for f in gas_phase_freq_cm]
+                gas_phase_freq_ev = [f / EV_TO_CM1 for f in gas_phase_freq_cm]
         except Exception as exc:
             self.logger.warning(
                 "Gas-phase reference unavailable for %s: %s — microkinetic "
@@ -1444,7 +1613,7 @@ class FairchemPredictor:
                 from fairchem.data.oc.utils import DetectTrajAnomaly
 
                 detector = DetectTrajAnomaly(
-                    configs[best_idx],
+                    configs[all_orig_indices[best_idx]],
                     best_config,
                     best_config.get_tags()
                 )
@@ -1463,7 +1632,9 @@ class FairchemPredictor:
 
         return AdsorptionResult(
             adsorbate=str(adsorbate),
-            surface_energy=surface_energy,
+            # the reference actually subtracted, i.e. the clean slab in the same
+            # cell as `best_configuration`
+            surface_energy=slab_reference_energy,
             adsorbate_surface_energy=best_energy,
             adsorbate_reference_energy=adsorbate_ref_energy,
             adsorption_energy=adsorption_energy,
@@ -1549,6 +1720,28 @@ class FairchemPredictor:
             )
             surface_relaxed = surface_result.final_structure
             surface_energy = surface_result.energy
+
+        # 1b. Adsorbate placement may need a tiled cell (see `_placement_slab`).
+        # Promote the clean surface to that cell *before* anything else, so the
+        # reference energy, the "*" clean state, the desorption bookkeeping
+        # (`n_surface`) and every adsorbate total all live in one cell. Without
+        # this the adsorbate sits on the tiled slab while E_slab is the un-tiled
+        # one and E_ads is off by (n_tiles - 1) * E_slab.
+        # Skipped when a fixed site is requested: that path goes straight to
+        # manual placement on the un-tiled slab and has no mismatch.
+        if fixed_adsorption_site is None:
+            placement_surface, was_tiled = self._placement_slab(surface_relaxed)
+            if was_tiled:
+                tiled_energy = self._clean_reference_energy(placement_surface)
+                n_tiles = len(placement_surface) / max(len(surface_relaxed), 1)
+                self.logger.info(
+                    "Clean surface tiled for adsorbate placement: %d -> %d atoms; "
+                    "E_slab %.3f -> %.3f eV (%.1fx, per-tile %.3f eV)",
+                    len(surface_relaxed), len(placement_surface),
+                    surface_energy, tiled_energy, n_tiles, tiled_energy / n_tiles,
+                )
+                surface_relaxed = placement_surface
+                surface_energy = tiled_energy
 
         # 保存清洁表面
         surface_file = os.path.join(output_dir, "surface_relaxed.vasp")

@@ -1,0 +1,5 @@
+OC20 surface rule round(40/|a|) x round(40/|b|) x 1
+0
+Monkhorst-Pack
+4 5 1
+0 0 0

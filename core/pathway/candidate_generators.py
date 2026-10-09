@@ -889,27 +889,77 @@ class CandidateGeneratorRouter:
 # RDKit helpers (shared by SystematicCRNExplorer)
 # ═══════════════════════════════════════════════════════════════════════════
 
+# Catalysis-label → SMILES mapping. Labels like "CO", "NO", "CH3" are not
+# valid SMILES representations of the intended catalytic species (e.g.
+# SMILES "CO" is methanol CH4O, not carbon monoxide). This table holds the
+# chemistry-correct mapping and is sanity-checked once at first use by
+# ``_validate_known_smiles_table`` (RDKit element counts must match the
+# label's parsed element counts).
+_KNOWN: Dict[str, str] = {
+    "CO2": "O=C=O", "CO": "[C-]#[O+]", "COOH": "O=[C]O",
+    "CHO": "[CH]=O", "COH": "[C]O",
+    "CHOH": "O[CH]", "CH2O": "C=O",
+    "CH3OH": "CO", "CH2OH": "[CH2]O", "CH3O": "C[O]", "OCH3": "C[O]",
+    "CH4": "C", "CH3": "[CH3]", "CH2": "[CH2]", "CH": "[CH]",
+    "OH": "[OH]", "H2O": "O", "H2": "[H][H]",
+    "C2H4": "C=C", "C2H5OH": "CCO", "HCOOH": "OC=O",
+    "NH3": "N", "NO": "[N]=O", "N2O": "[N-]=[N+]=O", "NO2": "[O]N=O",
+    "SO2": "O=S=O", "H2S": "S",
+}
+
+_KNOWN_TABLE_VALIDATED: bool = False
+
+
+def _smiles_element_counts(smiles: str) -> Optional[Dict[str, int]]:
+    """Element counts (incl. implicit H) of a SMILES string, or None."""
+    if not _check_rdkit():
+        return None
+    from rdkit import Chem
+    mol = Chem.MolFromSmiles(smiles)
+    if mol is None:
+        return None
+    counts: Dict[str, int] = {}
+    for atom in mol.GetAtoms():
+        sym = atom.GetSymbol()
+        counts[sym] = counts.get(sym, 0) + 1
+        if sym != "H":
+            counts["H"] = counts.get("H", 0) + atom.GetTotalNumHs()
+    return {e: n for e, n in counts.items() if n}
+
+
+def _validate_known_smiles_table() -> None:
+    """One-shot sanity check: every ``_KNOWN`` entry's RDKit element counts
+    must match the label's parsed element counts. Logs an error for each
+    mismatch so label↔SMILES bugs (e.g. mapping a methoxy label to the
+    methanol SMILES) cannot recur silently."""
+    global _KNOWN_TABLE_VALIDATED
+    if _KNOWN_TABLE_VALIDATED or not _check_rdkit():
+        return
+    _KNOWN_TABLE_VALIDATED = True
+    for label, smiles in _KNOWN.items():
+        expected = parse_species_elements(label)
+        actual = _smiles_element_counts(smiles)
+        if actual is None:
+            logger.error(
+                "_KNOWN sanity check: label %r maps to unparseable SMILES %r",
+                label, smiles,
+            )
+        elif actual != expected:
+            logger.error(
+                "_KNOWN sanity check: label %r (elements %r) maps to SMILES "
+                "%r with elements %r — table entry is WRONG.",
+                label, expected, smiles, actual,
+            )
+
+
 def _try_parse_smiles(cleaned: str) -> Optional[str]:
     """Try to convert a species name to SMILES."""
     if not _check_rdkit():
         return None
     from rdkit import Chem
 
-    # Check catalysis-label → SMILES mapping FIRST. Labels like "CO",
-    # "NO", "CH3" are not valid SMILES representations of the intended
-    # catalytic species (e.g. SMILES "CO" is methanol, not carbon
-    # monoxide). The KNOWN table holds the chemistry-correct mapping.
-    _KNOWN: Dict[str, str] = {
-        "CO2": "O=C=O", "CO": "[C-]#[O+]", "COOH": "OC=O",
-        "CHO": "[CH]=O", "COH": "[C]=O",
-        "CHOH": "O[CH]", "CH2O": "C=O",
-        "CH3OH": "CO", "CH2OH": "[CH2]O", "CH3O": "CO", "OCH3": "CO",
-        "CH4": "C", "CH3": "[CH3]", "CH2": "[CH2]", "CH": "[CH]",
-        "OH": "[OH]", "H2O": "O", "H2": "[H][H]",
-        "C2H4": "C=C", "C2H5OH": "CCO", "HCOOH": "OC=O",
-        "NH3": "N", "NO": "[N]=O", "N2O": "N=NO", "NO2": "O=[N]=O",
-        "SO2": "O=S=O", "H2S": "S",
-    }
+    # Check the catalysis-label → SMILES mapping FIRST (see ``_KNOWN``).
+    _validate_known_smiles_table()
     known = _KNOWN.get(cleaned)
     if known is not None:
         return known
@@ -1313,7 +1363,9 @@ def _lookup_compositions_for_elements(elements: Dict[str, int]) -> List[str]:
 
     key = frozenset((k, v) for k, v in elements.items() if v > 0)
     _DB: Dict[FrozenSet[Tuple[str, int]], List[str]] = {
-        frozenset({("C", 1), ("H", 1), ("O", 1)}): ["[CH]=O", "[C]=O"],
+        # NOTE: "[C]O" is hydroxymethylidyne COH (C bonded to O-H);
+        # "[C]=O" would be carbon monoxide (C1O1) and not match this key.
+        frozenset({("C", 1), ("H", 1), ("O", 1)}): ["[CH]=O", "[C]O"],
         frozenset({("C", 1), ("H", 1), ("O", 2)}): ["OC=O"],
         frozenset({("C", 1), ("H", 2), ("O", 1)}): ["C=O", "[CH2]O"],
     }
@@ -1351,7 +1403,12 @@ def _build_label_from_elements(elements: Dict[str, int], adsorbed: bool = True) 
 
 
 def parse_species_elements(label: str) -> Dict[str, int]:
-    """Parse element counts from ``*CHO``, ``CH3OH(g)``, etc."""
+    """Parse element counts from ``*CHO``, ``CH3OH(g)``, etc.
+
+    NOTE: for composite ``A+B`` labels only the FIRST component is parsed;
+    callers that need the full co-adsorbed composition must sum the
+    components themselves.
+    """
     cleaned = label.replace("*", "").replace("(g)", "").replace("(s)", "").replace("(l)", "")
     if "+" in cleaned:
         cleaned = cleaned.split("+")[0].strip()
@@ -1361,6 +1418,11 @@ def parse_species_elements(label: str) -> Dict[str, int]:
         count = int(match.group(2) or 1)
         if elem:
             elements[elem] = elements.get(elem, 0) + count
+    if not elements and label.strip():
+        logger.warning(
+            "parse_species_elements: could not parse any elements from "
+            "label %r — returning empty composition.", label,
+        )
     return elements
 
 

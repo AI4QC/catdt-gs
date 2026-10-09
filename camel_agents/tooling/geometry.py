@@ -57,8 +57,8 @@ class WorkflowGeometryMixin:
                                         frac[dim] = float(frac[dim] % 1.0)
                                 wrapped = cell.T @ frac
                                 return [float(wrapped[0]), float(wrapped[1]), float(wrapped[2])]
-                            except Exception:
-                                return position
+                            except (ValueError, np.linalg.LinAlgError):
+                                return list(fallback)
                 return position
             except Exception:
                 return list(fallback)
@@ -273,6 +273,20 @@ class WorkflowGeometryMixin:
 
             if not changed:
                 break
+        else:
+            min_remaining = float("inf")
+            for i in range(len(structure)):
+                for j in range(i + 1, len(structure)):
+                    min_remaining = min(
+                        min_remaining,
+                        float(np.linalg.norm(positions[j] - positions[i])),
+                    )
+            logger.warning(
+                "_relax_close_contacts: max_iter=%d exhausted with min pair "
+                "distance %.3f Å; close contacts may remain unresolved.",
+                max_iter,
+                min_remaining,
+            )
 
         structure.set_positions(positions)
 
@@ -322,6 +336,12 @@ class WorkflowGeometryMixin:
 
         return corrected
 
+    @staticmethod
+    def _all_pair_distances_mic(structure: Atoms) -> np.ndarray:
+        """Full distance matrix; minimum-image convention when any PBC is set."""
+        use_mic = bool(np.any(structure.pbc))
+        return structure.get_all_distances(mic=use_mic)
+
     def _min_pair_distance(self, structure: Atoms, indices: List[int]) -> float:
         n = len(structure)
         out_of_range = [i for i in indices if not (0 <= i < n)]
@@ -332,27 +352,20 @@ class WorkflowGeometryMixin:
             )
         if len(indices) < 2:
             return -1.0
-        positions = structure.get_positions()
-        min_dist = float("inf")
-        for i, idx_i in enumerate(indices):
-            for idx_j in indices[i + 1 :]:
-                dist = float(np.linalg.norm(positions[idx_i] - positions[idx_j]))
-                if dist < min_dist:
-                    min_dist = dist
-        return min_dist if min_dist != float("inf") else -1.0
+        dists = self._all_pair_distances_mic(structure)
+        sub = dists[np.ix_(list(indices), list(indices))]
+        iu = np.triu_indices(len(indices), k=1)
+        vals = sub[iu]
+        return float(np.min(vals)) if vals.size else -1.0
 
     @staticmethod
     def _min_distance_any_pair(structure: Atoms) -> float:
         if len(structure) < 2:
             return -1.0
-        positions = structure.get_positions()
-        min_dist = float("inf")
-        for i in range(len(structure)):
-            for j in range(i + 1, len(structure)):
-                dist = float(np.linalg.norm(positions[i] - positions[j]))
-                if dist < min_dist:
-                    min_dist = dist
-        return min_dist if min_dist != float("inf") else -1.0
+        dists = WorkflowGeometryMixin._all_pair_distances_mic(structure)
+        iu = np.triu_indices(len(structure), k=1)
+        vals = dists[iu]
+        return float(np.min(vals)) if vals.size else -1.0
 
     @staticmethod
     def _min_adsorbate_surface_distance(structure: Atoms, adsorbate_indices: List[int]) -> float:
@@ -368,15 +381,9 @@ class WorkflowGeometryMixin:
         if not surface_indices:
             return -1.0
 
-        positions = structure.get_positions()
-        min_dist = float("inf")
-        for a_idx in valid_ads:
-            for s_idx in surface_indices:
-                dist = float(np.linalg.norm(positions[a_idx] - positions[s_idx]))
-                if dist < min_dist:
-                    min_dist = dist
-
-        return min_dist if min_dist != float("inf") else -1.0
+        dists = WorkflowGeometryMixin._all_pair_distances_mic(structure)
+        sub = dists[np.ix_(valid_ads, surface_indices)]
+        return float(np.min(sub)) if sub.size else -1.0
 
     def _interpolated_path_min_distances(
         self,
@@ -610,26 +617,51 @@ class WorkflowGeometryMixin:
         reactant: Atoms,
         product: Atoms,
         product_adsorbate_indices: List[int],
-    ) -> Tuple[Atoms, List[int], bool]:
+        product_staged_indices: Optional[List[int]] = None,
+        atom_mapping_constraints: Optional[List[Dict[str, Any]]] = None,
+    ) -> Tuple[Atoms, List[int], bool] | Tuple[Atoms, List[int], List[int], bool]:
+        include_staged = product_staged_indices is not None
+        staged_in = list(product_staged_indices or [])
+
+        def _ret(atoms: Atoms, ads: List[int], staged: List[int], did_reorder: bool):
+            if include_staged:
+                return atoms, ads, staged, did_reorder
+            return atoms, ads, did_reorder
+
         if len(reactant) != len(product):
-            return product, list(product_adsorbate_indices), False
+            return _ret(product, list(product_adsorbate_indices), staged_in, False)
 
         reactant_symbols = reactant.get_chemical_symbols()
         product_symbols = product.get_chemical_symbols()
-        if sorted(reactant_symbols) != sorted(product_symbols):
-            return product, list(product_adsorbate_indices), False
-        if reactant_symbols == product_symbols:
-            return product, list(product_adsorbate_indices), False
-
         product_positions = product.get_positions()
         reactant_positions = reactant.get_positions()
+        if sorted(reactant_symbols) != sorted(product_symbols):
+            return _ret(product, list(product_adsorbate_indices), staged_in, False)
+        constraints = self._valid_atom_mapping_constraints(
+            reactant=reactant,
+            product=product,
+            atom_mapping_constraints=atom_mapping_constraints,
+        )
+
+        if reactant_symbols == product_symbols and not constraints:
+            diffs = product_positions - reactant_positions
+            cell = reactant.get_cell()
+            if bool(np.any(reactant.pbc)) and float(np.linalg.norm(cell[0])) > 0.1:
+                frac = np.linalg.solve(cell.T, diffs.T).T
+                frac -= np.round(frac)
+                diffs = (cell.T @ frac.T).T
+            displacements = np.linalg.norm(diffs, axis=1)
+            if np.max(displacements) < 3.0:
+                return _ret(product, list(product_adsorbate_indices), staged_in, False)
 
         try:
             from scipy.optimize import linear_sum_assignment  # type: ignore
         except Exception:
             linear_sum_assignment = None
 
-        assignment: Dict[int, int] = {}
+        assignment: Dict[int, int] = {ridx: pidx for ridx, pidx in constraints}
+        constrained_r = set(assignment)
+        constrained_p = set(assignment.values())
         by_symbol: Dict[str, Tuple[List[int], List[int]]] = {}
         for ridx, sym in enumerate(reactant_symbols):
             by_symbol.setdefault(sym, ([], []))[0].append(ridx)
@@ -638,15 +670,29 @@ class WorkflowGeometryMixin:
 
         for sym, (r_group, p_group) in by_symbol.items():
             if len(r_group) != len(p_group):
-                return product, list(product_adsorbate_indices), False
+                return _ret(product, list(product_adsorbate_indices), staged_in, False)
+            if not r_group:
+                continue
+            r_group = [idx for idx in r_group if idx not in constrained_r]
+            p_group = [idx for idx in p_group if idx not in constrained_p]
+            if len(r_group) != len(p_group):
+                return _ret(product, list(product_adsorbate_indices), staged_in, False)
             if not r_group:
                 continue
 
             if linear_sum_assignment is not None:
                 cost = np.zeros((len(r_group), len(p_group)), dtype=float)
+                cell = reactant.get_cell()
+                pbc = reactant.pbc
+                use_mic = bool(np.any(pbc)) and float(np.linalg.norm(cell[0])) > 0.1
                 for i, ridx in enumerate(r_group):
                     for j, pidx in enumerate(p_group):
-                        cost[i, j] = float(np.linalg.norm(reactant_positions[ridx] - product_positions[pidx]))
+                        diff = product_positions[pidx] - reactant_positions[ridx]
+                        if use_mic:
+                            frac = np.linalg.solve(cell.T, diff)
+                            frac -= np.round(frac)
+                            diff = cell.T @ frac
+                        cost[i, j] = float(np.linalg.norm(diff))
                 row_ind, col_ind = linear_sum_assignment(cost)
                 for rr, cc in zip(row_ind.tolist(), col_ind.tolist()):
                     assignment[r_group[rr]] = p_group[cc]
@@ -663,19 +709,69 @@ class WorkflowGeometryMixin:
         try:
             reorder_sequence = [assignment[idx] for idx in range(len(reactant_symbols))]
         except Exception:
-            return product, list(product_adsorbate_indices), False
+            return _ret(product, list(product_adsorbate_indices), staged_in, False)
 
         if reorder_sequence == list(range(len(reactant_symbols))):
-            return product, list(product_adsorbate_indices), False
+            return _ret(product, list(product_adsorbate_indices), staged_in, False)
 
         reordered_product = product[reorder_sequence]
         old_to_new = {old: new for new, old in enumerate(reorder_sequence)}
         new_ads = [old_to_new[idx] for idx in product_adsorbate_indices if idx in old_to_new]
         new_ads = sorted(new_ads)
+        new_staged = [old_to_new[idx] for idx in staged_in if idx in old_to_new]
+        new_staged = sorted(new_staged)
         new_ads_set = set(new_ads)
         reordered_product.info["adsorbate_indices"] = list(new_ads)
-        reordered_product.info["surface_indices"] = [i for i in range(len(reordered_product)) if i not in new_ads_set]
-        return reordered_product, new_ads, True
+        reordered_product.info["staged_indices"] = list(new_staged)
+        reordered_product.info["surface_indices"] = [
+            i for i in range(len(reordered_product))
+            if i not in new_ads_set and i not in set(new_staged)
+        ]
+        reordered_product.info["_reorder_sequence"] = list(reorder_sequence)
+        if atom_mapping_constraints:
+            reordered_product.info["atom_mapping_constraints"] = [
+                {
+                    **dict(item),
+                    "product_index_after_reorder": old_to_new.get(int(item.get("product_index", -1)), None),
+                }
+                for item in atom_mapping_constraints
+                if isinstance(item, dict)
+            ]
+        return _ret(reordered_product, new_ads, new_staged, True)
+
+    @staticmethod
+    def _valid_atom_mapping_constraints(
+        reactant: Atoms,
+        product: Atoms,
+        atom_mapping_constraints: Optional[List[Dict[str, Any]]],
+    ) -> List[Tuple[int, int]]:
+        constraints: List[Tuple[int, int]] = []
+        used_r: set[int] = set()
+        used_p: set[int] = set()
+        r_symbols = reactant.get_chemical_symbols()
+        p_symbols = product.get_chemical_symbols()
+
+        for item in atom_mapping_constraints or []:
+            if not isinstance(item, dict):
+                continue
+            try:
+                ridx = int(item.get("reactant_index"))
+                pidx = int(item.get("product_index"))
+            except Exception:
+                continue
+            if not (0 <= ridx < len(reactant) and 0 <= pidx < len(product)):
+                continue
+            if ridx in used_r or pidx in used_p:
+                continue
+            if r_symbols[ridx] != p_symbols[pidx]:
+                continue
+            expected = str(item.get("element", "") or "").strip()
+            if expected and expected != r_symbols[ridx]:
+                continue
+            constraints.append((ridx, pidx))
+            used_r.add(ridx)
+            used_p.add(pidx)
+        return constraints
 
     def _get_unbonded_position(self, structure: Atoms, adsorbate_indices: List[int]) -> List[float]:
         positions = structure.get_positions()

@@ -270,16 +270,37 @@ class SurfaceSystem:
             self.all_atoms += virtual_adsorbate
 
     def initialize_constraints(self) -> FixConstraint:
-        """Initialize constraints on the surface. If surface_depth is set, set tags according to
-        Z coordinate. Surface will be tagged 1, with tag increasing layerwise downwards until the
-        surface_depth is reached. All atoms with tags greater than surface_depth will be bulk and
-        thus fixed.
+        """Initialize constraints on the surface.
+
+        If external indices are provided via system_settings ("external_surface_idx" and
+        "external_adsorbate_idx"), use them directly — this avoids z-coordinate-based layer
+        detection which misidentifies adsorbate atoms as "surface" on slabs with adsorbates.
+
+        Otherwise, if surface_depth is set, set tags according to Z coordinate. Surface will
+        be tagged 1, with tag increasing layerwise downwards until the surface_depth is reached.
+        All atoms with tags greater than surface_depth will be bulk and thus fixed.
 
         Returns:
             FixConstraint: The constraints on the surface.
         """
-        get_unique_coordinates(self.real_atoms, tag=True)
-        if self.surface_depth is not None:
+        ext_surface = self.system_settings.get("external_surface_idx")
+        ext_adsorbate = self.system_settings.get("external_adsorbate_idx")
+
+        if ext_surface is not None and ext_adsorbate is not None:
+            # Use externally provided indices (from upstream workflow)
+            all_indices = set(range(len(self.real_atoms)))
+            self.surface_idx = np.array(ext_surface, dtype=int)
+            free_set = set(ext_surface) | set(ext_adsorbate)
+            self.bulk_idx = np.array(sorted(all_indices - free_set), dtype=int)
+            self.real_atoms.constraints = []
+            constraints = FixAtoms(indices=self.bulk_idx)
+            self.real_atoms.set_constraint(constraints)
+            self.logger.info(
+                "Using external indices: %d surface, %d adsorbate, %d bulk (fixed)",
+                len(ext_surface), len(ext_adsorbate), len(self.bulk_idx),
+            )
+        elif self.surface_depth is not None:
+            get_unique_coordinates(self.real_atoms, tag=True)
             # clear existing constraints
             self.real_atoms.constraints = []
             # check valid surface_depth
@@ -297,6 +318,7 @@ class SurfaceSystem:
             constraints = FixAtoms(indices=self.bulk_idx)
             self.real_atoms.set_constraint(constraints)
         else:
+            get_unique_coordinates(self.real_atoms, tag=True)
             # extract constraints for application to relaxed slab
             constraints = self.real_atoms.constraints
             self.bulk_idx = [] if not constraints else constraints[0].todict()["kwargs"]["indices"]

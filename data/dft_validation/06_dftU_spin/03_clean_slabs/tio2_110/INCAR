@@ -1,0 +1,29 @@
+SYSTEM  = tio2_110 slab [u_spin]
+# Level of theory: OC20 / CatTSunami, i.e. the DFT that UMA task "oc20" was trained on
+GGA     = RP         # RPBE
+ENCUT   = 350
+PREC    = Normal
+LREAL   = Auto
+ISYM    = 0
+SYMPREC = 1E-10
+ALGO    = Normal
+NELM    = 200
+LWAVE   = .FALSE.
+LCHARG  = .FALSE.
+NCORE   = 4          # adjust to the cluster
+# single point at the UMA geometry
+EDIFF   = 1E-6       # tighter than the OC20 default; changes precision only
+IBRION  = -1
+NSW     = 0
+# spin polarisation (physics check; UMA "oc20" was trained without spin)
+ISPIN   = 2
+MAGMOM  = 24*0.0 12*1.0
+# DFT+U, Dudarev (physics check; UMA "oc20" was trained without U)
+LDAU     = .TRUE.
+LDAUTYPE = 2
+LDAUL    = -1 2
+LDAUU    = 0.0 4.2
+LDAUJ    = 0.0 0.0
+LMAXMIX  = 4
+ISMEAR   = 0
+SIGMA    = 0.05

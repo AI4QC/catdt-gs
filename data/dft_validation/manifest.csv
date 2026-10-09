@@ -1,0 +1,177 @@
+path,category,system,item,role,calc,tier,uma_energy_eV,note,natoms,formula,kpts,species
+01_barrier_single_points/S09_CO2+H_to_COOH/IS,barrier,cu111,S09_CO2+H_to_COOH,IS,sp,oc20,-106.905736,carboxyl route,31,CHCu27O2,5x6x1,C Cu H O
+01_barrier_single_points/S09_CO2+H_to_COOH/TS,barrier,cu111,S09_CO2+H_to_COOH,TS,sp,oc20,-104.969802,carboxyl route,31,CHCu27O2,5x6x1,C Cu H O
+01_barrier_single_points/S09_CO2+H_to_COOH/FS,barrier,cu111,S09_CO2+H_to_COOH,FS,sp,oc20,-106.073604,carboxyl route,31,CHCu27O2,5x6x1,C Cu H O
+01_barrier_single_points/S12_N+H_to_NH/IS,barrier,ru0001,S12_N+H_to_NH,IS,sp,oc20,-228.177605,N hydrogenation [endpoints and path from CatDT Agent 4/5],29,HNRu27,5x6x1,H N Ru
+01_barrier_single_points/S12_N+H_to_NH/TS,barrier,ru0001,S12_N+H_to_NH,TS,sp,oc20,-226.985493,N hydrogenation [endpoints and path from CatDT Agent 4/5],29,HNRu27,5x6x1,H N Ru
+01_barrier_single_points/S12_N+H_to_NH/FS,barrier,ru0001,S12_N+H_to_NH,FS,sp,oc20,-228.118962,N hydrogenation [endpoints and path from CatDT Agent 4/5],29,HNRu27,5x6x1,H N Ru
+01_barrier_single_points/S13_CO+H_to_CHO/IS,barrier,pdmo0001,S13_CO+H_to_CHO,IS,sp,oc20,-274.585563,CO hydrogenation (hcp-PdMo route),39,CHMo18OPd18,5x5x1,C H Mo O Pd
+01_barrier_single_points/S13_CO+H_to_CHO/TS,barrier,pdmo0001,S13_CO+H_to_CHO,TS,sp,oc20,-273.809942,CO hydrogenation (hcp-PdMo route),39,CHMo18OPd18,5x5x1,C H Mo O Pd
+01_barrier_single_points/S13_CO+H_to_CHO/FS,barrier,pdmo0001,S13_CO+H_to_CHO,FS,sp,oc20,-274.353554,CO hydrogenation (hcp-PdMo route),39,CHMo18OPd18,5x5x1,C H Mo O Pd
+01_barrier_single_points/S14_CO2_to_CO+O/IS,barrier,pdmo0001,S14_CO2_to_CO+O,IS,sp,oc20,-277.884240,RWGS C-O scission (hcp-PdMo route),39,CMo18O2Pd18,5x5x1,C Mo O Pd
+01_barrier_single_points/S14_CO2_to_CO+O/TS,barrier,pdmo0001,S14_CO2_to_CO+O,TS,sp,oc20,-277.522523,RWGS C-O scission (hcp-PdMo route),39,CMo18O2Pd18,5x5x1,C Mo O Pd
+01_barrier_single_points/S14_CO2_to_CO+O/FS,barrier,pdmo0001,S14_CO2_to_CO+O,FS,sp,oc20,-279.153659,RWGS C-O scission (hcp-PdMo route),39,CMo18O2Pd18,5x5x1,C Mo O Pd
+01_barrier_single_points/S08_CO2+H_to_HCOO/IS,barrier,cu111,S08_CO2+H_to_HCOO,IS,sp,oc20,-106.906515,formate route,31,CHCu27O2,5x6x1,C Cu H O
+01_barrier_single_points/S08_CO2+H_to_HCOO/TS,barrier,cu111,S08_CO2+H_to_HCOO,TS,sp,oc20,-105.831808,formate route,31,CHCu27O2,5x6x1,C Cu H O
+01_barrier_single_points/S08_CO2+H_to_HCOO/FS,barrier,cu111,S08_CO2+H_to_HCOO,FS,sp,oc20,-106.893908,formate route,31,CHCu27O2,5x6x1,C Cu H O
+01_barrier_single_points/S10_HCOO+H_to_H2COO/IS,barrier,cu111,S10_HCOO+H_to_H2COO,IS,sp,oc20,-110.427161,formate hydrogenation (TDTS type of Cu1-O3/ZrO2),32,CH2Cu27O2,5x6x1,C Cu H O
+01_barrier_single_points/S10_HCOO+H_to_H2COO/TS,barrier,cu111,S10_HCOO+H_to_H2COO,TS,sp,oc20,-108.814721,formate hydrogenation (TDTS type of Cu1-O3/ZrO2),32,CH2Cu27O2,5x6x1,C Cu H O
+01_barrier_single_points/S10_HCOO+H_to_H2COO/FS,barrier,cu111,S10_HCOO+H_to_H2COO,FS,sp,oc20,-109.557900,formate hydrogenation (TDTS type of Cu1-O3/ZrO2),32,CH2Cu27O2,5x6x1,C Cu H O
+01_barrier_single_points/S11_N2_to_2N/IS,barrier,ru0001,S11_N2_to_2N,IS,sp,oc20,-232.043247,N2 dissociation (ammonia synthesis),29,N2Ru27,5x6x1,N Ru
+01_barrier_single_points/S11_N2_to_2N/TS,barrier,ru0001,S11_N2_to_2N,TS,sp,oc20,-230.311954,N2 dissociation (ammonia synthesis),29,N2Ru27,5x6x1,N Ru
+01_barrier_single_points/S11_N2_to_2N/FS,barrier,ru0001,S11_N2_to_2N,FS,sp,oc20,-231.049347,N2 dissociation (ammonia synthesis),29,N2Ru27,5x6x1,N Ru
+01_barrier_single_points/S15_CO+H_to_CHO/IS,barrier,mos2_sv2,S15_CO+H_to_CHO,IS,sp,oc20,-191.855945,CO hydrogenation at S vacancy,28,CHMo9OS16,4x5x1,C H Mo O S
+01_barrier_single_points/S15_CO+H_to_CHO/TS,barrier,mos2_sv2,S15_CO+H_to_CHO,TS,sp,oc20,-190.223251,CO hydrogenation at S vacancy,28,CHMo9OS16,4x5x1,C H Mo O S
+01_barrier_single_points/S15_CO+H_to_CHO/FS,barrier,mos2_sv2,S15_CO+H_to_CHO,FS,sp,oc20,-190.635584,CO hydrogenation at S vacancy,28,CHMo9OS16,4x5x1,C H Mo O S
+01_barrier_single_points/S16_CH3O_to_CH3+O/IS,barrier,mos2_sv2,S16_CH3O_to_CH3+O,IS,sp,oc20,-199.650095,C-O scission at S vacancy (selectivity step),30,CH3Mo9OS16,4x5x1,C H Mo O S
+01_barrier_single_points/S16_CH3O_to_CH3+O/TS,barrier,mos2_sv2,S16_CH3O_to_CH3+O,TS,sp,oc20,-198.020329,C-O scission at S vacancy (selectivity step),30,CH3Mo9OS16,4x5x1,C H Mo O S
+01_barrier_single_points/S16_CH3O_to_CH3+O/FS,barrier,mos2_sv2,S16_CH3O_to_CH3+O,FS,sp,oc20,-199.640772,C-O scission at S vacancy (selectivity step),30,CH3Mo9OS16,4x5x1,C H Mo O S
+01_barrier_single_points/S17_CO2_to_CO+O/IS,barrier,mo2c,S17_CO2_to_CO+O,IS,sp,oc20,-267.050784,"CO2 activation (RWGS, dominant CO branch)",30,C10Mo18O2,4x5x1,C Mo O
+01_barrier_single_points/S17_CO2_to_CO+O/TS,barrier,mo2c,S17_CO2_to_CO+O,TS,sp,oc20,-266.488164,"CO2 activation (RWGS, dominant CO branch)",30,C10Mo18O2,4x5x1,C Mo O
+01_barrier_single_points/S17_CO2_to_CO+O/FS,barrier,mo2c,S17_CO2_to_CO+O,FS,sp,oc20,-267.377836,"CO2 activation (RWGS, dominant CO branch)",30,C10Mo18O2,4x5x1,C Mo O
+01_barrier_single_points/S18_CO+H_to_CHO/IS,barrier,mo2c,S18_CO+H_to_CHO,IS,sp,oc20,-264.037484,CO hydrogenation,30,C10HMo18O,4x5x1,C H Mo O
+01_barrier_single_points/S18_CO+H_to_CHO/TS,barrier,mo2c,S18_CO+H_to_CHO,TS,sp,oc20,-263.105593,CO hydrogenation,30,C10HMo18O,4x5x1,C H Mo O
+01_barrier_single_points/S18_CO+H_to_CHO/FS,barrier,mo2c,S18_CO+H_to_CHO,FS,sp,oc20,-263.491803,CO hydrogenation,30,C10HMo18O,4x5x1,C H Mo O
+01_barrier_single_points/S19_H2_to_2H/IS,barrier,tio2_110,S19_H2_to_2H,IS,sp,oc20,-304.788817,H2 dissociation onto bridging O (forms 2 Ti3+),38,H2O24Ti12,7x6x1,H O Ti
+06_dftU_spin/01_barrier_single_points/S19_H2_to_2H/IS,barrier,tio2_110,S19_H2_to_2H,IS,sp,u_spin,-304.788817,,38,H2O24Ti12,7x6x1,H O Ti
+01_barrier_single_points/S19_H2_to_2H/TS,barrier,tio2_110,S19_H2_to_2H,TS,sp,oc20,-302.958518,H2 dissociation onto bridging O (forms 2 Ti3+),38,H2O24Ti12,7x6x1,H O Ti
+06_dftU_spin/01_barrier_single_points/S19_H2_to_2H/TS,barrier,tio2_110,S19_H2_to_2H,TS,sp,u_spin,-302.958518,,38,H2O24Ti12,7x6x1,H O Ti
+01_barrier_single_points/S19_H2_to_2H/FS,barrier,tio2_110,S19_H2_to_2H,FS,sp,oc20,-306.026404,H2 dissociation onto bridging O (forms 2 Ti3+),38,H2O24Ti12,7x6x1,H O Ti
+06_dftU_spin/01_barrier_single_points/S19_H2_to_2H/FS,barrier,tio2_110,S19_H2_to_2H,FS,sp,u_spin,-306.026404,,38,H2O24Ti12,7x6x1,H O Ti
+01_barrier_single_points/S01_CO+H_to_CHO/IS,barrier,ni111,S01_CO+H_to_CHO,IS,sp,oc20,-141.634091,"C-H formation (referee example, CHO branch)",30,CHNi27O,5x6x1,C H Ni O
+05_spin_polarised/01_barrier_single_points/S01_CO+H_to_CHO/IS,barrier,ni111,S01_CO+H_to_CHO,IS,sp,spin,-141.634091,,30,CHNi27O,5x6x1,C H Ni O
+01_barrier_single_points/S01_CO+H_to_CHO/TS,barrier,ni111,S01_CO+H_to_CHO,TS,sp,oc20,-140.109883,"C-H formation (referee example, CHO branch)",30,CHNi27O,5x6x1,C H Ni O
+05_spin_polarised/01_barrier_single_points/S01_CO+H_to_CHO/TS,barrier,ni111,S01_CO+H_to_CHO,TS,sp,spin,-140.109883,,30,CHNi27O,5x6x1,C H Ni O
+01_barrier_single_points/S01_CO+H_to_CHO/FS,barrier,ni111,S01_CO+H_to_CHO,FS,sp,oc20,-140.355562,"C-H formation (referee example, CHO branch)",30,CHNi27O,5x6x1,C H Ni O
+05_spin_polarised/01_barrier_single_points/S01_CO+H_to_CHO/FS,barrier,ni111,S01_CO+H_to_CHO,FS,sp,spin,-140.355562,,30,CHNi27O,5x6x1,C H Ni O
+01_barrier_single_points/S03_CO_to_C+O/IS,barrier,ni111,S03_CO_to_C+O,IS,sp,oc20,-137.695467,C-O scission (carbide route),29,CNi27O,5x6x1,C Ni O
+05_spin_polarised/01_barrier_single_points/S03_CO_to_C+O/IS,barrier,ni111,S03_CO_to_C+O,IS,sp,spin,-137.695467,,29,CNi27O,5x6x1,C Ni O
+01_barrier_single_points/S03_CO_to_C+O/TS,barrier,ni111,S03_CO_to_C+O,TS,sp,oc20,-134.842424,C-O scission (carbide route),29,CNi27O,5x6x1,C Ni O
+05_spin_polarised/01_barrier_single_points/S03_CO_to_C+O/TS,barrier,ni111,S03_CO_to_C+O,TS,sp,spin,-134.842424,,29,CNi27O,5x6x1,C Ni O
+01_barrier_single_points/S03_CO_to_C+O/FS,barrier,ni111,S03_CO_to_C+O,FS,sp,oc20,-136.142824,C-O scission (carbide route),29,CNi27O,5x6x1,C Ni O
+05_spin_polarised/01_barrier_single_points/S03_CO_to_C+O/FS,barrier,ni111,S03_CO_to_C+O,FS,sp,spin,-136.142824,,29,CNi27O,5x6x1,C Ni O
+01_barrier_single_points/S04_CHO+H_to_CHOH/IS,barrier,ni111,S04_CHO+H_to_CHOH,IS,sp,oc20,-144.134672,O-H formation,31,CH2Ni27O,5x6x1,C H Ni O
+05_spin_polarised/01_barrier_single_points/S04_CHO+H_to_CHOH/IS,barrier,ni111,S04_CHO+H_to_CHOH,IS,sp,spin,-144.134672,,31,CH2Ni27O,5x6x1,C H Ni O
+01_barrier_single_points/S04_CHO+H_to_CHOH/TS,barrier,ni111,S04_CHO+H_to_CHOH,TS,sp,oc20,-143.093366,O-H formation,31,CH2Ni27O,5x6x1,C H Ni O
+05_spin_polarised/01_barrier_single_points/S04_CHO+H_to_CHOH/TS,barrier,ni111,S04_CHO+H_to_CHOH,TS,sp,spin,-143.093366,,31,CH2Ni27O,5x6x1,C H Ni O
+01_barrier_single_points/S04_CHO+H_to_CHOH/FS,barrier,ni111,S04_CHO+H_to_CHOH,FS,sp,oc20,-143.782007,O-H formation,31,CH2Ni27O,5x6x1,C H Ni O
+05_spin_polarised/01_barrier_single_points/S04_CHO+H_to_CHOH/FS,barrier,ni111,S04_CHO+H_to_CHOH,FS,sp,spin,-143.782007,,31,CH2Ni27O,5x6x1,C H Ni O
+01_barrier_single_points/S05_COH+H_to_CHOH/IS,barrier,ni111,S05_COH+H_to_CHOH,IS,sp,oc20,-144.612726,C-H formation,31,CH2Ni27O,5x6x1,C H Ni O
+05_spin_polarised/01_barrier_single_points/S05_COH+H_to_CHOH/IS,barrier,ni111,S05_COH+H_to_CHOH,IS,sp,spin,-144.612726,,31,CH2Ni27O,5x6x1,C H Ni O
+01_barrier_single_points/S05_COH+H_to_CHOH/TS,barrier,ni111,S05_COH+H_to_CHOH,TS,sp,oc20,-143.612901,C-H formation,31,CH2Ni27O,5x6x1,C H Ni O
+05_spin_polarised/01_barrier_single_points/S05_COH+H_to_CHOH/TS,barrier,ni111,S05_COH+H_to_CHOH,TS,sp,spin,-143.612901,,31,CH2Ni27O,5x6x1,C H Ni O
+01_barrier_single_points/S05_COH+H_to_CHOH/FS,barrier,ni111,S05_COH+H_to_CHOH,FS,sp,oc20,-143.663623,C-H formation,31,CH2Ni27O,5x6x1,C H Ni O
+05_spin_polarised/01_barrier_single_points/S05_COH+H_to_CHOH/FS,barrier,ni111,S05_COH+H_to_CHOH,FS,sp,spin,-143.663623,,31,CH2Ni27O,5x6x1,C H Ni O
+01_barrier_single_points/S07_C3H6_to_C3H5+H/IS,barrier,ni111,S07_C3H6_to_C3H5+H,IS,sp,oc20,-169.725832,PDH deep dehydrogenation (coke precursor),36,C3H6Ni27,5x6x1,C H Ni
+05_spin_polarised/01_barrier_single_points/S07_C3H6_to_C3H5+H/IS,barrier,ni111,S07_C3H6_to_C3H5+H,IS,sp,spin,-169.725832,,36,C3H6Ni27,5x6x1,C H Ni
+01_barrier_single_points/S07_C3H6_to_C3H5+H/TS,barrier,ni111,S07_C3H6_to_C3H5+H,TS,sp,oc20,-169.071628,PDH deep dehydrogenation (coke precursor),36,C3H6Ni27,5x6x1,C H Ni
+05_spin_polarised/01_barrier_single_points/S07_C3H6_to_C3H5+H/TS,barrier,ni111,S07_C3H6_to_C3H5+H,TS,sp,spin,-169.071628,,36,C3H6Ni27,5x6x1,C H Ni
+01_barrier_single_points/S07_C3H6_to_C3H5+H/FS,barrier,ni111,S07_C3H6_to_C3H5+H,FS,sp,oc20,-169.773222,PDH deep dehydrogenation (coke precursor),36,C3H6Ni27,5x6x1,C H Ni
+05_spin_polarised/01_barrier_single_points/S07_C3H6_to_C3H5+H/FS,barrier,ni111,S07_C3H6_to_C3H5+H,FS,sp,spin,-169.773222,,36,C3H6Ni27,5x6x1,C H Ni
+01_barrier_single_points/S02_CO+H_to_COH/IS,barrier,ni111,S02_CO+H_to_COH,IS,sp,oc20,-141.616331,"O-H formation (referee example, COH branch)",30,CHNi27O,5x6x1,C H Ni O
+05_spin_polarised/01_barrier_single_points/S02_CO+H_to_COH/IS,barrier,ni111,S02_CO+H_to_COH,IS,sp,spin,-141.616331,,30,CHNi27O,5x6x1,C H Ni O
+01_barrier_single_points/S02_CO+H_to_COH/TS,barrier,ni111,S02_CO+H_to_COH,TS,sp,oc20,-139.639621,"O-H formation (referee example, COH branch)",30,CHNi27O,5x6x1,C H Ni O
+05_spin_polarised/01_barrier_single_points/S02_CO+H_to_COH/TS,barrier,ni111,S02_CO+H_to_COH,TS,sp,spin,-139.639621,,30,CHNi27O,5x6x1,C H Ni O
+01_barrier_single_points/S02_CO+H_to_COH/FS,barrier,ni111,S02_CO+H_to_COH,FS,sp,oc20,-140.699343,"O-H formation (referee example, COH branch)",30,CHNi27O,5x6x1,C H Ni O
+05_spin_polarised/01_barrier_single_points/S02_CO+H_to_COH/FS,barrier,ni111,S02_CO+H_to_COH,FS,sp,spin,-140.699343,,30,CHNi27O,5x6x1,C H Ni O
+01_barrier_single_points/S06_C3H7_to_C3H6+H/IS,barrier,ni111,S06_C3H7_to_C3H6+H,IS,sp,oc20,-173.416141,PDH rate-determining step (beta-H elimination),37,C3H7Ni27,5x6x1,C H Ni
+05_spin_polarised/01_barrier_single_points/S06_C3H7_to_C3H6+H/IS,barrier,ni111,S06_C3H7_to_C3H6+H,IS,sp,spin,-173.416141,,37,C3H7Ni27,5x6x1,C H Ni
+01_barrier_single_points/S06_C3H7_to_C3H6+H/TS,barrier,ni111,S06_C3H7_to_C3H6+H,TS,sp,oc20,-173.110918,PDH rate-determining step (beta-H elimination),37,C3H7Ni27,5x6x1,C H Ni
+05_spin_polarised/01_barrier_single_points/S06_C3H7_to_C3H6+H/TS,barrier,ni111,S06_C3H7_to_C3H6+H,TS,sp,spin,-173.110918,,37,C3H7Ni27,5x6x1,C H Ni
+01_barrier_single_points/S06_C3H7_to_C3H6+H/FS,barrier,ni111,S06_C3H7_to_C3H6+H,FS,sp,oc20,-173.660764,PDH rate-determining step (beta-H elimination),37,C3H7Ni27,5x6x1,C H Ni
+05_spin_polarised/01_barrier_single_points/S06_C3H7_to_C3H6+H/FS,barrier,ni111,S06_C3H7_to_C3H6+H,FS,sp,spin,-173.660764,,37,C3H7Ni27,5x6x1,C H Ni
+02_sibling_pairs/P04_HCOO_vs_COOH/A_HCOO,sibling,cu111,P04_HCOO_vs_COOH,A_HCOO,sp,oc20,-106.907373,,31,CHCu27O2,5x6x1,C Cu H O
+02_sibling_pairs/P04_HCOO_vs_COOH/B_COOH,sibling,cu111,P04_HCOO_vs_COOH,B_COOH,sp,oc20,-106.107754,,31,CHCu27O2,5x6x1,C Cu H O
+02_sibling_pairs/P05_CHO_vs_COH/A_CHO,sibling,pdmo0001,P05_CHO_vs_COH,A_CHO,sp,oc20,-274.353553,,39,CHMo18OPd18,5x5x1,C H Mo O Pd
+02_sibling_pairs/P05_CHO_vs_COH/B_COH,sibling,pdmo0001,P05_CHO_vs_COH,B_COH,sp,oc20,-273.800592,,39,CHMo18OPd18,5x5x1,C H Mo O Pd
+02_sibling_pairs/P06_CHO_vs_COH/A_CHO,sibling,mos2_sv2,P06_CHO_vs_COH,A_CHO,sp,oc20,-190.635583,,28,CHMo9OS16,4x5x1,C H Mo O S
+02_sibling_pairs/P06_CHO_vs_COH/B_COH,sibling,mos2_sv2,P06_CHO_vs_COH,B_COH,sp,oc20,-191.298524,,28,CHMo9OS16,4x5x1,C H Mo O S
+02_sibling_pairs/P07_CH3O_vs_CH2OH/A_CH3O,sibling,mos2_sv2,P07_CH3O_vs_CH2OH,A_CH3O,sp,oc20,-199.650095,,30,CH3Mo9OS16,4x5x1,C H Mo O S
+02_sibling_pairs/P07_CH3O_vs_CH2OH/B_CH2OH,sibling,mos2_sv2,P07_CH3O_vs_CH2OH,B_CH2OH,sp,oc20,-197.535746,,30,CH3Mo9OS16,4x5x1,C H Mo O S
+02_sibling_pairs/P08_CHO_vs_COH/A_CHO,sibling,mo2c,P08_CHO_vs_COH,A_CHO,sp,oc20,-263.491804,,30,C10HMo18O,4x5x1,C H Mo O
+02_sibling_pairs/P08_CHO_vs_COH/B_COH,sibling,mo2c,P08_CHO_vs_COH,B_COH,sp,oc20,-263.028744,,30,C10HMo18O,4x5x1,C H Mo O
+02_sibling_pairs/P01_CHO_vs_COH/A_CHO,sibling,ni111,P01_CHO_vs_COH,A_CHO,sp,oc20,-140.355561,,30,CHNi27O,5x6x1,C H Ni O
+05_spin_polarised/02_sibling_pairs/P01_CHO_vs_COH/A_CHO,sibling,ni111,P01_CHO_vs_COH,A_CHO,sp,spin,-140.355561,,30,CHNi27O,5x6x1,C H Ni O
+02_sibling_pairs/P01_CHO_vs_COH/B_COH,sibling,ni111,P01_CHO_vs_COH,B_COH,sp,oc20,-140.699344,,30,CHNi27O,5x6x1,C H Ni O
+05_spin_polarised/02_sibling_pairs/P01_CHO_vs_COH/B_COH,sibling,ni111,P01_CHO_vs_COH,B_COH,sp,spin,-140.699344,,30,CHNi27O,5x6x1,C H Ni O
+02_sibling_pairs/P02_CH2O_vs_CHOH/A_CH2O,sibling,ni111,P02_CH2O_vs_CHOH,A_CH2O,sp,oc20,-143.814293,,31,CH2Ni27O,5x6x1,C H Ni O
+05_spin_polarised/02_sibling_pairs/P02_CH2O_vs_CHOH/A_CH2O,sibling,ni111,P02_CH2O_vs_CHOH,A_CH2O,sp,spin,-143.814293,,31,CH2Ni27O,5x6x1,C H Ni O
+02_sibling_pairs/P02_CH2O_vs_CHOH/B_CHOH,sibling,ni111,P02_CH2O_vs_CHOH,B_CHOH,sp,oc20,-143.663625,,31,CH2Ni27O,5x6x1,C H Ni O
+05_spin_polarised/02_sibling_pairs/P02_CH2O_vs_CHOH/B_CHOH,sibling,ni111,P02_CH2O_vs_CHOH,B_CHOH,sp,spin,-143.663625,,31,CH2Ni27O,5x6x1,C H Ni O
+02_sibling_pairs/P03_1-C3H7_vs_2-C3H7/A_C3H7_1,sibling,ni111,P03_1-C3H7_vs_2-C3H7,A_C3H7_1,sp,oc20,-173.534942,,37,C3H7Ni27,5x6x1,C H Ni
+05_spin_polarised/02_sibling_pairs/P03_1-C3H7_vs_2-C3H7/A_C3H7_1,sibling,ni111,P03_1-C3H7_vs_2-C3H7,A_C3H7_1,sp,spin,-173.534942,,37,C3H7Ni27,5x6x1,C H Ni
+02_sibling_pairs/P03_1-C3H7_vs_2-C3H7/B_C3H7_2,sibling,ni111,P03_1-C3H7_vs_2-C3H7,B_C3H7_2,sp,oc20,-173.416461,,37,C3H7Ni27,5x6x1,C H Ni
+05_spin_polarised/02_sibling_pairs/P03_1-C3H7_vs_2-C3H7/B_C3H7_2,sibling,ni111,P03_1-C3H7_vs_2-C3H7,B_C3H7_2,sp,spin,-173.416461,,37,C3H7Ni27,5x6x1,C H Ni
+03_clean_slabs/cu111,slab,cu111,cu111,slab,sp,oc20,-81.014620,,27,Cu27,5x6x1,Cu
+03_clean_slabs/ru0001,slab,ru0001,ru0001,slab,sp,oc20,-215.588775,,27,Ru27,5x6x1,Ru
+03_clean_slabs/pdmo0001,slab,pdmo0001,pdmo0001,slab,sp,oc20,-254.182283,,36,Mo18Pd18,5x5x1,Mo Pd
+03_clean_slabs/mos2_sv2,slab,mos2_sv2,mos2_sv2,slab,sp,oc20,-172.162801,,25,Mo9S16,4x5x1,Mo S
+03_clean_slabs/mo2c,slab,mo2c,mo2c,slab,sp,oc20,-243.844620,,27,C9Mo18,4x5x1,C Mo
+03_clean_slabs/tio2_110,slab,tio2_110,tio2_110,slab,sp,oc20,-297.845449,,36,O24Ti12,7x6x1,O Ti
+06_dftU_spin/03_clean_slabs/tio2_110,slab,tio2_110,tio2_110,slab,sp,u_spin,-297.845449,,36,O24Ti12,7x6x1,O Ti
+03_clean_slabs/ni111,slab,ni111,ni111,slab,sp,oc20,-121.428936,,27,Ni27,5x6x1,Ni
+05_spin_polarised/03_clean_slabs/ni111,slab,ni111,ni111,slab,sp,spin,-121.428936,,27,Ni27,5x6x1,Ni
+03_clean_slabs/ni_tiox,slab,ni_tiox,ni_tiox,slab,sp,oc20,-180.665359,,34,Ni27O4Ti3,5x6x1,Ni O Ti
+04_site_relaxations/pdmo0001__CO/site_00,site,pdmo0001,pdmo0001__CO,site_00,relax,oc20,-270.704068,UMA rank 0 (bridge),38,CMo18OPd18,5x5x1,C Mo O Pd
+04_site_relaxations/pdmo0001__CO/site_01,site,pdmo0001,pdmo0001__CO,site_01,relax,oc20,-270.597763,UMA rank 1 (ontop),38,CMo18OPd18,5x5x1,C Mo O Pd
+04_site_relaxations/pdmo0001__CO/site_02,site,pdmo0001,pdmo0001__CO,site_02,relax,oc20,-270.192065,UMA rank 2 (hollow),38,CMo18OPd18,5x5x1,C Mo O Pd
+04_site_relaxations/pdmo0001__CO/site_03,site,pdmo0001,pdmo0001__CO,site_03,relax,oc20,-270.189991,UMA rank 3 (hollow),38,CMo18OPd18,5x5x1,C Mo O Pd
+04_site_relaxations/pdmo0001__H/site_00,site,pdmo0001,pdmo0001__H,site_00,relax,oc20,-258.446338,UMA rank 0 (hollow),37,HMo18Pd18,5x5x1,H Mo Pd
+04_site_relaxations/pdmo0001__H/site_01,site,pdmo0001,pdmo0001__H,site_01,relax,oc20,-258.437277,UMA rank 1 (hollow),37,HMo18Pd18,5x5x1,H Mo Pd
+04_site_relaxations/pdmo0001__H/site_02,site,pdmo0001,pdmo0001__H,site_02,relax,oc20,-258.329632,UMA rank 2 (bridge),37,HMo18Pd18,5x5x1,H Mo Pd
+04_site_relaxations/pdmo0001__H/site_03,site,pdmo0001,pdmo0001__H,site_03,relax,oc20,-257.791602,UMA rank 3 (ontop),37,HMo18Pd18,5x5x1,H Mo Pd
+04_site_relaxations/tio2_110__H/site_00,site,tio2_110,tio2_110__H,site_00,relax,oc20,-302.302324,UMA rank 0 (bridge),37,HO24Ti12,7x6x1,H O Ti
+04_site_relaxations/tio2_110__H/site_01,site,tio2_110,tio2_110__H,site_01,relax,oc20,-302.298113,UMA rank 1 (bridge),37,HO24Ti12,7x6x1,H O Ti
+04_site_relaxations/tio2_110__H/site_02,site,tio2_110,tio2_110__H,site_02,relax,oc20,-301.957735,UMA rank 2 (ontop),37,HO24Ti12,7x6x1,H O Ti
+04_site_relaxations/tio2_110__H/site_03,site,tio2_110,tio2_110__H,site_03,relax,oc20,-301.254084,UMA rank 3 (ontop),37,HO24Ti12,7x6x1,H O Ti
+04_site_relaxations/tio2_110__H/site_04,site,tio2_110,tio2_110__H,site_04,relax,oc20,-301.186274,UMA rank 4 (ontop),37,HO24Ti12,7x6x1,H O Ti
+04_site_relaxations/tio2_110__CH3/site_00,site,tio2_110,tio2_110__CH3,site_00,relax,oc20,-318.103440,UMA rank 0 (ontop),40,CH3O24Ti12,7x6x1,C H O Ti
+04_site_relaxations/tio2_110__CH3/site_01,site,tio2_110,tio2_110__CH3,site_01,relax,oc20,-318.097451,UMA rank 1 (bridge),40,CH3O24Ti12,7x6x1,C H O Ti
+04_site_relaxations/tio2_110__CH3/site_02,site,tio2_110,tio2_110__CH3,site_02,relax,oc20,-318.069138,UMA rank 2 (ontop),40,CH3O24Ti12,7x6x1,C H O Ti
+04_site_relaxations/tio2_110__CH3/site_03,site,tio2_110,tio2_110__CH3,site_03,relax,oc20,-317.073411,UMA rank 3 (ontop),40,CH3O24Ti12,7x6x1,C H O Ti
+04_site_relaxations/tio2_110__CH3/site_04,site,tio2_110,tio2_110__CH3,site_04,relax,oc20,-317.067582,UMA rank 4 (bridge),40,CH3O24Ti12,7x6x1,C H O Ti
+04_site_relaxations/tio2_110__CH3/site_05,site,tio2_110,tio2_110__CH3,site_05,relax,oc20,-317.046113,UMA rank 5 (bridge),40,CH3O24Ti12,7x6x1,C H O Ti
+04_site_relaxations/tio2_110__CH3/site_06,site,tio2_110,tio2_110__CH3,site_06,relax,oc20,-316.802460,UMA rank 6 (ontop),40,CH3O24Ti12,7x6x1,C H O Ti
+04_site_relaxations/tio2_110__CH3/site_07,site,tio2_110,tio2_110__CH3,site_07,relax,oc20,-315.495850,UMA rank 7 (ontop),40,CH3O24Ti12,7x6x1,C H O Ti
+04_site_relaxations/mos2_sv2__CO/site_00,site,mos2_sv2,mos2_sv2__CO,site_00,relax,oc20,-187.714301,UMA rank 0 (hollow),27,CMo9OS16,4x5x1,C Mo O S
+04_site_relaxations/mos2_sv2__CO/site_01,site,mos2_sv2,mos2_sv2__CO,site_01,relax,oc20,-187.663802,UMA rank 1 (hollow),27,CMo9OS16,4x5x1,C Mo O S
+04_site_relaxations/mos2_sv2__CO/site_02,site,mos2_sv2,mos2_sv2__CO,site_02,relax,oc20,-187.650093,UMA rank 2 (hollow),27,CMo9OS16,4x5x1,C Mo O S
+04_site_relaxations/mos2_sv2__H/site_00,site,mos2_sv2,mos2_sv2__H,site_00,relax,oc20,-176.299281,UMA rank 0 (hollow),26,HMo9S16,4x5x1,H Mo S
+04_site_relaxations/mos2_sv2__H/site_01,site,mos2_sv2,mos2_sv2__H,site_01,relax,oc20,-176.289924,UMA rank 1 (hollow),26,HMo9S16,4x5x1,H Mo S
+04_site_relaxations/mos2_sv2__H/site_02,site,mos2_sv2,mos2_sv2__H,site_02,relax,oc20,-175.439244,UMA rank 2 (hollow),26,HMo9S16,4x5x1,H Mo S
+04_site_relaxations/mos2_sv2__H/site_03,site,mos2_sv2,mos2_sv2__H,site_03,relax,oc20,-175.235970,UMA rank 3 (bridge),26,HMo9S16,4x5x1,H Mo S
+04_site_relaxations/mos2_sv2__H/site_04,site,mos2_sv2,mos2_sv2__H,site_04,relax,oc20,-174.794830,UMA rank 4 (bridge),26,HMo9S16,4x5x1,H Mo S
+04_site_relaxations/mos2_sv2__H/site_05,site,mos2_sv2,mos2_sv2__H,site_05,relax,oc20,-174.794455,UMA rank 5 (ontop),26,HMo9S16,4x5x1,H Mo S
+04_site_relaxations/mos2_sv2__H/site_06,site,mos2_sv2,mos2_sv2__H,site_06,relax,oc20,-174.790249,UMA rank 6 (ontop),26,HMo9S16,4x5x1,H Mo S
+04_site_relaxations/mos2_sv2__H/site_07,site,mos2_sv2,mos2_sv2__H,site_07,relax,oc20,-174.780409,UMA rank 7 (ontop),26,HMo9S16,4x5x1,H Mo S
+04_site_relaxations/mos2_sv2__H/site_08,site,mos2_sv2,mos2_sv2__H,site_08,relax,oc20,-174.761800,UMA rank 8 (bridge),26,HMo9S16,4x5x1,H Mo S
+04_site_relaxations/mos2_sv2__H/site_09,site,mos2_sv2,mos2_sv2__H,site_09,relax,oc20,-174.761340,UMA rank 9 (bridge),26,HMo9S16,4x5x1,H Mo S
+04_site_relaxations/mos2_sv2__H/site_10,site,mos2_sv2,mos2_sv2__H,site_10,relax,oc20,-174.721424,UMA rank 10 (bridge),26,HMo9S16,4x5x1,H Mo S
+04_site_relaxations/mos2_sv2__H/site_11,site,mos2_sv2,mos2_sv2__H,site_11,relax,oc20,-174.715915,UMA rank 11 (bridge),26,HMo9S16,4x5x1,H Mo S
+04_site_relaxations/mos2_sv2__H/site_12,site,mos2_sv2,mos2_sv2__H,site_12,relax,oc20,-174.698595,UMA rank 12 (ontop),26,HMo9S16,4x5x1,H Mo S
+04_site_relaxations/mos2_sv2__H/site_13,site,mos2_sv2,mos2_sv2__H,site_13,relax,oc20,-174.689445,UMA rank 13 (bridge),26,HMo9S16,4x5x1,H Mo S
+04_site_relaxations/mos2_sv2__H/site_14,site,mos2_sv2,mos2_sv2__H,site_14,relax,oc20,-174.536000,UMA rank 14 (bridge),26,HMo9S16,4x5x1,H Mo S
+04_site_relaxations/mos2_sv2__H/site_15,site,mos2_sv2,mos2_sv2__H,site_15,relax,oc20,-174.534824,UMA rank 15 (bridge),26,HMo9S16,4x5x1,H Mo S
+04_site_relaxations/mos2_sv2__H/site_16,site,mos2_sv2,mos2_sv2__H,site_16,relax,oc20,-174.528190,UMA rank 16 (hollow),26,HMo9S16,4x5x1,H Mo S
+04_site_relaxations/mos2_sv2__H/site_17,site,mos2_sv2,mos2_sv2__H,site_17,relax,oc20,-174.516116,UMA rank 17 (bridge),26,HMo9S16,4x5x1,H Mo S
+04_site_relaxations/mos2_sv2__H/site_18,site,mos2_sv2,mos2_sv2__H,site_18,relax,oc20,-174.449482,UMA rank 18 (bridge),26,HMo9S16,4x5x1,H Mo S
+04_site_relaxations/mos2_sv2__H/site_19,site,mos2_sv2,mos2_sv2__H,site_19,relax,oc20,-174.448305,UMA rank 19 (bridge),26,HMo9S16,4x5x1,H Mo S
+04_site_relaxations/mos2_sv2__H/site_20,site,mos2_sv2,mos2_sv2__H,site_20,relax,oc20,-174.440631,UMA rank 20 (hollow),26,HMo9S16,4x5x1,H Mo S
+04_site_relaxations/mos2_sv2__H/site_21,site,mos2_sv2,mos2_sv2__H,site_21,relax,oc20,-174.435673,UMA rank 21 (hollow),26,HMo9S16,4x5x1,H Mo S
+04_site_relaxations/ni_tiox__H/site_00,site,ni_tiox,ni_tiox__H,site_00,relax,oc20,-184.746113,UMA rank 0 (ontop),35,HNi27O4Ti3,5x6x1,H Ni O Ti
+04_site_relaxations/ni_tiox__H/site_01,site,ni_tiox,ni_tiox__H,site_01,relax,oc20,-184.576275,UMA rank 1 (ontop),35,HNi27O4Ti3,5x6x1,H Ni O Ti
+04_site_relaxations/ni_tiox__H/site_02,site,ni_tiox,ni_tiox__H,site_02,relax,oc20,-184.492310,UMA rank 2 (ontop),35,HNi27O4Ti3,5x6x1,H Ni O Ti
+04_site_relaxations/ni_tiox__H/site_03,site,ni_tiox,ni_tiox__H,site_03,relax,oc20,-184.491436,UMA rank 3 (ontop),35,HNi27O4Ti3,5x6x1,H Ni O Ti
+04_site_relaxations/ni_tiox__H/site_04,site,ni_tiox,ni_tiox__H,site_04,relax,oc20,-184.454920,UMA rank 4 (ontop),35,HNi27O4Ti3,5x6x1,H Ni O Ti
+04_site_relaxations/ni_tiox__H/site_05,site,ni_tiox,ni_tiox__H,site_05,relax,oc20,-184.453836,UMA rank 5 (ontop),35,HNi27O4Ti3,5x6x1,H Ni O Ti
+04_site_relaxations/ni_tiox__H/site_06,site,ni_tiox,ni_tiox__H,site_06,relax,oc20,-184.331416,UMA rank 6 (ontop),35,HNi27O4Ti3,5x6x1,H Ni O Ti
+04_site_relaxations/ni_tiox__H/site_07,site,ni_tiox,ni_tiox__H,site_07,relax,oc20,-184.138865,UMA rank 7 (bridge),35,HNi27O4Ti3,5x6x1,H Ni O Ti
+04_site_relaxations/ni_tiox__H/site_08,site,ni_tiox,ni_tiox__H,site_08,relax,oc20,-184.130944,UMA rank 8 (bridge),35,HNi27O4Ti3,5x6x1,H Ni O Ti
+04_site_relaxations/ni_tiox__H/site_09,site,ni_tiox,ni_tiox__H,site_09,relax,oc20,-184.128472,UMA rank 9 (ontop),35,HNi27O4Ti3,5x6x1,H Ni O Ti
+04_site_relaxations/ni_tiox__H/site_10,site,ni_tiox,ni_tiox__H,site_10,relax,oc20,-184.126765,UMA rank 10 (hollow),35,HNi27O4Ti3,5x6x1,H Ni O Ti
+04_site_relaxations/ni_tiox__H/site_11,site,ni_tiox,ni_tiox__H,site_11,relax,oc20,-184.123289,UMA rank 11 (bridge),35,HNi27O4Ti3,5x6x1,H Ni O Ti
+04_site_relaxations/ni_tiox__H/site_12,site,ni_tiox,ni_tiox__H,site_12,relax,oc20,-184.115050,UMA rank 12 (bridge),35,HNi27O4Ti3,5x6x1,H Ni O Ti
+04_site_relaxations/ni_tiox__H/site_13,site,ni_tiox,ni_tiox__H,site_13,relax,oc20,-183.993244,UMA rank 13 (bridge),35,HNi27O4Ti3,5x6x1,H Ni O Ti
+04_site_relaxations/ni_tiox__H/site_14,site,ni_tiox,ni_tiox__H,site_14,relax,oc20,-183.992887,UMA rank 14 (ontop),35,HNi27O4Ti3,5x6x1,H Ni O Ti
+04_site_relaxations/ni_tiox__H/site_15,site,ni_tiox,ni_tiox__H,site_15,relax,oc20,-183.992751,UMA rank 15 (bridge),35,HNi27O4Ti3,5x6x1,H Ni O Ti
+04_site_relaxations/ni_tiox__H/site_16,site,ni_tiox,ni_tiox__H,site_16,relax,oc20,-183.330063,UMA rank 16 (ontop),35,HNi27O4Ti3,5x6x1,H Ni O Ti

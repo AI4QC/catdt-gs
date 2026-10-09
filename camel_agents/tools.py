@@ -84,16 +84,106 @@ class CatDTTools(
             bridge._pathway_energy_helper = None
             self._workflow_bridge = bridge
         except Exception as exc:
-            logger.warning("Workflow helper bridge init failed: %s", exc)
+            # Fail fast: a None bridge only defers the failure into
+            # contextless AttributeErrors at delegation time.
+            logger.error("Workflow helper bridge init failed: %s", exc)
             self._workflow_bridge = None
+            raise
+
+    @staticmethod
+    def _agent45_suggest_positions_schema() -> Dict[str, Any]:
+        return {
+            "type": "function",
+            "function": {
+                "name": "suggest_staged_positions_tool",
+                "description": (
+                    "Suggest positions for ALL staged atoms across ALL steps in one call. "
+                    "Pass requests like {step_name, element, side}."
+                ),
+                "strict": True,
+                "parameters": {
+                    "type": "object",
+                    "additionalProperties": False,
+                    "properties": {
+                        "requests": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "additionalProperties": False,
+                                "properties": {
+                                    "step_name": {"type": "string"},
+                                    "element": {"type": "string"},
+                                    "side": {"type": "string", "enum": ["reactant", "product"]},
+                                },
+                                "required": ["step_name", "element", "side"],
+                            },
+                        }
+                    },
+                    "required": ["requests"],
+                },
+            },
+        }
+
+    @staticmethod
+    def _agent45_validate_positions_schema() -> Dict[str, Any]:
+        return {
+            "type": "function",
+            "function": {
+                "name": "validate_proposed_positions_tool",
+                "description": (
+                    "Validate proposed staged atom positions. Pass steps like "
+                    "{step_name, atoms:[{species, side, position}]}."
+                ),
+                "strict": True,
+                "parameters": {
+                    "type": "object",
+                    "additionalProperties": False,
+                    "properties": {
+                        "steps": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "additionalProperties": False,
+                                "properties": {
+                                    "step_name": {"type": "string"},
+                                    "atoms": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "object",
+                                            "additionalProperties": False,
+                                            "properties": {
+                                                "species": {"type": "string"},
+                                                "side": {"type": "string", "enum": ["reactant", "product"]},
+                                                "position": {
+                                                    "type": "array",
+                                                    "items": {"type": "number"},
+                                                    "minItems": 3,
+                                                    "maxItems": 3,
+                                                },
+                                            },
+                                            "required": ["species", "side", "position"],
+                                        },
+                                    },
+                                },
+                                "required": ["step_name", "atoms"],
+                            },
+                        }
+                    },
+                    "required": ["steps"],
+                },
+            },
+        }
 
     def __getattr__(self, name: str) -> Any:
         bridge = self.__dict__.get("_workflow_bridge")
         if bridge is not None:
             try:
-                return getattr(bridge, name)
+                attr = getattr(bridge, name)
             except AttributeError:
                 pass
+            else:
+                logger.debug("CatDTTools.__getattr__: delegating %r to workflow bridge", name)
+                return attr
         raise AttributeError(f"{self.__class__.__name__} has no attribute {name}")
 
     def generate_surfaces_tool(
@@ -149,6 +239,22 @@ class CatDTTools(
         run_id: str = "default_run",
         workflow_step: str = "03_reconstruction",
         clean_slab_path: str | None = None,
+        surface_indices: list[int] | None = None,
+        adsorbate_indices: list[int] | None = None,
+        num_adsorbates_override: int | None = None,
+        adsorbate_counts: dict[str, int] | None = None,
+        chem_pots: dict[str, float] | None = None,
+        offset_data: dict[str, Any] | None = None,
+        use_seed_for_virtual_sites: bool = False,
+        adsorbate_exclusion_radius_A: float | None = None,
+        existing_atom_exclusion_radius_A: float | None = None,
+        min_virtual_site_distance_A: float | None = None,
+        max_virtual_site_distance_to_surface_A: float | None = None,
+        virtual_site_planar_distance_A: float | None = None,
+        virtual_site_near_reduce: float | None = None,
+        virtual_site_no_obtuse_hollow: bool | None = None,
+        virtual_site_min_count: int | None = None,
+        virtual_site_local_expansion_radius_A: float | None = None,
     ) -> Any:
         if not str(surface_with_adsorbate_path or "").strip():
             return {
@@ -184,6 +290,22 @@ class CatDTTools(
             run_id=run_id,
             workflow_step=workflow_step,
             clean_slab_path=clean_slab_path,
+            surface_indices=surface_indices,
+            adsorbate_indices=adsorbate_indices,
+            num_adsorbates_override=num_adsorbates_override,
+            adsorbate_counts=adsorbate_counts,
+            chem_pots=chem_pots,
+            offset_data=offset_data,
+            use_seed_for_virtual_sites=use_seed_for_virtual_sites,
+            adsorbate_exclusion_radius_A=adsorbate_exclusion_radius_A,
+            existing_atom_exclusion_radius_A=existing_atom_exclusion_radius_A,
+            min_virtual_site_distance_A=min_virtual_site_distance_A,
+            max_virtual_site_distance_to_surface_A=max_virtual_site_distance_to_surface_A,
+            virtual_site_planar_distance_A=virtual_site_planar_distance_A,
+            virtual_site_near_reduce=virtual_site_near_reduce,
+            virtual_site_no_obtuse_hollow=virtual_site_no_obtuse_hollow,
+            virtual_site_min_count=virtual_site_min_count,
+            virtual_site_local_expansion_radius_A=virtual_site_local_expansion_radius_A,
         )
 
     def build_steps_payload_tool(self, step_structures: list[dict] | None = None) -> str:
@@ -247,14 +369,16 @@ class CatDTTools(
         self,
         step_structures: list[dict],
         output_dir: str = "",
-        relax_if_needed: bool = True,
-        force_warning_threshold: float = 2.5,
-        force_fatal_threshold: float = 4.0,
+        force_warning_threshold: float = 0.5,
+        force_fatal_threshold: float = 1.0,
         min_pair_fatal_threshold: float = 0.8,
-        max_relax_steps: int = 40,
-        relax_fmax: float = 0.25,
     ) -> dict:
-        """UMA endpoint audit + constrained staged-atom relaxation for Agent4/5 loop."""
+        """UMA endpoint energy/force audit for the Agent4/5 loop.
+
+        Structures are evaluated AS-IS: no relaxation is performed. The gate
+        only computes UMA energies, adsorbate force norms, and overlap
+        diagnostics against the given thresholds.
+        """
         if step_structures:
             sample = step_structures[0]
             if not isinstance(sample, dict) or not isinstance(sample.get("reactant"), Atoms) or not isinstance(sample.get("product"), Atoms):
@@ -267,24 +391,18 @@ class CatDTTools(
                     "warning_issues": [],
                     "steps": [],
                     "settings": {
-                        "relax_if_needed": bool(relax_if_needed),
                         "force_warning_threshold": float(force_warning_threshold),
                         "force_fatal_threshold": float(force_fatal_threshold),
                         "min_pair_fatal_threshold": float(min_pair_fatal_threshold),
-                        "max_relax_steps": int(max_relax_steps),
-                        "relax_fmax": float(relax_fmax),
                     },
                 }
         return self.run_agent45_energy_gate(
             workflow=self._workflow_bridge or self,
             step_structures=step_structures,
             output_dir=output_dir,
-            relax_if_needed=relax_if_needed,
-            force_warning_threshold=force_warning_threshold,
-            force_fatal_threshold=force_fatal_threshold,
             min_pair_fatal_threshold=min_pair_fatal_threshold,
-            max_relax_steps=max_relax_steps,
-            relax_fmax=relax_fmax,
+            force_fatal_threshold=force_fatal_threshold,
+            force_warning_threshold=force_warning_threshold,
         )
 
     def retrieve_agent45_memento_cases_tool(
@@ -572,26 +690,219 @@ class CatDTTools(
             max_steps=max_steps,
         )
 
+    # ---- Path-based adapters for Atoms-payload methods ----
+    # These keep the registered tool names JSON-callable: the LLM passes file
+    # paths, the wrapper loads ASE Atoms and returns a JSON-safe summary.
+
+    def _load_steps_payload_from_manifest(self, steps_manifest_path: str) -> tuple[list | None, str]:
+        """Load a steps payload (list of dicts with ASE Atoms endpoints) from disk.
+
+        Supports:
+        - a pickle (.pkl/.pickle) of an already-built steps payload, or
+        - a JSON manifest: list (or {"steps": [...]}) of entries with
+          'name', 'reactant_path', 'product_path' and optional index lists.
+
+        Returns (steps, error_message); exactly one of the two is set.
+        """
+        import json as _json
+        from pathlib import Path as _Path
+        from ase.io import read as _ase_read
+
+        path_text = str(steps_manifest_path or "").strip()
+        if not path_text:
+            return None, "missing_required_arg: steps_manifest_path"
+        manifest_path = _Path(path_text)
+        if not manifest_path.exists():
+            return None, f"steps manifest not found: {path_text}"
+
+        if manifest_path.suffix.lower() in {".pkl", ".pickle"}:
+            payload = self._load_result_from_pickle(str(manifest_path))
+        else:
+            with open(manifest_path, "r", encoding="utf-8") as fh:
+                payload = _json.load(fh)
+            if isinstance(payload, dict):
+                payload = payload.get("steps", [])
+
+        if not isinstance(payload, list) or not payload:
+            return None, "manifest contains no steps"
+
+        steps: list = []
+        for idx, entry in enumerate(payload, start=1):
+            if not isinstance(entry, dict):
+                return None, f"step {idx} is not a dict"
+            step = dict(entry)
+            for endpoint in ("reactant", "product"):
+                if isinstance(step.get(endpoint), Atoms):
+                    continue
+                structure_path = str(step.get(f"{endpoint}_path", "") or "").strip()
+                if not structure_path:
+                    return None, f"step {idx} missing '{endpoint}' Atoms or '{endpoint}_path'"
+                step[endpoint] = _ase_read(structure_path)
+            step.setdefault("name", f"step_{idx}")
+            steps.append(step)
+        return steps, ""
+
+    def run_neb_for_steps_tool(
+        self,
+        steps_manifest_path: str = "",
+        output_dir: str = "",
+        n_frames: int = 10,
+        fmax: float = 0.1,
+        max_steps: int = 300,
+    ) -> dict:
+        """Run NEB for reaction steps loaded from a manifest file.
+
+        ``steps_manifest_path``: pickle of a steps payload, or a JSON manifest
+        with per-step 'name'/'reactant_path'/'product_path' entries.
+        Returns a JSON-safe per-step summary; full results are pickled to
+        ``output_dir``.
+        """
+        from pathlib import Path as _Path
+
+        if not str(output_dir or "").strip():
+            return {"status": "FAIL", "error": "missing_required_arg: output_dir"}
+        steps, error = self._load_steps_payload_from_manifest(steps_manifest_path)
+        if error:
+            return {"status": "FAIL", "error": error}
+
+        results = self.run_neb_for_steps(
+            steps=steps,
+            output_dir=output_dir,
+            n_frames=n_frames,
+            fmax=fmax,
+            max_steps=max_steps,
+        )
+
+        out_dir = _Path(output_dir)
+        out_dir.mkdir(parents=True, exist_ok=True)
+        result_path = self._save_result_to_pickle(results, out_dir / "neb_results.pkl")
+
+        summary: dict = {}
+        for name, res in results.items():
+            if isinstance(res, dict):
+                summary[name] = {
+                    k: v for k, v in res.items()
+                    if isinstance(v, (str, int, float, bool, type(None)))
+                }
+            else:
+                summary[name] = {
+                    "Ea_fwd": float(getattr(res, "activation_energy_forward", float("nan"))),
+                    "Ea_rev": float(getattr(res, "activation_energy_reverse", float("nan"))),
+                    "E_rxn": float(getattr(res, "reaction_energy", float("nan"))),
+                    "converged": bool(getattr(res, "converged", False)),
+                }
+        return {"status": "OK", "result_path": result_path, "steps": summary}
+
+    def compute_adsorption_energies_tool(
+        self,
+        surface_path: str = "",
+        intermediates: list[str] | None = None,
+        output_dir: str = "",
+        num_sites: int = 5,
+        fmax: float = 0.05,
+        max_steps: int = 300,
+        fixed_site: list[float] | None = None,
+        skip_surface_relaxation: bool = False,
+    ) -> dict:
+        """Compute adsorption energies for intermediates on a surface.
+
+        Path-based wrapper that returns a JSON-safe summary (best
+        configurations are sanitized rather than returned as ASE Atoms).
+        """
+        if not str(surface_path or "").strip() or not intermediates or not str(output_dir or "").strip():
+            return {
+                "status": "FAIL",
+                "error": "missing_required_args: surface_path/intermediates/output_dir",
+            }
+        result = self.compute_adsorption_energies(
+            surface_path=surface_path,
+            intermediates=intermediates,
+            output_dir=output_dir,
+            num_sites=num_sites,
+            fmax=fmax,
+            max_steps=max_steps,
+            fixed_site=fixed_site,
+            skip_surface_relaxation=skip_surface_relaxation,
+        )
+        return {
+            "status": "OK",
+            "adsorbate_energies": {k: float(v) for k, v in (result.get("adsorbate_energies") or {}).items()},
+            "adsorption_energies": {k: float(v) for k, v in (result.get("adsorption_energies") or {}).items()},
+            "gas_frequencies": self._make_pickle_safe(result.get("gas_frequencies") or {}),
+            "best_configurations": self._make_pickle_safe(result.get("best_configurations") or {}),
+        }
+
+    def export_step_structures_tool(
+        self,
+        steps_manifest_path: str = "",
+        output_dir: str = "",
+        prefix: str = "tool_baseline",
+        with_images: bool = True,
+    ) -> dict:
+        """Export per-step reactant/product structures loaded from a manifest file."""
+        if not str(output_dir or "").strip():
+            return {"status": "FAIL", "error": "missing_required_arg: output_dir"}
+        steps, error = self._load_steps_payload_from_manifest(steps_manifest_path)
+        if error:
+            return {"status": "FAIL", "error": error}
+        return self.export_step_structures(
+            steps=steps,
+            output_dir=output_dir,
+            prefix=prefix,
+            with_images=with_images,
+        )
+
+    def validate_neb_endpoints_tool(
+        self,
+        initial_structure_path: str = "",
+        final_structure_path: str = "",
+        expected_reaction_type: str | None = None,
+        auto_fix: bool = True,
+        run_id: str = "default_run",
+        workflow_step: str = "04_neb_validation",
+    ) -> dict:
+        """Validate a pair of NEB endpoint structure files; returns the report path."""
+        if not str(initial_structure_path or "").strip() or not str(final_structure_path or "").strip():
+            return {
+                "status": "FAIL",
+                "error": "missing_required_args: initial_structure_path/final_structure_path",
+            }
+        report_path = self.validate_neb_endpoints(
+            initial_structure_path=initial_structure_path,
+            final_structure_path=final_structure_path,
+            expected_reaction_type=expected_reaction_type,
+            auto_fix=auto_fix,
+            run_id=run_id,
+            workflow_step=workflow_step,
+        )
+        return {"status": "OK", "report_path": report_path}
+
     def to_camel_tools(self) -> Dict[str, FunctionTool]:
         """Expose CatDT tool methods as CAMEL `FunctionTool` registry."""
         return {
             "generate_surfaces": FunctionTool(self.generate_surfaces_tool),
             "predict_adsorption_sites": FunctionTool(self.predict_adsorption_sites_tool),
             "simulate_surface_reconstruction": FunctionTool(self.simulate_surface_reconstruction_tool),
-            "run_neb_for_steps": FunctionTool(self.run_neb_for_steps),
-            "compute_adsorption_energies": FunctionTool(self.compute_adsorption_energies),
+            "run_neb_for_steps": FunctionTool(self.run_neb_for_steps_tool),
+            "compute_adsorption_energies": FunctionTool(self.compute_adsorption_energies_tool),
             "run_kmc_simulation": FunctionTool(self.run_kmc_simulation),
             "generate_final_report": FunctionTool(self.generate_final_report),
-            "validate_neb_endpoints": FunctionTool(self.validate_neb_endpoints),
+            "validate_neb_endpoints": FunctionTool(self.validate_neb_endpoints_tool),
             "run_neb_with_validation": FunctionTool(self.run_neb_with_validation),
             "check_checkpoint_exists": FunctionTool(self.check_checkpoint_exists),
             "list_available_checkpoints": FunctionTool(self.list_available_checkpoints),
-            "export_step_structures": FunctionTool(self.export_step_structures),
+            "export_step_structures": FunctionTool(self.export_step_structures_tool),
             "build_steps_payload": FunctionTool(self.build_steps_payload_tool),
             "programmatic_validation": FunctionTool(self.programmatic_validation_tool),
             "get_step_element_deltas": FunctionTool(self.get_step_element_deltas_tool),
-            "suggest_staged_positions": FunctionTool(self.suggest_staged_positions_tool),
-            "validate_proposed_positions": FunctionTool(self.validate_proposed_positions_tool),
+            "suggest_staged_positions": FunctionTool(
+                self.suggest_staged_positions_tool,
+                openai_tool_schema=self._agent45_suggest_positions_schema(),
+            ),
+            "validate_proposed_positions": FunctionTool(
+                self.validate_proposed_positions_tool,
+                openai_tool_schema=self._agent45_validate_positions_schema(),
+            ),
             "relax_adsorbate": FunctionTool(self.relax_adsorbate_tool),
             "run_agent45_energy_gate": FunctionTool(self.run_agent45_energy_gate_tool),
             "retrieve_agent45_memento_cases": FunctionTool(self.retrieve_agent45_memento_cases_tool),

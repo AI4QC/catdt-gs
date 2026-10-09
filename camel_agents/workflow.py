@@ -51,9 +51,72 @@ from camel_agents.schemas import (
 )
 from camel_agents.runtime import CamelWorkflowAgent, Task, TaskOutput
 from camel_agents.policy import EvolvablePolicy
+from camel_agents.surface_model import CatalystSurface
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 logger = logging.getLogger(__name__)
+
+try:
+    # Typed API-error detection (preferred over substring matching). Only the
+    # transient/retryable error classes are listed — generic APIError would
+    # also match non-retryable 4xx client errors.
+    import openai as _openai
+    _OPENAI_RETRYABLE_ERRORS: Tuple[type, ...] = tuple(
+        exc_type
+        for exc_type in (
+            getattr(_openai, "APITimeoutError", None),
+            getattr(_openai, "APIConnectionError", None),
+            getattr(_openai, "RateLimitError", None),
+            getattr(_openai, "InternalServerError", None),
+        )
+        if isinstance(exc_type, type)
+    )
+except ImportError:
+    _OPENAI_RETRYABLE_ERRORS = ()
+
+# Reward weights. Iteration and episode rewards intentionally weight
+# convergence vs barrier reasonableness differently; the named constants make
+# the asymmetry explicit instead of looking like a silent swap.
+ITER_REWARD_W_CONVERGED = 0.4
+ITER_REWARD_W_BARRIER = 0.6
+EPISODE_REWARD_W_CONVERGED = 0.6
+EPISODE_REWARD_W_BARRIER = 0.4
+
+# WorkflowState fields that are safe to restore from a checkpointed
+# surface.state. Run-identity/config fields (run_id, output_base_dir,
+# reaction_description, current_facet_id) are intentionally excluded so a
+# resumed run keeps its own configuration.
+_RESUMABLE_STATE_FIELDS: Tuple[str, ...] = (
+    "reaction_context",
+    "intermediates",
+    "pathway_design",
+    "validation_report",
+    "step_structures",
+    "tool_baseline_steps",
+    "memento_retrieval",
+    "knowledge_retrieval",
+    "skill_retrieval",
+    "memento_query_text",
+    "energy_gate_report",
+    "adsorption_energies",
+    "adsorbate_energies",
+    "gas_frequencies",
+    "neb_results",
+    "last_feedback",
+    "iteration_history",
+    "mechanism_context",
+    "candidate_pathways",
+    "retained_pathways",
+    "pruned_pathways",
+    "pathway_manifests",
+    "mechanism_search_result",
+    "all_surface_paths",
+    "all_area_fractions",
+    "all_miller_indices",
+    "facet_results",
+    "aggregated_tof",
+    "aggregated_production_rates",
+)
 
 
 
@@ -340,7 +403,11 @@ class CatDTCamelWorkflow:
             except Exception as exc:
                 err_text = str(exc)
 
-                is_api_error = any(
+                # Prefer typed detection; fall back to the substring heuristic
+                # for backends that wrap errors in plain exceptions.
+                is_api_error = (
+                    _OPENAI_RETRYABLE_ERRORS and isinstance(exc, _OPENAI_RETRYABLE_ERRORS)
+                ) or any(
                     marker in err_text
                     for marker in ["503", "502", "429", "temporarily unavailable", "rate limit", "overloaded", "算力紧张"]
                 )
@@ -1174,10 +1241,12 @@ After all tools complete, output a JSON summary of the retained pathways."""
                             confidence_value = 0.8
 
                 raw_modify = item.get("atoms_to_modify", [])
+                if not isinstance(raw_modify, list):
+                    raw_modify = []
                 atoms_to_modify = [
                     dict(mod)
                     for mod in raw_modify
-                    if isinstance(raw_modify, list) and isinstance(mod, dict) and "index" in mod
+                    if isinstance(mod, dict) and "index" in mod
                 ]
                 raw_remove = item.get("atoms_to_remove", [])
 
@@ -1635,6 +1704,26 @@ After all tools complete, output a JSON summary of the retained pathways."""
         except Exception:
             return None
 
+    @staticmethod
+    def _normalize_neb_result_entry(neb_value: Any) -> Dict[str, Any]:
+        """Normalize a NEB result (dict or object) into a flat summary dict.
+
+        A dict carrying real result keys (converged / barrier energies) is a
+        valid result — only dicts without any of those keys are treated as
+        error entries.
+        """
+        result_keys = (
+            "activation_energy_forward",
+            "activation_energy_reverse",
+            "reaction_energy",
+            "converged",
+        )
+        if isinstance(neb_value, dict):
+            if not any(key in neb_value for key in result_keys):
+                return {"error": neb_value.get("error", str(neb_value))}
+            return {key: neb_value.get(key) for key in result_keys}
+        return {key: getattr(neb_value, key, None) for key in result_keys}
+
     def _collect_neb_quality_metrics(self, neb_results: Dict[str, Any]) -> Dict[str, float]:
         total = len(neb_results or {})
         if total <= 0:
@@ -1649,15 +1738,9 @@ After all tools complete, output a JSON summary of the retained pathways."""
         barriers: List[float] = []
 
         for value in (neb_results or {}).values():
-            if isinstance(value, dict):
-                converged_flag = value.get("converged", None)
-                if converged_flag is None:
-                    if "error" not in value:
-                        converged += 1
-                elif bool(converged_flag):
-                    converged += 1
-            else:
-                converged_flag = getattr(value, "converged", None)
+            entry = self._normalize_neb_result_entry(value)
+            if "error" not in entry:
+                converged_flag = entry.get("converged", None)
                 if converged_flag is None or bool(converged_flag):
                     converged += 1
 
@@ -1691,7 +1774,7 @@ After all tools complete, output a JSON summary of the retained pathways."""
         if converged_ratio <= 0.0 or reasonable_ratio <= 0.0:
             return 0.0
 
-        reward = 0.4 * converged_ratio + 0.6 * reasonable_ratio
+        reward = ITER_REWARD_W_CONVERGED * converged_ratio + ITER_REWARD_W_BARRIER * reasonable_ratio
         return round(max(0.0, min(1.0, float(reward))), 6)
 
     def _run_pathway_iteration(self, state: WorkflowState, base_structure: Optional[Atoms], config: Optional[CatDTConfig]) -> None:
@@ -1760,6 +1843,7 @@ After all tools complete, output a JSON summary of the retained pathways."""
                     logger.warning("Failed to re-sync surface endpoint to step-0 intermediate: %s", exc)
 
             all_step_structures: List[Dict[str, Any]] = []
+            step_validation_reports: List[Tuple[str, Optional[ValidationReport]]] = []
             for step_idx in range(n_steps):
                 step_label = f"{intermediates[step_idx]}_to_{intermediates[step_idx + 1]}"
                 logger.info(
@@ -1779,182 +1863,194 @@ After all tools complete, output a JSON summary of the retained pathways."""
                 self.tools._agent45_baseline_steps = [baseline_entry]
 
                 # Temporarily scope intermediates to this step so _build_step_structures
-                # alignment logic matches Agent4's single-step output.
+                # alignment logic matches Agent4's single-step output. The scoped
+                # section is wrapped in try/finally so any raise below cannot
+                # leave state.intermediates truncated to the 2-element pair.
                 _saved_intermediates = list(state.intermediates or [])
                 state.intermediates = [intermediates[step_idx], intermediates[step_idx + 1]]
                 if state.reaction_context is not None:
                     state.reaction_context.intermediates = state.intermediates
 
-                # 2. Agent4 designs staging for this single step
-                agent4_retry_feedback = ""
-                max_agent4_attempts = 2
-                step_structure = None
+                try:
+                    # 2. Agent4 designs staging for this single step
+                    agent4_retry_feedback = ""
+                    max_agent4_attempts = 2
+                    step_structure = None
 
-                for agent4_attempt in range(max_agent4_attempts):
-                    design_task = self._create_pathway_design_task(
-                        state,
-                        current_structure,
-                        preplaced_products=preplaced_products,
-                        extra_feedback=agent4_retry_feedback,
-                    )
-                    self._persist_prompt_snapshot(
-                        state=state,
-                        iteration=iteration_num,
-                        agent_name=f"agent4_step{step_idx + 1:02d}",
-                        prompt_text=design_task.description,
-                    )
-                    try:
-                        self._run_task(design_task, use_memory=True)
-                    except RuntimeError as exc:
-                        err_text = str(exc)
-                        design_issue = any(
-                            marker in err_text
-                            for marker in [
-                                "pathway design has",
-                                "formula matching failed",
-                                "returned empty pathway design",
-                            ]
-                        )
-                        if design_issue and (agent4_attempt + 1 < max_agent4_attempts):
-                            agent4_retry_feedback = (
-                                f"SYSTEM CHECK FAILED: {err_text}\n"
-                                "RULES: "
-                                "1) Use the exact reaction pathway given — step count must match exactly. "
-                                "2) reactant_formula/product_formula must match the given pathway order. "
-                                "3) ONLY use atoms_to_add with [x,y,z] positions. atoms_to_modify and atoms_to_remove MUST be empty arrays []."
-                            )
-                            logger.warning(
-                                "Agent4 design failed in iter %d step %d attempt %d: %s",
-                                iteration_num, step_idx + 1, agent4_attempt + 1, err_text,
-                            )
-                            continue
-                        raise
-
-                    if not state.pathway_design or not state.pathway_design.steps:
-                        if agent4_attempt + 1 < max_agent4_attempts:
-                            agent4_retry_feedback = (
-                                "SYSTEM CHECK FAILED: pathway_design is empty. "
-                                "Output a complete PathwayDesign JSON with atoms_to_add."
-                            )
-                            continue
-                        raise RuntimeError("Agent4 returned empty pathway design.")
-
-                    try:
-                        built = self._build_step_structures(
+                    for agent4_attempt in range(max_agent4_attempts):
+                        design_task = self._create_pathway_design_task(
                             state,
                             current_structure,
-                            state.pathway_design.steps,
                             preplaced_products=preplaced_products,
+                            extra_feedback=agent4_retry_feedback,
                         )
-                        if built:
-                            step_structure = built[0]
-                        break
-                    except RuntimeError as exc:
-                        err_text = str(exc)
-                        design_issue = any(
-                            marker in err_text
-                            for marker in [
-                                "requires atoms_to_add",
-                                "endpoint element multisets differ",
-                                "changed immutable",
-                                "attempts to remove immutable core atoms",
-                            ]
+                        self._persist_prompt_snapshot(
+                            state=state,
+                            iteration=iteration_num,
+                            agent_name=f"agent4_step{step_idx + 1:02d}",
+                            prompt_text=design_task.description,
                         )
-                        if design_issue and (agent4_attempt + 1 < max_agent4_attempts):
-                            agent4_retry_feedback = (
-                                f"SYSTEM CHECK FAILED: {err_text}\n"
-                                "RULES: "
-                                "1) Existing atom coordinates are READ-ONLY. "
-                                "2) ONLY use atoms_to_add to balance elements. "
-                                "3) Each step's reactant/product must have identical element multisets."
+                        try:
+                            self._run_task(design_task, use_memory=True)
+                        except RuntimeError as exc:
+                            err_text = str(exc)
+                            design_issue = any(
+                                marker in err_text
+                                for marker in [
+                                    "pathway design has",
+                                    "formula matching failed",
+                                    "returned empty pathway design",
+                                ]
                             )
-                            continue
-                        raise
-                else:
-                    raise RuntimeError(f"Agent4 design could not pass checks for step {step_idx + 1}.")
+                            if design_issue and (agent4_attempt + 1 < max_agent4_attempts):
+                                agent4_retry_feedback = (
+                                    f"SYSTEM CHECK FAILED: {err_text}\n"
+                                    "RULES: "
+                                    "1) Use the exact reaction pathway given — step count must match exactly. "
+                                    "2) reactant_formula/product_formula must match the given pathway order. "
+                                    "3) ONLY use atoms_to_add with [x,y,z] positions. atoms_to_modify and atoms_to_remove MUST be empty arrays []."
+                                )
+                                logger.warning(
+                                    "Agent4 design failed in iter %d step %d attempt %d: %s",
+                                    iteration_num, step_idx + 1, agent4_attempt + 1, err_text,
+                                )
+                                continue
+                            raise
 
-                if step_structure is None:
-                    raise RuntimeError(f"No step structure built for step {step_idx + 1}")
+                        if not state.pathway_design or not state.pathway_design.steps:
+                            if agent4_attempt + 1 < max_agent4_attempts:
+                                agent4_retry_feedback = (
+                                    "SYSTEM CHECK FAILED: pathway_design is empty. "
+                                    "Output a complete PathwayDesign JSON with atoms_to_add."
+                                )
+                                continue
+                            raise RuntimeError("Agent4 returned empty pathway design.")
 
-                # 3. Agent5 validates this single step
-                state.step_structures = [step_structure]
-                state.step_structures = self._agent4_postprocess_step_structures(
-                    state=state, base_structure=current_structure,
-                    step_structures=state.step_structures,
-                )
+                        try:
+                            built = self._build_step_structures(
+                                state,
+                                current_structure,
+                                state.pathway_design.steps,
+                                preplaced_products=preplaced_products,
+                            )
+                            if built:
+                                step_structure = built[0]
+                            break
+                        except RuntimeError as exc:
+                            err_text = str(exc)
+                            design_issue = any(
+                                marker in err_text
+                                for marker in [
+                                    "requires atoms_to_add",
+                                    "endpoint element multisets differ",
+                                    "changed immutable",
+                                    "attempts to remove immutable core atoms",
+                                ]
+                            )
+                            if design_issue and (agent4_attempt + 1 < max_agent4_attempts):
+                                agent4_retry_feedback = (
+                                    f"SYSTEM CHECK FAILED: {err_text}\n"
+                                    "RULES: "
+                                    "1) Existing atom coordinates are READ-ONLY. "
+                                    "2) ONLY use atoms_to_add to balance elements. "
+                                    "3) Each step's reactant/product must have identical element multisets."
+                                )
+                                continue
+                            raise
+                    else:
+                        raise RuntimeError(f"Agent4 design could not pass checks for step {step_idx + 1}.")
 
-                energy_gate_dir = surface.agent_dir(
-                    "agent45",
-                    subdir=f"iter_{iteration_num:02d}_energy_gate_step{step_idx + 1:02d}",
-                )
-                try:
-                    step_energy_gate = self.tools.run_agent45_energy_gate(
-                        workflow=self,
+                    if step_structure is None:
+                        raise RuntimeError(f"No step structure built for step {step_idx + 1}")
+
+                    # 3. Agent5 validates this single step
+                    state.step_structures = [step_structure]
+                    state.step_structures = self._agent4_postprocess_step_structures(
+                        state=state, base_structure=current_structure,
                         step_structures=state.step_structures,
-                        output_dir=str(energy_gate_dir),
                     )
-                except Exception as exc:
-                    logger.warning("Energy gate failed for step %d: %s", step_idx + 1, exc)
-                    step_energy_gate = {"status": "FAIL", "fatal_issues": [str(exc)], "warning_issues": []}
 
-                validation_task = self._create_validation_task(state)
-                self._persist_prompt_snapshot(
-                    state=state, iteration=iteration_num,
-                    agent_name=f"agent5_step{step_idx + 1:02d}",
-                    prompt_text=validation_task.description,
-                )
-                self._run_task(validation_task, use_memory=True)
-
-                # 4. Relax endpoints for this step
-                relax_dir = surface.agent_dir(
-                    "agent6", subdir=f"pre_neb_relax/step{step_idx + 1:02d}",
-                )
-                try:
-                    state.step_structures = self._relax_neb_endpoints(
-                        step_structures=state.step_structures,
-                        output_dir=str(relax_dir),
-                        fmax=0.05,
-                        max_steps=200,
+                    energy_gate_dir = surface.agent_dir(
+                        "agent45",
+                        subdir=f"iter_{iteration_num:02d}_energy_gate_step{step_idx + 1:02d}",
                     )
-                except Exception as exc:
-                    logger.warning("Endpoint relax failed for step %d: %s", step_idx + 1, exc)
-
-                relaxed_step = state.step_structures[0]
-                all_step_structures.append(relaxed_step)
-
-                # Checkpoint after each pathway step
-                self._auto_checkpoint(f"pathway_step{step_idx + 1:02d}")
-
-                # 5. Chain: next step's reactant = CLEAN product from Stage A.
-                # Per Phase-2 spec: staging atoms (added on this step's endpoints
-                # for NEB element-count balance) must NOT propagate to the next
-                # step. The next reactant is the clean intermediate produced by
-                # _llm_driven_preplace_products, not the staged relaxed product.
-                if step_idx + 1 < n_steps:
-                    next_reactant_label = intermediates[step_idx + 1]
-                    next_key = self._canonical_species_label(next_reactant_label)
-                    next_entry = preplaced_products_cache.get(next_key) if preplaced_products_cache else None
-                    if not (next_entry and isinstance(next_entry.get("structure"), Atoms)):
-                        raise RuntimeError(
-                            f"[iter {iteration_num}] Step {step_idx + 1}: "
-                            f"no Stage A clean intermediate for '{next_reactant_label}'. "
-                            "Stage A (_llm_driven_preplace_products) must produce "
-                            "every intermediate before Stage B can consume them."
+                    try:
+                        step_energy_gate = self.tools.run_agent45_energy_gate(
+                            workflow=self,
+                            step_structures=state.step_structures,
+                            output_dir=str(energy_gate_dir),
                         )
-                    current_structure = next_entry["structure"].copy()
-                    clean_surf = list(next_entry.get("surface_indices", []))
-                    clean_ads = list(next_entry.get("adsorbate_indices", []))
-                    self._update_indices(state, current_structure, clean_surf, clean_ads)
-                    logger.info(
-                        "[iter %d] Step %d done. Next reactant <- Stage A clean '%s' (%d atoms, ads=%d)",
-                        iteration_num, step_idx + 1, next_reactant_label,
-                        len(current_structure), len(clean_ads),
-                    )
+                    except Exception as exc:
+                        logger.warning("Energy gate failed for step %d: %s", step_idx + 1, exc)
+                        step_energy_gate = {"status": "FAIL", "fatal_issues": [str(exc)], "warning_issues": []}
 
-                # Restore full intermediates for next iteration
-                state.intermediates = _saved_intermediates
-                if state.reaction_context is not None:
-                    state.reaction_context.intermediates = _saved_intermediates
+                    # Store the per-step gate so _create_validation_task sees it:
+                    # its fatal issues are merged into Agent5's fatal set and
+                    # force the per-step report to FAIL (blocking), and the
+                    # summary reaches the Agent5 prompt + memento records.
+                    state.energy_gate_report = dict(step_energy_gate or {})
+
+                    validation_task = self._create_validation_task(state)
+                    self._persist_prompt_snapshot(
+                        state=state, iteration=iteration_num,
+                        agent_name=f"agent5_step{step_idx + 1:02d}",
+                        prompt_text=validation_task.description,
+                    )
+                    self._run_task(validation_task, use_memory=True)
+                    step_validation_reports.append((step_label, state.validation_report))
+
+                    # 4. Relax endpoints for this step
+                    relax_dir = surface.agent_dir(
+                        "agent6", subdir=f"pre_neb_relax/step{step_idx + 1:02d}",
+                    )
+                    try:
+                        state.step_structures = self._relax_neb_endpoints(
+                            step_structures=state.step_structures,
+                            output_dir=str(relax_dir),
+                            fmax=0.05,
+                            max_steps=200,
+                        )
+                    except Exception as exc:
+                        logger.warning("Endpoint relax failed for step %d: %s", step_idx + 1, exc)
+                        if state.step_structures:
+                            state.step_structures[0]["endpoint_relax_failed"] = True
+
+                    relaxed_step = state.step_structures[0]
+                    all_step_structures.append(relaxed_step)
+
+                    # Checkpoint after each pathway step
+                    self._auto_checkpoint(f"pathway_step{step_idx + 1:02d}")
+
+                    # 5. Chain: next step's reactant = CLEAN product from Stage A.
+                    # Per Phase-2 spec: staging atoms (added on this step's endpoints
+                    # for NEB element-count balance) must NOT propagate to the next
+                    # step. The next reactant is the clean intermediate produced by
+                    # _llm_driven_preplace_products, not the staged relaxed product.
+                    if step_idx + 1 < n_steps:
+                        next_reactant_label = intermediates[step_idx + 1]
+                        next_key = self._canonical_species_label(next_reactant_label)
+                        next_entry = preplaced_products_cache.get(next_key) if preplaced_products_cache else None
+                        if not (next_entry and isinstance(next_entry.get("structure"), Atoms)):
+                            raise RuntimeError(
+                                f"[iter {iteration_num}] Step {step_idx + 1}: "
+                                f"no Stage A clean intermediate for '{next_reactant_label}'. "
+                                "Stage A (_llm_driven_preplace_products) must produce "
+                                "every intermediate before Stage B can consume them."
+                            )
+                        current_structure = next_entry["structure"].copy()
+                        clean_surf = list(next_entry.get("surface_indices", []))
+                        clean_ads = list(next_entry.get("adsorbate_indices", []))
+                        self._update_indices(state, current_structure, clean_surf, clean_ads)
+                        logger.info(
+                            "[iter %d] Step %d done. Next reactant <- Stage A clean '%s' (%d atoms, ads=%d)",
+                            iteration_num, step_idx + 1, next_reactant_label,
+                            len(current_structure), len(clean_ads),
+                        )
+                finally:
+                    # Restore full intermediates even if a step raised above
+                    state.intermediates = _saved_intermediates
+                    if state.reaction_context is not None:
+                        state.reaction_context.intermediates = _saved_intermediates
 
             # ── All steps built. Collect results. ──
             state.step_structures = all_step_structures
@@ -1962,9 +2058,33 @@ After all tools complete, output a JSON summary of the retained pathways."""
 
             self._export_pathway_iteration_visuals(state, i + 1)
 
-            validation_passed = bool(
-                state.validation_report and state.validation_report.status.upper() == "PASS"
-            )
+            # Aggregate per-step validation reports: the iteration passes only
+            # if EVERY step passed, and failed steps' issues/feedback are
+            # merged (keyed by step name) so they are not lost to overwriting.
+            failed_steps = [
+                (label, rep)
+                for label, rep in step_validation_reports
+                if rep is None or str(rep.status or "").upper() != "PASS"
+            ]
+            validation_passed = bool(step_validation_reports) and not failed_steps
+            if step_validation_reports:
+                agg_issues: List[str] = []
+                agg_feedback_parts: List[str] = []
+                for label, rep in step_validation_reports:
+                    if rep is None:
+                        agg_issues.append(f"[{label}] no validation report")
+                        continue
+                    for issue in rep.issues or []:
+                        agg_issues.append(f"[{label}] {issue}")
+                    if str(rep.status or "").upper() != "PASS" and str(rep.feedback or "").strip():
+                        agg_feedback_parts.append(f"[{label}] {str(rep.feedback).strip()}")
+                state.validation_report = ValidationReport(
+                    status="PASS" if validation_passed else "FAIL",
+                    issues=agg_issues,
+                    feedback="\n".join(agg_feedback_parts),
+                )
+                if not validation_passed:
+                    state.last_feedback = state.validation_report.feedback
 
             state.neb_results = {}
             if validation_passed and config.calculate_barriers and state.step_structures and self.tools is not None:
@@ -2018,6 +2138,7 @@ After all tools complete, output a JSON summary of the retained pathways."""
         fmax: float = 0.03,
         max_steps: int = 100,
         enforce_connectivity: bool = True,
+        relax_top_surface: bool = True,
     ) -> List[Dict[str, Any]]:
         """Relax adsorbate atoms (surface fixed) on NEB endpoints before NEB.
 
@@ -2029,15 +2150,7 @@ After all tools complete, output a JSON summary of the retained pathways."""
         from ase.constraints import FixAtoms
         from ase.io import write as ase_write
 
-        predictor = self.tools.get_shared_fairchem_predictor(
-            cache_key="uma_shared",
-            model_name="uma-s-1p1",
-            use_gpu=True,
-            device="cuda",
-            work_subdir="_shared_fairchem_global",
-            keep_files=False,
-            verbose=False,
-        )
+        predictor = self.tools.get_shared_uma_predictor()
         predictor._load_model()
         calc = predictor._calculator
 
@@ -2070,10 +2183,12 @@ After all tools complete, output a JSON summary of the retained pathways."""
                 # (Stage B may have appended staging atoms beyond the surface range).
                 top2_surface = {i for i in frozen_top_layer if 0 <= i < len(atoms)}
 
-                if top2_surface:
-                    # Full pipeline: staged atoms + top surface layers move.
-                    # The adsorbate core stays at its Stage A local minimum.
-                    free_indices = staged_indices | top2_surface
+                if top2_surface and relax_top_surface:
+                    # Full pipeline: adsorbate core + staged atoms + top surface
+                    # layers move. The force/NEB gates evaluate adsorbate atoms,
+                    # so freezing the Stage A core here leaves inconsistent
+                    # endpoint minima.
+                    free_indices = ads_indices | staged_indices | top2_surface
                 else:
                     # Replay/unit-test mode without a registered surface.
                     free_indices = ads_indices | staged_indices
@@ -2240,8 +2355,22 @@ After all tools complete, output a JSON summary of the retained pathways."""
 
                 except Exception as exc:
                     logger.warning("Pre-NEB relax failed for %s/%s: %s", name, side, exc)
+                    # Record the degradation on the step so NEB summaries can
+                    # surface that this step ran on an unrelaxed endpoint.
+                    step["endpoint_relax_failed"] = True
+                    failed_sides = step.setdefault("endpoint_relax_failed_sides", [])
+                    if side not in failed_sides:
+                        failed_sides.append(side)
 
         return step_structures
+
+    @staticmethod
+    def _slab_majority_element(atoms: Atoms) -> str:
+        """Surface metal element, inferred as the majority element of the slab."""
+        symbols = atoms.get_chemical_symbols()
+        if not symbols:
+            return ""
+        return Counter(symbols).most_common(1)[0][0]
 
     def _free_atom_connectivity_signature(
         self,
@@ -2252,13 +2381,14 @@ After all tools complete, output a JSON summary of the retained pathways."""
         valid = sorted({int(i) for i in free_indices if 0 <= int(i) < len(atoms)})
         staged = {int(i) for i in (staged_indices or set()) if 0 <= int(i) < len(atoms)}
         symbols = atoms.get_chemical_symbols()
+        surface_element = self._slab_majority_element(atoms)
         signature: List[Tuple[int, int]] = []
 
         for pos, i in enumerate(valid):
-            if symbols[i] == "Cu":
+            if symbols[i] == surface_element:
                 continue
             for j in valid[pos + 1:]:
-                if symbols[j] == "Cu":
+                if symbols[j] == surface_element:
                     continue
                 cutoff = 1.15 * (
                     covalent_radii[atomic_numbers[symbols[i]]] + covalent_radii[atomic_numbers[symbols[j]]]
@@ -2281,13 +2411,14 @@ After all tools complete, output a JSON summary of the retained pathways."""
         if not staged:
             return tuple()
         symbols = atoms.get_chemical_symbols()
+        surface_element = self._slab_majority_element(atoms)
         signature: List[Tuple[int, int]] = []
 
         for pos, i in enumerate(valid):
-            if symbols[i] == "Cu":
+            if symbols[i] == surface_element:
                 continue
             for j in valid[pos + 1:]:
-                if symbols[j] == "Cu" or ((i in staged) == (j in staged)):
+                if symbols[j] == surface_element or ((i in staged) == (j in staged)):
                     continue
                 cutoff = 1.15 * (
                     covalent_radii[atomic_numbers[symbols[i]]] + covalent_radii[atomic_numbers[symbols[j]]]
@@ -2304,8 +2435,8 @@ After all tools complete, output a JSON summary of the retained pathways."""
         neb_total = int(neb_metrics.get("total", 0.0))
         if neb_total > 0:
             neb_score = (
-                0.6 * float(neb_metrics.get("converged_ratio", 0.0))
-                + 0.4 * float(neb_metrics.get("reasonable_barrier_ratio", 0.0))
+                EPISODE_REWARD_W_CONVERGED * float(neb_metrics.get("converged_ratio", 0.0))
+                + EPISODE_REWARD_W_BARRIER * float(neb_metrics.get("reasonable_barrier_ratio", 0.0))
             )
         else:
             neb_score = 0.0
@@ -2428,197 +2559,269 @@ After all tools complete, output a JSON summary of the retained pathways."""
             surface_info = f"surface_top_z={surface_top_z:.3f} Å, cell=({cell[0][0]:.2f}, {cell[1][1]:.2f}, {cell[2][2]:.2f})"
 
             # ── Agent4 design + relax + Agent5 validation loop ──
-            max_stageA_attempts = 3
+            # The final slot is a deterministic build used only when every Agent4
+            # attempt before it failed validation: a broken intermediate poisons
+            # every step downstream of it, so the pathway must not inherit one.
+            max_llm_stageA_attempts = 3
+            max_stageA_attempts = max_llm_stageA_attempts + 1
             stageA_feedback = ""
+            # Save the original intermediates ONCE before the attempt loop and
+            # restore in try/finally — an Agent4-failure `continue` must not
+            # permanently truncate state.intermediates to the scoped pair.
+            _saved = list(state.intermediates or [])
+            new_structure: Optional[Atoms] = None
+            relax_output = ""
+            new_ads_indices: List[int] = []
+            surface_indices: List[int] = []
+            relaxed_energy: Optional[float] = None
+            built = False
 
-            for stageA_attempt in range(max_stageA_attempts):
-                # Create preplacement task for Agent4
-                extra_feedback = (
-                    f"\n\n[PREVIOUS ATTEMPT FAILED]\n{stageA_feedback}\n"
-                    "Fix the issues above. Place atoms closer to the surface "
-                    "and ensure they bond to the adsorbate backbone."
-                ) if stageA_feedback else ""
-
-                description = TaskPrompts.preplacement_design(
-                    current_label=prev_label,
-                    target_label=label,
-                    current_adsorbate_coords=current_ads_text,
-                    target_molecule_coords=target_mol_text,
-                    surface_info=surface_info,
-                    element_delta=element_delta,
-                ) + extra_feedback
-
-                # Temporarily set baseline for suggest_staged_positions tool
-                baseline_entry = {
-                    "name": f"{prev_label}_to_{label}",
-                    "reactant": prev_ep.atoms.copy(),
-                    "product": prev_ep.atoms.copy(),
-                    "reactant_adsorbate_indices": prev_ep.adsorbate_indices,
-                    "product_adsorbate_indices": prev_ep.adsorbate_indices,
-                    "reactant_formula": prev_label,
-                    "product_formula": label,
-                }
-                state.tool_baseline_steps = [baseline_entry]
-                if self.tools is not None:
-                    self.tools._agent45_baseline_steps = [baseline_entry]
-
-                # Scope intermediates to this pair
-                _saved = list(state.intermediates or [])
-                state.intermediates = [prev_label, label]
-                if state.reaction_context is not None:
-                    state.reaction_context.intermediates = state.intermediates
-
-                # Reset Agent4 dialogue for fresh context each step
-                try:
-                    chat_agent = getattr(self.agent4, "chat_agent", None)
-                    if chat_agent is not None and hasattr(chat_agent, "reset"):
-                        chat_agent.reset()
-                except Exception:
-                    pass
-
-                # Call Agent4 LLM
-                logger.info(
-                    "[stageA] Building %s from %s (delta=%s, attempt %d/%d)",
-                    label, prev_label, element_delta,
-                    stageA_attempt + 1, max_stageA_attempts,
-                )
-                self._persist_prompt_snapshot(
-                    state, iteration,
-                    f"preplacement_{self._species_safe_name(label)}_attempt{stageA_attempt + 1}",
-                    description,
-                )
-
-                def _apply_preplacement_design(output: "TaskOutput"):
-                    payload = output.json_dict or {}
-                    design_obj = output.pydantic
-                    if design_obj is None:
-                        try:
-                            design_obj = PathwayDesign(**self._coerce_pathway_design_payload(state, payload))
-                        except Exception:
-                            design_obj = None
-                    state.pathway_design = design_obj
-
-                preplacement_task = Task(
-                    description=description,
-                    expected_output="Atom placement JSON",
-                    agent=self.agent4,
-                    output_pydantic=PathwayDesign,
-                    result_handler=_apply_preplacement_design,
-                )
-
-                try:
-                    self._run_task(preplacement_task, use_memory=True)
-                except Exception as exc:
-                    logger.warning("[stageA] Agent4 failed for %s (attempt %d): %s", label, stageA_attempt + 1, exc)
-                    stageA_feedback = f"Agent4 call failed: {exc}"
-                    continue
-
-                # Apply Agent4's atom operations to prev_ep.atoms
-                design = state.pathway_design
-                new_structure = prev_ep.atoms.copy()
-                new_ads_indices = list(prev_ep.adsorbate_indices)
-
-                if design and design.steps:
-                    step_spec = design.steps[0]
-
-                    # Remove atoms first (highest index first)
-                    remove_indices = []
-                    for item in (step_spec.atoms_to_remove or []):
-                        idx = None
-                        if isinstance(item, dict):
-                            idx = item.get("index")
-                        elif isinstance(item, int):
-                            idx = item
-                        if idx is not None and isinstance(idx, int) and 0 <= idx < len(new_structure):
-                            if idx in set(new_ads_indices):
-                                remove_indices.append(idx)
-                    for idx in sorted(set(remove_indices), reverse=True):
-                        del new_structure[idx]
-                        new_ads_indices = [j if j < idx else j - 1
-                                           for j in new_ads_indices if j != idx]
-
-                    # Add atoms
-                    for atom_spec in (step_spec.atoms_to_add or []):
-                        elements = self._resolve_addition_elements(atom_spec)
-                        pos = atom_spec.position
-                        if pos and len(pos) == 3 and elements:
-                            for elem in elements:
-                                new_structure.append(Atom(elem, position=[float(pos[0]), float(pos[1]), float(pos[2])]))
-                                new_ads_indices.append(len(new_structure) - 1)
-
-                new_ads_indices, removed_for_formula = self._enforce_stageA_target_formula(
-                    new_structure,
-                    new_ads_indices,
-                    label,
-                )
-                if removed_for_formula:
-                    logger.info(
-                        "[stageA] Formula guard removed excess atoms for %s: %s",
-                        label,
-                        removed_for_formula,
-                    )
-
-                surface_indices = [i for i in range(len(new_structure)) if i not in set(new_ads_indices)]
-                self._set_surface_indices(new_structure, surface_indices, new_ads_indices)
-
-                # Save and relax
-                pre_relax_path = str(iter_dir / f"{self._species_safe_name(label)}_pre_relax.vasp")
-                write(pre_relax_path, new_structure)
-
-                relax_output = str(iter_dir / f"{self._species_safe_name(label)}_product.vasp")
-                relaxed_energy: Optional[float] = None
-                if self.tools is not None:
-                    try:
-                        relax_fmax = float(getattr(config, "stagea_relax_fmax", 0.05))
-                        relax_steps = int(getattr(config, "stagea_relax_steps", 200))
-                        result = self.tools.relax_adsorbate_on_surface(
-                            structure_path=pre_relax_path,
-                            adsorbate_indices=new_ads_indices,
-                            output_path=relax_output,
-                            fmax=relax_fmax,
-                            max_steps=relax_steps,
-                            free_surface_indices=list(surface.top_layer_indices),
+            try:
+                for stageA_attempt in range(max_stageA_attempts):
+                    deterministic_attempt = stageA_attempt >= max_llm_stageA_attempts
+                    if deterministic_attempt:
+                        logger.warning(
+                            "[stageA] %d Agent4 attempts failed for %s; building it "
+                            "deterministically from %s. Last feedback: %s",
+                            max_llm_stageA_attempts, label, prev_label, stageA_feedback,
                         )
-                        new_structure = read(relax_output)
-                        self._set_surface_indices(new_structure, surface_indices, new_ads_indices)
-                        relaxed_energy = float(result.get("energy", 0.0))
-                        logger.info(
-                            "[stageA] Relaxed %s: E=%.3f fmax=%.3f (top-2 free)",
-                            label, relaxed_energy, result.get("fmax", 0.0),
-                        )
-                    except Exception as exc:
-                        logger.warning("[stageA] Relax failed for %s: %s", label, exc)
-                        write(relax_output, new_structure)
+                        state.pathway_design = None
 
-                # ── Agent5-style validation: check structural quality ──
-                valid, feedback = self._validate_stageA_intermediate(
-                    new_structure, new_ads_indices, label,
-                )
-                if valid:
-                    logger.info("[stageA] Validation PASSED for %s", label)
-                    break
-                else:
-                    logger.warning(
-                        "[stageA] Validation FAILED for %s (attempt %d/%d): %s",
-                        label, stageA_attempt + 1, max_stageA_attempts, feedback,
-                    )
-                    stageA_feedback = feedback
-                    # Restore intermediates before retry
-                    state.intermediates = _saved
+                    # Create preplacement task for Agent4
+                    extra_feedback = (
+                        f"\n\n[PREVIOUS ATTEMPT FAILED]\n{stageA_feedback}\n"
+                        "Fix the issues above. Put every added atom at a covalent "
+                        "bond length from the adsorbate atom it bonds to, on the side "
+                        "facing away from the surface, so the intramolecular bond "
+                        "survives relaxation instead of the atom migrating to the slab."
+                    ) if stageA_feedback else ""
+
+                    description = TaskPrompts.preplacement_design(
+                        current_label=prev_label,
+                        target_label=label,
+                        current_adsorbate_coords=current_ads_text,
+                        target_molecule_coords=target_mol_text,
+                        surface_info=surface_info,
+                        element_delta=element_delta,
+                    ) + extra_feedback
+
+                    # Temporarily set baseline for suggest_staged_positions tool
+                    baseline_entry = {
+                        "name": f"{prev_label}_to_{label}",
+                        "reactant": prev_ep.atoms.copy(),
+                        "product": prev_ep.atoms.copy(),
+                        "reactant_adsorbate_indices": prev_ep.adsorbate_indices,
+                        "product_adsorbate_indices": prev_ep.adsorbate_indices,
+                        "reactant_formula": prev_label,
+                        "product_formula": label,
+                    }
+                    state.tool_baseline_steps = [baseline_entry]
+                    if self.tools is not None:
+                        self.tools._agent45_baseline_steps = [baseline_entry]
+
+                    # Scope intermediates to this pair
+                    state.intermediates = [prev_label, label]
                     if state.reaction_context is not None:
-                        state.reaction_context.intermediates = _saved
-            else:
-                # All attempts exhausted — accept with warning
-                logger.warning(
-                    "[stageA] All %d attempts failed validation for %s. "
-                    "Accepting last attempt with known quality issues.",
-                    max_stageA_attempts, label,
-                )
+                        state.reaction_context.intermediates = state.intermediates
 
-            # Restore intermediates after the loop
-            state.intermediates = _saved
-            if state.reaction_context is not None:
-                state.reaction_context.intermediates = _saved
+                    # Reset Agent4 dialogue for fresh context each step
+                    try:
+                        chat_agent = getattr(self.agent4, "chat_agent", None)
+                        if chat_agent is not None and hasattr(chat_agent, "reset"):
+                            chat_agent.reset()
+                    except Exception:
+                        pass
+
+                    # Call Agent4 LLM
+                    logger.info(
+                        "[stageA] Building %s from %s (delta=%s, attempt %d/%d)",
+                        label, prev_label, element_delta,
+                        stageA_attempt + 1, max_stageA_attempts,
+                    )
+                    self._persist_prompt_snapshot(
+                        state, iteration,
+                        f"preplacement_{self._species_safe_name(label)}_attempt{stageA_attempt + 1}",
+                        description,
+                    )
+
+                    def _apply_preplacement_design(output: "TaskOutput"):
+                        payload = output.json_dict or {}
+                        design_obj = output.pydantic
+                        if design_obj is None:
+                            try:
+                                design_obj = PathwayDesign(**self._coerce_pathway_design_payload(state, payload))
+                            except Exception:
+                                design_obj = None
+                        state.pathway_design = design_obj
+
+                    preplacement_task = Task(
+                        description=description,
+                        expected_output="Atom placement JSON",
+                        agent=self.agent4,
+                        output_pydantic=PathwayDesign,
+                        result_handler=_apply_preplacement_design,
+                    )
+
+                    if not deterministic_attempt:
+                        try:
+                            self._run_task(preplacement_task, use_memory=True)
+                        except Exception as exc:
+                            logger.warning("[stageA] Agent4 failed for %s (attempt %d): %s", label, stageA_attempt + 1, exc)
+                            stageA_feedback = f"Agent4 call failed: {exc}"
+                            continue
+
+                    # Apply Agent4's atom operations to prev_ep.atoms
+                    design = state.pathway_design
+                    use_fallback = deterministic_attempt
+                    if not deterministic_attempt and element_delta != "none" and not (design and design.steps):
+                        # An empty design leaves the previous intermediate untouched, so
+                        # `label` would be registered with `prev_label`'s coordinates and
+                        # the pathway step would carry two identical endpoints.
+                        logger.warning(
+                            "[stageA] Agent4 returned no atom operations for %s "
+                            "(delta=%s, attempt %d/%d)",
+                            label, element_delta,
+                            stageA_attempt + 1, max_stageA_attempts,
+                        )
+                        stageA_feedback = (
+                            f"No atom operations were returned, so the structure would "
+                            f"remain {prev_label} instead of {label}. Return one step "
+                            f"whose atoms_to_add / atoms_to_remove realise the element "
+                            f"change {element_delta}."
+                        )
+                        if stageA_attempt < max_stageA_attempts - 1:
+                            continue
+                        use_fallback = True
+
+                    new_structure = prev_ep.atoms.copy()
+                    new_ads_indices = list(prev_ep.adsorbate_indices)
+
+                    if design and design.steps:
+                        step_spec = design.steps[0]
+
+                        # Remove atoms first (highest index first)
+                        remove_indices = []
+                        for item in (step_spec.atoms_to_remove or []):
+                            idx = None
+                            if isinstance(item, dict):
+                                idx = item.get("index")
+                            elif isinstance(item, int):
+                                idx = item
+                            if idx is not None and isinstance(idx, int) and 0 <= idx < len(new_structure):
+                                if idx in set(new_ads_indices):
+                                    remove_indices.append(idx)
+                        for idx in sorted(set(remove_indices), reverse=True):
+                            del new_structure[idx]
+                            new_ads_indices = [j if j < idx else j - 1
+                                               for j in new_ads_indices if j != idx]
+
+                        # Add atoms
+                        for atom_spec in (step_spec.atoms_to_add or []):
+                            elements = self._resolve_addition_elements(atom_spec)
+                            pos = atom_spec.position
+                            if pos and len(pos) == 3 and elements:
+                                for elem in elements:
+                                    new_structure.append(Atom(elem, position=[float(pos[0]), float(pos[1]), float(pos[2])]))
+                                    new_ads_indices.append(len(new_structure) - 1)
+
+                    if use_fallback:
+                        new_ads_indices = self._stagea_add_missing_atoms(
+                            new_structure, new_ads_indices, label, target_atoms,
+                        )
+                        logger.warning(
+                            "[stageA] Deterministic fallback placement used for %s", label,
+                        )
+
+                    new_ads_indices, removed_for_formula = self._enforce_stageA_target_formula(
+                        new_structure,
+                        new_ads_indices,
+                        label,
+                    )
+                    if removed_for_formula:
+                        logger.info(
+                            "[stageA] Formula guard removed excess atoms for %s: %s",
+                            label,
+                            removed_for_formula,
+                        )
+
+                    surface_indices = [i for i in range(len(new_structure)) if i not in set(new_ads_indices)]
+                    self._set_surface_indices(new_structure, surface_indices, new_ads_indices)
+
+                    # Save and relax
+                    pre_relax_path = str(iter_dir / f"{self._species_safe_name(label)}_pre_relax.vasp")
+                    write(pre_relax_path, new_structure)
+
+                    relax_output = str(iter_dir / f"{self._species_safe_name(label)}_product.vasp")
+                    relaxed_energy = None
+                    if self.tools is not None:
+                        try:
+                            relax_fmax = float(getattr(config, "stagea_relax_fmax", 0.05))
+                            relax_steps = int(getattr(config, "stagea_relax_steps", 200))
+                            result = self.tools.relax_adsorbate_on_surface(
+                                structure_path=pre_relax_path,
+                                adsorbate_indices=new_ads_indices,
+                                output_path=relax_output,
+                                fmax=relax_fmax,
+                                max_steps=relax_steps,
+                                free_surface_indices=list(surface.top_layer_indices),
+                            )
+                            new_structure = read(relax_output)
+                            self._set_surface_indices(new_structure, surface_indices, new_ads_indices)
+                            energy_value = result.get("energy") if isinstance(result, dict) else None
+                            if energy_value is not None:
+                                relaxed_energy = float(energy_value)
+                                logger.info(
+                                    "[stageA] Relaxed %s: E=%.3f fmax=%.3f (top-2 free)",
+                                    label, relaxed_energy, result.get("fmax", 0.0),
+                                )
+                            else:
+                                logger.warning(
+                                    "[stageA] Relax result for %s has no 'energy'; energy not recorded",
+                                    label,
+                                )
+                        except Exception as exc:
+                            logger.warning("[stageA] Relax failed for %s: %s", label, exc)
+                            write(relax_output, new_structure)
+                    built = True
+
+                    # ── Agent5-style validation: check structural quality ──
+                    valid, feedback = self._validate_stageA_intermediate(
+                        new_structure, new_ads_indices, label,
+                    )
+                    if valid:
+                        logger.info("[stageA] Validation PASSED for %s", label)
+                        break
+                    else:
+                        logger.warning(
+                            "[stageA] Validation FAILED for %s (attempt %d/%d): %s",
+                            label, stageA_attempt + 1, max_stageA_attempts, feedback,
+                        )
+                        stageA_feedback = feedback
+                else:
+                    # All attempts exhausted — accept last BUILT attempt with warning
+                    if built:
+                        logger.warning(
+                            "[stageA] All %d attempts failed validation for %s. "
+                            "Accepting last attempt with known quality issues.",
+                            max_stageA_attempts, label,
+                        )
+            finally:
+                # Restore intermediates regardless of how the loop exited
+                state.intermediates = _saved
+                if state.reaction_context is not None:
+                    state.reaction_context.intermediates = _saved
+
+            if not built or new_structure is None:
+                # No attempt produced a structure (Agent4 failed every time):
+                # do NOT register a stale/unbound structure for this key.
+                logger.error(
+                    "[stageA] No structure could be built for '%s' after %d attempts; last error: %s",
+                    label, max_stageA_attempts, stageA_feedback,
+                )
+                raise RuntimeError(
+                    f"Stage A failed to build intermediate '{label}' after "
+                    f"{max_stageA_attempts} attempts: {stageA_feedback}"
+                )
 
             placed[key] = {
                 "label": label,
@@ -2664,6 +2867,130 @@ After all tools complete, output a JSON summary of the retained pathways."""
             logger.warning("[stageA] Failed to dump intermediate chain: %s", exc)
 
         return placed
+
+    def _stagea_target_bond_partners(
+        self,
+        atoms: Atoms,
+        ads: List[int],
+        label: str,
+        target_atoms: Optional[Atoms],
+        missing: "Counter",
+    ) -> Dict[str, List[int]]:
+        """Map each missing element to the adsorbate atom it bonds to in the target.
+
+        Matches the atoms already on the surface onto the reference molecule by
+        element (heaviest and most-connected first), then reads off which matched
+        atom each unmatched reference atom is bonded to. Returns {} when no
+        reference molecule is available or the match is ambiguous, in which case
+        the caller falls back to the least-coordinated heavy atom.
+        """
+        from ase.data import covalent_radii, atomic_numbers
+
+        if target_atoms is None or len(target_atoms) < 2:
+            return {}
+
+        t_syms = target_atoms.get_chemical_symbols()
+        t_pos = target_atoms.get_positions()
+        t_adj: Dict[int, set] = {i: set() for i in range(len(target_atoms))}
+        for i in range(len(target_atoms)):
+            for j in range(i + 1, len(target_atoms)):
+                cut = 1.3 * (float(covalent_radii[atomic_numbers[t_syms[i]]])
+                             + float(covalent_radii[atomic_numbers[t_syms[j]]]))
+                if float(np.linalg.norm(t_pos[i] - t_pos[j])) < cut:
+                    t_adj[i].add(j)
+                    t_adj[j].add(i)
+
+        # Greedy element-wise match: reference atoms with more bonds first, so the
+        # backbone is matched before the hydrogens hanging off it.
+        unmatched_ref = sorted(
+            range(len(target_atoms)),
+            key=lambda i: (-len(t_adj[i]), t_syms[i]),
+        )
+        available = list(ads)
+        matched: Dict[int, int] = {}
+        for ref in unmatched_ref:
+            same = [i for i in available if atoms[i].symbol == t_syms[ref]]
+            if not same:
+                continue
+            pick = max(same, key=lambda i: float(atoms.positions[i][2])) \
+                if t_syms[ref] == "H" else same[0]
+            matched[ref] = pick
+            available.remove(pick)
+
+        partners: Dict[str, List[int]] = {}
+        for ref in range(len(target_atoms)):
+            if ref in matched or t_syms[ref] not in missing:
+                continue
+            anchors = [matched[nb] for nb in sorted(t_adj[ref]) if nb in matched]
+            if anchors:
+                partners.setdefault(t_syms[ref], []).append(anchors[0])
+        return partners
+
+    def _stagea_add_missing_atoms(
+        self,
+        atoms: Atoms,
+        ads_indices: List[int],
+        label: str,
+        target_atoms: Optional[Atoms] = None,
+    ) -> List[int]:
+        """Add the atoms the target species is missing, in place.
+
+        Deterministic last resort for Stage A when Agent4 returns no usable atom
+        operations. The bonding partner comes from the target molecule's own
+        connectivity, so *CHO puts the new H on carbon while *COH puts it on
+        oxygen; without that, composition alone cannot tell the two apart. Each
+        atom is placed at a covalent bond length, pointing away from the surface
+        and from its partner's existing neighbours, which is the geometry an
+        Agent4 reply is asked to produce. Excess atoms are left to
+        `_enforce_stageA_target_formula`.
+        """
+        from ase.data import covalent_radii, atomic_numbers
+
+        tokens = self._extract_species_tokens(label)
+        ads = sorted({i for i in ads_indices if 0 <= i < len(atoms)})
+        if not tokens or not ads:
+            return ads
+
+        missing = Counter(tokens) - Counter(atoms[i].symbol for i in ads)
+        if not missing:
+            return ads
+
+        def _radius(symbol: str) -> float:
+            return float(covalent_radii[atomic_numbers[symbol]])
+
+        def _bonded(i: int, j: int) -> bool:
+            cut = 1.3 * (_radius(atoms[i].symbol) + _radius(atoms[j].symbol))
+            return float(atoms.get_distance(i, j, mic=bool(np.any(atoms.pbc)))) < cut
+
+        preferred = self._stagea_target_bond_partners(
+            atoms, ads, label, target_atoms, missing,
+        )
+
+        for element in sorted(missing.elements()):
+            partner = preferred.get(element, [])
+            partner = partner.pop(0) if partner else None
+            if partner is None:
+                heavy = [i for i in ads if atoms[i].symbol != "H"] or ads
+                partner = min(
+                    heavy,
+                    key=lambda i: (sum(1 for j in ads if j != i and _bonded(i, j)),
+                                   -float(atoms.positions[i][2])),
+                )
+            neighbours = [j for j in ads if j != partner and _bonded(partner, j)]
+            direction = np.array([0.0, 0.0, 1.0])
+            if neighbours:
+                away = atoms.positions[partner] - np.mean(
+                    [atoms.positions[j] for j in neighbours], axis=0
+                )
+                norm = float(np.linalg.norm(away))
+                if norm > 1e-6:
+                    direction = direction + away / norm
+            direction = direction / float(np.linalg.norm(direction))
+            bond = _radius(element) + _radius(atoms[partner].symbol)
+            atoms.append(Atom(element, position=atoms.positions[partner] + direction * bond))
+            ads.append(len(atoms) - 1)
+
+        return sorted(ads)
 
     def _enforce_stageA_target_formula(
         self,
@@ -2731,8 +3058,8 @@ After all tools complete, output a JSON summary of the retained pathways."""
         )
         return new_ads, removed
 
-    @staticmethod
     def _validate_stageA_intermediate(
+        self,
         atoms: Atoms,
         ads_indices: List[int],
         label: str,
@@ -2746,10 +3073,13 @@ After all tools complete, output a JSON summary of the retained pathways."""
         are "dangling" and indicate a structural problem.
 
         Checks:
-          1. At least one adsorbate atom is chemically bound to the surface
-          2. All adsorbate atoms form a single connected component (including
+          1. The adsorbate composition matches the target species label
+          2. At least one adsorbate atom is chemically bound to the surface
+          3. All adsorbate atoms form a single connected component (including
              bonds to the surface as anchors)
-          3. No same-element homonuclear diatomic molecules formed in gas
+          4. A single-species label stays one covalent fragment — the surface
+             must not be the only thing holding it together
+          5. No same-element homonuclear diatomic molecules formed in gas
              phase (e.g. H-H < 0.85 Å, O-O < 1.30 Å)
 
         Returns (ok, feedback_text).
@@ -2769,11 +3099,44 @@ After all tools complete, output a JSON summary of the retained pathways."""
         if not valid_ads or not surf_set:
             return True, ""
 
+        # Slabs are periodic in x/y: an adsorbate near a cell edge has its nearest
+        # surface neighbour across the boundary, so raw Cartesian distances report
+        # a bound species as desorbed. Every distance below is a minimum-image one.
+        try:
+            dmat = atoms.get_all_distances(mic=bool(np.any(atoms.pbc)))
+        except Exception:
+            dmat = atoms.get_all_distances()
+
+        def _dist(a, b):
+            return float(dmat[a][b])
+
         def _cov_cut(a, b):
             return 1.3 * (covalent_radii[atomic_numbers[syms[a]]] +
                           covalent_radii[atomic_numbers[syms[b]]])
 
         issues = []
+
+        # 0. Composition: the built adsorbate must be the species the label names.
+        #    An Agent4 reply that edits nothing silently reproduces the previous
+        #    intermediate, which then travels down the pathway as a duplicate
+        #    endpoint (zero barrier, zero reaction energy).
+        target_tokens = self._extract_species_tokens(label)
+        if target_tokens:
+            want = Counter(target_tokens)
+            have = Counter(syms[i] for i in valid_ads)
+            if want != have:
+                missing = ", ".join(
+                    f"{n}x{el}" for el, n in sorted((want - have).items())
+                ) or "none"
+                excess = ", ".join(
+                    f"{n}x{el}" for el, n in sorted((have - want).items())
+                ) or "none"
+                issues.append(
+                    f"Adsorbate composition does not match the target species "
+                    f"'{label}': missing {missing}, excess {excess}. Provide the "
+                    f"atoms_to_add / atoms_to_remove operations that turn the "
+                    f"previous intermediate into {label}."
+                )
 
         # Build bond graph among adsorbate atoms
         ads_local = {gi: li for li, gi in enumerate(valid_ads)}
@@ -2781,7 +3144,7 @@ After all tools complete, output a JSON summary of the retained pathways."""
         for li in range(len(valid_ads)):
             for lj in range(li + 1, len(valid_ads)):
                 gi, gj = valid_ads[li], valid_ads[lj]
-                d = float(np.linalg.norm(pos[gi] - pos[gj]))
+                d = _dist(gi, gj)
                 if d < _cov_cut(gi, gj):
                     adj[li].add(lj)
                     adj[lj].add(li)
@@ -2790,7 +3153,7 @@ After all tools complete, output a JSON summary of the retained pathways."""
         surface_anchors: set = set()  # local indices of ads atoms bound to surface
         for li, gi in enumerate(valid_ads):
             for si in surf_set:
-                d = float(np.linalg.norm(pos[gi] - pos[si]))
+                d = _dist(gi, si)
                 if d < _cov_cut(gi, si):
                     surface_anchors.add(li)
                     break
@@ -2824,6 +3187,37 @@ After all tools complete, output a JSON summary of the retained pathways."""
                 f"in vacuum and need to be repositioned."
             )
 
+        # 2b. Fragment check: a label that names one species (no "+" between
+        #     co-adsorbates) must relax to ONE covalent fragment. The BFS above
+        #     walks through surface anchors, so *CO + *H sitting apart on the
+        #     slab would pass it while the C-H bond that defines *CHO is absent.
+        if "+" not in str(label) and len(valid_ads) > 1:
+            fragments: List[List[int]] = []
+            unseen = set(range(len(valid_ads)))
+            while unseen:
+                seed = unseen.pop()
+                comp = {seed}
+                stack = [seed]
+                while stack:
+                    x = stack.pop()
+                    for y in adj[x] - comp:
+                        comp.add(y)
+                        unseen.discard(y)
+                        stack.append(y)
+                fragments.append(sorted(comp))
+            if len(fragments) > 1:
+                frag_desc = " | ".join(
+                    "".join(f"{syms[valid_ads[li]]}[{valid_ads[li]}]" for li in frag)
+                    for frag in fragments
+                )
+                issues.append(
+                    f"'{label}' is a single species but the relaxed adsorbate broke "
+                    f"into {len(fragments)} separate fragments held together only by "
+                    f"the surface: {frag_desc}. Place the added atom at a covalent "
+                    f"bond length from its bonding partner and pointing away from the "
+                    f"surface, so the intramolecular bond survives relaxation."
+                )
+
         # 3. Gas-phase homonuclear diatomic detection (H₂, O₂, N₂, etc.)
         #    Check if any pair of same-element ads atoms are at their
         #    gas-phase diatomic bond length (much shorter than typical
@@ -2839,7 +3233,7 @@ After all tools complete, output a JSON summary of the retained pathways."""
             elem_ads = [i for i in valid_ads if syms[i] == elem]
             for ii in range(len(elem_ads)):
                 for jj in range(ii + 1, len(elem_ads)):
-                    d = float(np.linalg.norm(pos[elem_ads[ii]] - pos[elem_ads[jj]]))
+                    d = _dist(elem_ads[ii], elem_ads[jj])
                     if d < cutoff:
                         issues.append(
                             f"Gas-phase {elem}₂ detected: {elem}[{elem_ads[ii]}]-"
@@ -3118,13 +3512,13 @@ After all tools complete, output a JSON summary of the retained pathways."""
         _done_2 = surface is not None and surface.agent2 is not None
         _done_3b = surface is not None and surface.agent3 is not None and surface.agent3.agent3b is not None
 
-        # Restore state from surface
+        # Restore state from surface (explicit whitelist — never blanket-copy
+        # every attribute, which would also clobber run-identity/config fields)
         if surface is not None and surface.state is not None:
-            for attr in vars(surface.state):
-                if not attr.startswith("_"):
-                    val = getattr(surface.state, attr, None)
-                    if val is not None:
-                        setattr(state, attr, val)
+            for attr in _RESUMABLE_STATE_FIELDS:
+                val = getattr(surface.state, attr, None)
+                if val is not None:
+                    setattr(state, attr, val)
 
         if not _done_3a:
             slab_atoms = read(surface_path)
@@ -3218,38 +3612,49 @@ After all tools complete, output a JSON summary of the retained pathways."""
                 "surfaces have no adsorbates to sample)",
                 facet_id,
             )
-            from core.pathway.fairchem_predictor import FairchemPredictor
-            fairchem_root_path = str(Path(state.output_base_dir).parent.parent / "deps/fairchem")
-            if not Path(fairchem_root_path).exists():
-                fairchem_root_path = str(_project_root / "deps/fairchem")
-            uma_model_path = str(_project_root / "deps/fairchem_models/uma-s-1p1.pt")
-
             relax_dir = surface.agent_dir(
                 "agent3", subdir=f"{step_prefix.rstrip('/') or 'default'}_03a_clean_relax" if step_prefix else "03a_clean_relax",
             )
-            fairchem_relax = FairchemPredictor(
-                fairchem_root=fairchem_root_path,
-                model_name="uma-s-1p1",
-                model_path=uma_model_path,
-                use_gpu=True,
-                work_dir=str(relax_dir / "uma_relax"),
-            )
+            # Reuse the process-wide shared UMA predictor instead of loading a
+            # third resident copy of the model onto the GPU.
+            fairchem_relax = self.tools.get_shared_uma_predictor()
             clean_slab_atoms = read(surface.surface_path)
             t_relax = time.time()
             relax_result = fairchem_relax.predict_energy(
                 clean_slab_atoms, relax=True, fmax=0.05, max_steps=200,
             )
+            # predict_energy relaxes a COPY internally; prefer the relaxed
+            # structure when the predictor exposes it (dict or attribute).
+            relaxed_atoms = (
+                relax_result.get("relaxed_atoms")
+                if isinstance(relax_result, dict)
+                else getattr(relax_result, "relaxed_atoms", None)
+            )
+            if relaxed_atoms is not None:
+                clean_slab_atoms = relaxed_atoms
+            else:
+                logger.warning(
+                    "[%s] Step 3a: FairchemPredictor did not expose relaxed_atoms; "
+                    "the slab written to relaxed_clean_slab.vasp is UNRELAXED.",
+                    facet_id,
+                )
             relaxed_path = str(relax_dir / "relaxed_clean_slab.vasp")
             write(relaxed_path, clean_slab_atoms)
             surface.surface_path = relaxed_path
             surface.clean_slab_path = relaxed_path
             self._update_indices(state, clean_slab_atoms, list(range(len(clean_slab_atoms))), [])
+            if isinstance(relax_result, dict):
+                _relax_energy = float(relax_result.get("energy", 0.0) or 0.0)
+                _relax_converged = relax_result.get("converged", True)
+            else:
+                _relax_energy = float(getattr(relax_result, "energy", 0.0) or 0.0)
+                _relax_converged = getattr(relax_result, "converged", True)
             logger.info(
                 "[%s] Step 3a complete: UMA-relaxed clean slab %s (%d atoms, "
                 "E=%.3f eV, converged=%s, %.1fs)",
                 facet_id, clean_slab_atoms.get_chemical_formula(),
-                len(clean_slab_atoms), float(relax_result.energy),
-                getattr(relax_result, "converged", True),
+                len(clean_slab_atoms), _relax_energy,
+                _relax_converged,
                 time.time() - t_relax,
             )
             self._write_agent3a_to_surface(state)
@@ -3299,6 +3704,7 @@ After all tools complete, output a JSON summary of the retained pathways."""
                 surface_indices=agent3b_surface_indices,
                 adsorbate_indices=surface.adsorbate_indices,
                 num_adsorbates_override=getattr(config, "mc_num_adsorbates_override", None),
+                adsorbate_counts=getattr(config, "mc_adsorbate_counts", None),
                 chem_pots=getattr(config, "mc_chem_pots", None),
                 use_seed_for_virtual_sites=getattr(config, "mc_use_seed_for_virtual_sites", False),
                 adsorbate_exclusion_radius_A=getattr(
@@ -3306,6 +3712,9 @@ After all tools complete, output a JSON summary of the retained pathways."""
                 ),
                 existing_atom_exclusion_radius_A=getattr(
                     config, "mc_existing_atom_exclusion_radius_A", None
+                ),
+                min_virtual_site_distance_A=getattr(
+                    config, "mc_min_virtual_site_distance_A", None
                 ),
             )
             if not Path(mc_result_pkl).exists():
@@ -3387,17 +3796,19 @@ After all tools complete, output a JSON summary of the retained pathways."""
             state.neb_results = retry_results
 
         # ---- Build NEB summary ----
+        # Same normalization as _collect_neb_quality_metrics: dict-valued
+        # results with real converged/barrier keys are valid, not errors.
+        _relax_failed_steps = {
+            str(step.get("name", "")): bool(step.get("endpoint_relax_failed"))
+            for step in state.step_structures
+            if isinstance(step, dict)
+        }
         neb_summary: Dict[str, Any] = {}
         for step_name, neb_value in state.neb_results.items():
-            if isinstance(neb_value, dict):
-                neb_summary[step_name] = {"error": neb_value.get("error", str(neb_value))}
-            else:
-                neb_summary[step_name] = {
-                    "activation_energy_forward": getattr(neb_value, "activation_energy_forward", None),
-                    "activation_energy_reverse": getattr(neb_value, "activation_energy_reverse", None),
-                    "reaction_energy": getattr(neb_value, "reaction_energy", None),
-                    "converged": getattr(neb_value, "converged", None),
-                }
+            entry = self._normalize_neb_result_entry(neb_value)
+            if _relax_failed_steps.get(step_name):
+                entry["endpoint_relax_failed"] = True
+            neb_summary[step_name] = entry
         if config.calculate_barriers:
             neb_dir = surface.agent_dir(
                 "agent6", subdir=f"{step_prefix.rstrip('/')}" if step_prefix else None,
@@ -3569,6 +3980,7 @@ After all tools complete, output a JSON summary of the retained pathways."""
         agent3_mc_temperature: float,
     ) -> None:
         """Run the per-facet pipeline for each top-N Wulff surface and aggregate."""
+        self._facet_episode_rewards: Dict[str, float] = {}
         for facet_id, surface_path in state.all_surface_paths.items():
             miller_index = state.all_miller_indices.get(facet_id)
             area_fraction = state.all_area_fractions.get(facet_id, 0.0)
@@ -3609,6 +4021,10 @@ After all tools complete, output a JSON summary of the retained pathways."""
                     production_rates=result.get("production_rates", {}),
                     neb_summary=result.get("neb_summary", {}),
                 ))
+                # Each facet ran on a deepcopy of `state`; capture the episode
+                # reward from the facet's own (mutated) state so the policy
+                # update isn't computed on the untouched parent state.
+                self._facet_episode_rewards[facet_id] = self._compute_episode_reward(facet_state)
             except Exception as exc:
                 logger.error("Facet %s failed: %s", facet_id, exc, exc_info=True)
                 state.facet_results.append(FacetResult(
@@ -3973,7 +4389,18 @@ After all tools complete, output a JSON summary of the retained pathways."""
         )
         results["final_report_path"] = final_report
 
-        reward = self._compute_episode_reward(state)
+        # Episode reward: in multi-facet mode each facet ran on a deepcopy of
+        # `state`, so scoring the parent state would always yield 0. Use the
+        # best facet's reward (the same facet whose pathway feeds the final
+        # report), falling back to the best reward across facets.
+        if config.multi_facet and len(state.all_surface_paths) > 1:
+            facet_rewards = getattr(self, "_facet_episode_rewards", {}) or {}
+            if best_facet is not None and best_facet.facet_id in facet_rewards:
+                reward = facet_rewards[best_facet.facet_id]
+            else:
+                reward = max(facet_rewards.values(), default=0.0)
+        else:
+            reward = self._compute_episode_reward(state)
         if self.evolvable_policy is not None:
             self.evolvable_policy.update(strategy=self.current_strategy, reward=reward)
 

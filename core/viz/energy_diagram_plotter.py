@@ -6,10 +6,14 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..', 'deps', '
 Energy Diagram Plotter - High-quality free energy diagram visualization
 """
 
+import copy
+import logging
 import numpy as np
 from typing import List, Dict, Optional, Union, Tuple
 from dataclasses import dataclass, field
 import re
+
+logger = logging.getLogger(__name__)
 
 plt = None
 rcParams = None
@@ -205,6 +209,7 @@ def parse_energy_input(
     # Case 3: List of floats
     if all(isinstance(e, (int, float)) for e in energies):
         steps = []
+        heuristic_ts_indices = []
         for i, energy in enumerate(energies):
             # Auto-detect labels
             if labels and i < len(labels):
@@ -221,8 +226,17 @@ def parse_energy_input(
                 if i > 0 and i < len(energies) - 1:
                     if energy > energies[i-1] and energy > energies[i+1]:
                         is_ts = True
+                        heuristic_ts_indices.append(i)
 
             steps.append(EnergyStep(label=label, energy=energy, is_ts=is_ts))
+
+        if heuristic_ts_indices:
+            logger.warning(
+                "is_ts_list not provided: auto-TS heuristic marked every local "
+                "energy maximum as a transition state (indices %s). Pass "
+                "is_ts_list explicitly if these states are not actual TSs.",
+                heuristic_ts_indices,
+            )
 
         return steps
 
@@ -318,7 +332,9 @@ class EnergyDiagramPlotter:
 
         Args:
             style: DiagramStyle object with custom styling
-            apply_matplotlib_style: Whether to override global matplotlib rcParams
+            apply_matplotlib_style: Whether to apply the publication rc style
+                (scoped via plt.rc_context inside plot()/save(), never mutating
+                global rcParams)
         """
         self.style = style or DiagramStyle()
         self.fig = None
@@ -329,9 +345,8 @@ class EnergyDiagramPlotter:
         # Apply color scheme
         self._apply_color_scheme()
 
-        # Set matplotlib style
-        if self.apply_matplotlib_style:
-            self._set_matplotlib_style()
+        # Matplotlib style is applied via plt.rc_context inside plot()/save()
+        self._rc_style = self._build_matplotlib_style() if apply_matplotlib_style else {}
 
     def _apply_color_scheme(self):
         """Apply predefined color scheme to style."""
@@ -341,24 +356,29 @@ class EnergyDiagramPlotter:
             self.style.ts_color = scheme['ts']
             self.style.background_color = scheme['background']
 
-    def _set_matplotlib_style(self):
-        """Set matplotlib rcParams for publication quality."""
-        _, rc_params = _ensure_matplotlib()
-        rc_params['font.family'] = 'sans-serif'
-        rc_params['font.sans-serif'] = ['Arial', 'Helvetica', 'DejaVu Sans']
-        rc_params['font.size'] = 11
-        rc_params['axes.labelsize'] = 12
-        rc_params['axes.titlesize'] = 14
-        rc_params['xtick.labelsize'] = 10
-        rc_params['ytick.labelsize'] = 10
-        rc_params['legend.fontsize'] = 10
-        rc_params['figure.dpi'] = 100
-        rc_params['savefig.dpi'] = self.style.dpi
-        rc_params['savefig.bbox'] = 'tight'
-        rc_params['axes.linewidth'] = 1.2
-        rc_params['axes.edgecolor'] = '#333333'
-        rc_params['axes.labelcolor'] = '#333333'
-        rc_params['text.usetex'] = False  # Can be set to True if LaTeX is available
+    def _build_matplotlib_style(self) -> Dict:
+        """Matplotlib rc settings for publication quality.
+
+        Returned as a dict for plt.rc_context so global rcParams are
+        never mutated.
+        """
+        return {
+            'font.family': 'sans-serif',
+            'font.sans-serif': ['Arial', 'Helvetica', 'DejaVu Sans'],
+            'font.size': 11,
+            'axes.labelsize': 12,
+            'axes.titlesize': 14,
+            'xtick.labelsize': 10,
+            'ytick.labelsize': 10,
+            'legend.fontsize': 10,
+            'figure.dpi': 100,
+            'savefig.dpi': self.style.dpi,
+            'savefig.bbox': 'tight',
+            'axes.linewidth': 1.2,
+            'axes.edgecolor': '#333333',
+            'axes.labelcolor': '#333333',
+            'text.usetex': False,  # Can be set to True if LaTeX is available
+        }
 
     def plot(
         self,
@@ -380,37 +400,40 @@ class EnergyDiagramPlotter:
             show: Whether to display the plot immediately
             ax: Optional matplotlib axis to draw into
         """
-        # Parse input
-        self.steps = parse_energy_input(energies, labels, is_ts_list)
+        # Parse input; deep-copy so caller-owned EnergyStep objects are not
+        # mutated by the reference-energy shift below (re-plotting the same
+        # steps would otherwise compound the shift).
+        self.steps = copy.deepcopy(parse_energy_input(energies, labels, is_ts_list))
 
         # Set reference energy to zero
         ref_energy = self.steps[reference_index].energy
         for step in self.steps:
             step.energy -= ref_energy
 
-        # Create figure
+        # Create figure (rc style scoped to this block, not global)
         plt_mod, _ = _ensure_matplotlib()
-        if ax is None:
-            self.fig, self.ax = plt.subplots(
-                figsize=self.style.figsize,
-                facecolor=self.style.background_color
-            )
-        else:
-            self.ax = ax
-            self.fig = ax.figure
-        self.ax.set_facecolor(self.style.background_color)
+        with plt_mod.rc_context(self._rc_style):
+            if ax is None:
+                self.fig, self.ax = plt_mod.subplots(
+                    figsize=self.style.figsize,
+                    facecolor=self.style.background_color
+                )
+            else:
+                self.ax = ax
+                self.fig = ax.figure
+            self.ax.set_facecolor(self.style.background_color)
 
-        # Plot energy profile
-        self._plot_energy_profile()
+            # Plot energy profile
+            self._plot_energy_profile()
 
-        # Format axes
-        self._format_axes()
+            # Format axes
+            self._format_axes()
 
-        # Add labels
-        self._add_labels()
+            # Add labels
+            self._add_labels()
 
-        if show:
-            plt_mod.show()
+            if show:
+                plt_mod.show()
 
     def _plot_energy_profile(self):
         """Plot the main energy profile with barriers using catplot's approach."""
@@ -446,6 +469,23 @@ class EnergyDiagramPlotter:
                     zorder=2
                 )
                 x_offset += self.style.platform_length
+
+                # Draw barrierless connection from first state to the next state
+                # (mirrors the trailing-state handling later on)
+                if len(self.steps) > 1:
+                    next_step = self.steps[1]
+                    gap = 0.3
+                    x_next_start = x_offset + gap
+                    self.ax.plot(
+                        [x_offset, x_next_start],
+                        [first_step.energy, next_step.energy],
+                        color=barrierless_color,
+                        linestyle=barrierless_style,
+                        linewidth=self.style.line_width * 0.8,
+                        zorder=1,
+                    )
+                    x_offset = x_next_start
+
                 i = 1
 
         # Process all barriers
@@ -699,6 +739,63 @@ class EnergyDiagramPlotter:
                     color='black'
                 )
 
+    def annotate_barrier(
+        self,
+        is_idx: int,
+        ts_idx: int,
+        label: Optional[str] = None,
+        color: Optional[str] = None,
+        text_offset: float = 0.02,
+        arrow_lw: float = 1.1,
+    ):
+        """
+        Annotate a barrier between an initial state and a transition state
+        with an arrow and a text label (e.g. "E_a = 0.40 eV").
+
+        Args:
+            is_idx: Index of the initial state in the steps list.
+            ts_idx: Index of the transition state.
+            label: Text to render above the midpoint of the arrow. If None,
+                the barrier value (E_TS - E_IS) is rendered automatically.
+            color: Arrow and text colour (defaults to style.ts_color).
+            text_offset: Vertical offset of the label above the arrow
+                midpoint, in data units.
+            arrow_lw: Arrow line width.
+        """
+        if self.ax is None or self.steps is None:
+            raise ValueError("Call plot() before annotating barriers.")
+        if getattr(self, "x_positions", None) is None:
+            raise ValueError("Plot has no stored step positions.")
+
+        x_is = self.x_positions[is_idx]
+        x_ts = self.x_positions[ts_idx]
+        y_is = self.steps[is_idx].energy
+        y_ts = self.steps[ts_idx].energy
+        if x_is is None or x_ts is None:
+            raise ValueError(
+                f"Position not available for step indices {is_idx}/{ts_idx}."
+            )
+
+        c = color if color is not None else self.style.ts_color
+        if label is None:
+            label = f"$E_a$ = {y_ts - y_is:.2f} eV"
+
+        self.ax.annotate(
+            "",
+            xy=(x_ts, y_ts),
+            xytext=(x_is, y_is),
+            arrowprops=dict(arrowstyle="->", color=c, lw=arrow_lw),
+        )
+        self.ax.text(
+            (x_is + x_ts) / 2,
+            (y_is + y_ts) / 2 + text_offset,
+            label,
+            color=c,
+            ha="center",
+            va="bottom",
+            fontsize=self.style.label_fontsize,
+        )
+
     def save(self, filename: str, dpi: Optional[int] = None, **kwargs):
         """
         Save figure to file.
@@ -711,9 +808,21 @@ class EnergyDiagramPlotter:
         if self.fig is None:
             raise ValueError("No figure to save. Call plot() first.")
 
+        plt_mod, _ = _ensure_matplotlib()
         save_dpi = dpi or self.style.dpi
-        self.fig.savefig(filename, dpi=save_dpi, bbox_inches='tight', **kwargs)
+        with plt_mod.rc_context(self._rc_style):
+            self.fig.savefig(filename, dpi=save_dpi, bbox_inches='tight', **kwargs)
         print(f"Saved energy diagram to: {filename}")
+        # Release the figure so repeated plot/save cycles do not leak memory
+        plt_mod.close(self.fig)
+
+    def close(self):
+        """Close the current figure and release matplotlib resources."""
+        if self.fig is not None:
+            plt_mod, _ = _ensure_matplotlib()
+            plt_mod.close(self.fig)
+            self.fig = None
+            self.ax = None
 
     def export_data(self, filename: str):
         """

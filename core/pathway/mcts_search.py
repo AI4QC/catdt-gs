@@ -6,9 +6,16 @@ branches that look bad early but may lead to lower-energy states later
 ("hard up front, easy after"). Intermediate energies are looked up
 through a shared ``EnergyCache`` so the same species is never re-evaluated.
 
-Reward convention: ``-max_bottleneck_energy`` along the path from root to
-the node (higher reward = lower barrier). Unknown / gas-phase energies
-contribute 0 to the bottleneck (consistent with upstream ranking).
+Reward convention (eV scale, shared with the rest of UniMech): all node
+energies are corrected adsorption free energies ΔG_ads (see
+``core.pathway.free_energy_router``), so rewards are O(1 eV) and the UCB1
+exploration constant ``c_uct`` is meaningful. The reward of a simulation
+is ``-max(ΔG_step)`` along the realised path when ``step_dg_fn`` is given
+(stoichiometry-corrected step free energies — the preferred mode),
+otherwise ``-max(ΔG_ads)`` over the path's evaluable nodes. Lower energy
+= better = higher reward. Species that cannot be evaluated (None) simply
+do not contribute to the bottleneck — they are unevaluable, never scored
+as 0 from some other scale.
 """
 
 from __future__ import annotations
@@ -123,6 +130,10 @@ class MCTSNode:
         return self.total_reward / self.visits if self.visits else 0.0
 
     def ucb1(self, c: float) -> float:
+        # Sign convention: rewards are -max(ΔG) in eV, so LOWER energy
+        # paths have HIGHER avg_reward, and selection maximises UCB1.
+        # With eV-scale rewards (ΔG_ads convention) the default c=1.4
+        # exploration term is commensurate with the exploitation term.
         if self.visits == 0:
             return float("inf")
         parent_n = self.parent.visits if self.parent else 1
@@ -175,10 +186,15 @@ class MCTSSearchEngine:
         # formula-merge loop over the full registry.
         self._crn_graph: Optional[Dict[str, List[Dict[str, Any]]]] = crn_graph
         self.energy_cache = energy_cache or EnergyCache()
-        self.energy_fn = energy_fn  # (label) -> Optional[float]; None => skip eval
+        # (label) -> Optional[float]; must return the corrected adsorption
+        # free energy ΔG_ads (shared eV-scale convention) or None when the
+        # species is unevaluable. The energy_fn owns the convention for
+        # gas-phase / composite labels too (e.g. ΔG_ads(X(g)) = 0 by
+        # definition, composite = sum of components).
+        self.energy_fn = energy_fn
         # When provided, reward is computed as -max(ΔG_step) along the path
-        # (stoichiometry-corrected). Without it, reward falls back to the
-        # legacy -max(absolute_G) bottleneck.
+        # (stoichiometry-corrected — preferred). Without it, reward falls
+        # back to -max(ΔG_ads) over the path's evaluable nodes.
         self.step_dg_fn = step_dg_fn
         self.c_uct = c_uct
         self.rollout_depth = rollout_depth
@@ -431,11 +447,13 @@ class MCTSSearchEngine:
             r["elements"] for r in rollout_chain
         ]
         # Prefer ΔG_step bottleneck (stoichiometry-corrected, size-fair).
-        # Fall back to absolute-G bottleneck when step_dg_fn unavailable.
+        # Fall back to the ΔG_ads bottleneck (same eV-scale convention)
+        # when step_dg_fn is unavailable. Either way the reward is on the
+        # eV scale — never an absolute UMA total.
         if self.step_dg_fn is not None:
             bottleneck = self._bottleneck_step_dG(all_labels, all_elements)
         else:
-            bottleneck = self._bottleneck_energy(all_labels)
+            bottleneck = self._bottleneck_dG_ads(all_labels)
 
         # Stitch and record the pathway for the rollout-successes listing.
         if reached_target:
@@ -458,10 +476,13 @@ class MCTSSearchEngine:
                 })
             self._rollout_successes.append(stitched)
 
-        # Reward: negative of the worst-state energy on the full path. For
-        # the rare rollouts that did not reach target we fall back to a
-        # distance-to-target penalty so UCB1 still prefers branches whose
-        # trajectories end close to the goal.
+        # Reward: negative of the worst step ΔG (or worst ΔG_ads) on the
+        # full path — lower energy = higher reward. When NOTHING on the
+        # path was evaluable (bottleneck = -inf) the path is unevaluable:
+        # it carries no energetic signal and only the distance-to-target
+        # penalty below differentiates it. For the rare rollouts that did
+        # not reach target the penalty also steers UCB1 toward branches
+        # whose trajectories end close to the goal.
         energy_reward = -bottleneck if bottleneck != float("-inf") else 0.0
         if not reached_target and self._target_elements and self.distance_penalty_eV > 0.0:
             end_distance = self._element_distance(cur_elements, self._target_elements)
@@ -492,10 +513,11 @@ class MCTSSearchEngine:
         node.untried_candidates = filtered
 
     def _lookup_energy(self, label: str) -> Optional[float]:
-        if "(g)" in label or "+" in label:
-            # Follow upstream convention: gas-phase / composite → None
-            self.energy_cache.put(label, None)
-            return None
+        """Cache-first ΔG_ads lookup. The convention for ALL labels —
+        including gas-phase '(g)' and composite '+' ones — is owned by
+        ``energy_fn`` (see ``__init__``); this method never special-cases
+        them, so it cannot poison a shared cache with placeholder values.
+        """
         hit, val = self.energy_cache.get(label)
         if hit:
             return val
@@ -507,7 +529,13 @@ class MCTSSearchEngine:
         self._eval_count += 1
         return val
 
-    def _bottleneck_energy(self, labels: List[str]) -> float:
+    def _bottleneck_dG_ads(self, labels: List[str]) -> float:
+        """Largest ΔG_ads along the path (eV scale, shared convention).
+
+        Fallback reward basis when ``step_dg_fn`` is unavailable: the
+        highest corrected adsorption free energy the path passes through.
+        Unevaluable species (None) do not contribute. Returns -inf when no
+        node on the path is evaluable (path unevaluable)."""
         worst = float("-inf")
         for lab in labels:
             e = self._lookup_energy(lab)
@@ -629,9 +657,10 @@ class MCTSSearchEngine:
           (b) Rollout simulations that reached the target (captured during
               ``_simulate`` into ``self._rollout_successes``).
 
-        Deduplicated by label sequence. Ranked by path length (shorter =
-        simpler mechanism preferred); ties broken by tree-node avg_reward
-        when available.
+        Deduplicated by label sequence. Ranked PRIMARILY by the energetic
+        objective — highest reward, i.e. lowest pathway max-ΔG (rewards
+        are -max(ΔG_step) / -max(ΔG_ads) in eV) — with path length only
+        as a tiebreaker (shorter = simpler mechanism preferred).
         """
         candidates: List[Tuple[int, float, List[Dict[str, Any]]]] = []
 
@@ -667,8 +696,9 @@ class MCTSSearchEngine:
             seen.add(sig)
             unique.append((length, reward, chain))
 
-        # Prefer shorter paths; tie-break by higher reward.
-        unique.sort(key=lambda x: (x[0], -x[1]))
+        # Rank by energetic objective first (higher reward = lower pathway
+        # max-ΔG); path length is only a tiebreaker.
+        unique.sort(key=lambda x: (-x[1], x[0]))
         return [chain for _, _, chain in unique[:top_k]]
 
 

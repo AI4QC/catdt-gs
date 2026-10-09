@@ -22,9 +22,6 @@ from ase import Atoms
 from ase.io import read, write, Trajectory
 
 # Import viz modules
-import sys
-sys.path.insert(0, os.path.join(os.path.dirname(__file__)))
-
 from core.viz.catalyst_surface_visualizer import CatalystSurfaceVisualizer
 from core.viz.energy_diagram_plotter import EnergyDiagramPlotter, DiagramStyle, EnergyStep
 
@@ -788,6 +785,10 @@ class CatalysisVisualizationManager:
         """
         从.traj文件读取并可视化NEB轨迹（提取收敛路径）
 
+        ASE NEB 轨迹每个优化步写入整个 band（n_images 帧），因此收敛路径
+        是最后一个完整 band，即最后 n_images 帧。n_images 必须等于 NEB
+        band 的图像数，否则切片会混合两个优化迭代的帧。
+
         Parameters
         ----------
         traj_file : str
@@ -795,7 +796,8 @@ class CatalysisVisualizationManager:
         reaction_name : str, optional
             反应名称（从文件名推断）
         n_images : int
-            提取最后n帧作为收敛路径
+            NEB band 的图像数（每个优化步写入的帧数）；
+            提取最后 n_images 帧作为收敛路径
         output_filename : str, optional
             输出文件名
         fps : int
@@ -817,8 +819,21 @@ class CatalysisVisualizationManager:
 
             logger.info(f"  Total frames in trajectory: {total_frames}")
 
-            # 提取收敛路径（最后n帧）
+            # 提取收敛路径（最后一个完整 band = 最后 n_images 帧）
             if total_frames >= n_images:
+                if total_frames % n_images != 0:
+                    logger.warning(
+                        f"  Trajectory length {total_frames} is not divisible by "
+                        f"n_images={n_images}; n_images probably does not match "
+                        f"the NEB band size, so the last {n_images} frames may mix "
+                        f"two optimization iterations. Falling back to slicing the "
+                        f"last {n_images} frames anyway."
+                    )
+                else:
+                    logger.info(
+                        f"  Trajectory contains {total_frames // n_images} bands "
+                        f"of {n_images} images"
+                    )
                 converged_path = full_trajectory[-n_images:]
                 logger.info(f"  Extracting last {n_images} frames as converged path")
             else:

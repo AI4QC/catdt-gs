@@ -7,8 +7,9 @@ siblings, and extracts complete pathways from root to goal.
 from __future__ import annotations
 
 import logging
+from collections import deque
 from dataclasses import dataclass, field
-from typing import Any, Dict, List, Optional, Set, Tuple
+from typing import Any, Dict, List, Optional, Set
 
 from core.pathway.candidate_generators import (
     CandidateGeneratorRouter,
@@ -85,7 +86,7 @@ class MechanismSearchEngine:
         )
         self._nodes[state_id] = root
         self._frontier = [state_id]
-        self._visited_labels.add(self._strip_phase(species_label))
+        self._visited_labels.add(self._visited_key(species_label))
         return state_id
 
     def expand_node(self, node_id: str) -> List[str]:
@@ -107,8 +108,19 @@ class MechanismSearchEngine:
                 product_elements = parse_species_elements(product_label)
 
             child_id = self._make_state_id(product_label, depth=node.depth + 1)
-            # Skip duplicates (by state_id AND by normalized label across depths)
-            normalized = self._strip_phase(product_label)
+            # Skip duplicates (by state_id AND by normalized label across
+            # depths). The visited key PRESERVES phase markers: '*CH4'
+            # (adsorbed) and 'CH4(g)' (desorbed) are distinct states, so
+            # visiting one must not block creating the other.
+            #
+            # Known limitation (first-parent-wins): a species reached via
+            # one parent is never re-created for a different parent, even
+            # if the alternative partial path is lower in free energy —
+            # energies are only evaluated after expansion, so a safe
+            # energy-based revisit rule is not available at this point.
+            # Alternative routes to the same intermediate are therefore
+            # represented only by the first one discovered.
+            normalized = self._visited_key(product_label)
             if child_id in self._nodes or normalized in self._visited_labels:
                 continue
             self._visited_labels.add(normalized)
@@ -132,17 +144,31 @@ class MechanismSearchEngine:
         backend: Optional[str] = None,
         fixed_site: Optional[list] = None,
     ) -> int:
-        """Evaluate free energies for all frontier nodes."""
+        """Evaluate corrected adsorption free energies (ΔG_ads) for all
+        frontier nodes.
+
+        ``free_energy_eV`` is either ΔG_ads on the shared convention (see
+        ``core.pathway.free_energy_router`` module docstring) or None when
+        the state cannot be evaluated. None means INCOMPARABLE — pruning
+        keeps such nodes and never ranks them against numeric values. No
+        0.0 placeholders are ever stored.
+        """
         count = 0
         for nid in self._frontier:
             node = self._nodes.get(nid)
             if node is None or node.free_energy_eV is not None:
                 continue
 
-            # Skip gas-phase and composite labels (UMA can't handle them)
+            # Gas-phase and composite labels cannot be evaluated by the
+            # single-adsorbate UMA path here: leave free_energy_eV=None
+            # (incomparable; kept by pruning), never a fabricated value.
             label = node.species_label
             if "(g)" in label or "+" in label:
-                node.free_energy_eV = 0.0  # placeholder for gas/composite
+                logger.debug(
+                    "evaluate_frontier: %s is gas/composite — "
+                    "ΔG_ads unavailable at this layer, kept as incomparable.",
+                    label,
+                )
                 continue
 
             extra_kwargs: Dict[str, Any] = {}
@@ -388,13 +414,14 @@ class MechanismSearchEngine:
         if not self._frontier:
             return graph
         root_node = self._nodes[self._frontier[0]]
-        expand_queue: List[Tuple[str, Dict[str, int], int]] = [
+        expand_queue: deque = deque([
             (root_node.species_label, root_node.elements, 0),
-        ]
-        visited: Set[str] = {self._strip_phase(root_node.species_label)}
+        ])
+        # Phase-preserving visited key: '*X' and 'X(g)' are distinct states.
+        visited: Set[str] = {self._visited_key(root_node.species_label)}
 
         while expand_queue:
-            label, elements, depth = expand_queue.pop(0)
+            label, elements, depth = expand_queue.popleft()
             if depth >= max_depth:
                 continue
             children = self.generator.generate_candidates(
@@ -408,7 +435,7 @@ class MechanismSearchEngine:
                     prod_elem = parse_species_elements(prod)
                 adj.append({"label": prod, "elements": prod_elem, "step": c})
 
-                norm = self._strip_phase(prod)
+                norm = self._visited_key(prod)
                 if norm not in visited:
                     if len(visited) >= max_graph_nodes:
                         continue
@@ -488,9 +515,9 @@ class MechanismSearchEngine:
 
         # Reverse BFS from target(s)
         backward_reachable: Set[str] = set(target_species)
-        queue = list(target_species)
+        queue: deque = deque(target_species)
         while queue:
-            node = queue.pop(0)
+            node = queue.popleft()
             for pred in reverse.get(node, ()):
                 if pred not in backward_reachable:
                     backward_reachable.add(pred)
@@ -498,9 +525,9 @@ class MechanismSearchEngine:
 
         # Forward reachable: BFS from root (only consider species in graph)
         forward_reachable: Set[str] = {root_label}
-        queue = [root_label]
+        queue = deque([root_label])
         while queue:
-            node = queue.pop(0)
+            node = queue.popleft()
             for e in graph.get(node, ()):
                 if e["label"] not in forward_reachable:
                     forward_reachable.add(e["label"])
@@ -548,9 +575,9 @@ class MechanismSearchEngine:
                 target_labels.add(lbl)
 
         dist: Dict[str, int] = {t: 0 for t in target_labels}
-        queue: List[str] = list(target_labels)
+        queue: deque = deque(target_labels)
         while queue:
-            node = queue.pop(0)
+            node = queue.popleft()
             d = dist[node]
             for pred in reverse_adj.get(node, ()):
                 if pred not in dist:
@@ -653,7 +680,9 @@ class MechanismSearchEngine:
                 if dfs_budget_hit[0] or len(all_paths) >= max_paths:
                     return
                 child_label = child["label"]
-                child_norm = self._strip_phase(child_label)
+                # Phase-preserving key: '*X' → 'X(g)' (desorption) is a
+                # legitimate step within one path.
+                child_norm = self._visited_key(child_label)
                 if child_norm in visited:
                     continue
                 child_elem = child["elements"]
@@ -678,7 +707,7 @@ class MechanismSearchEngine:
         _dfs(
             root_label, root_elements,
             [root_entry],
-            {self._strip_phase(root_label)},
+            {self._visited_key(root_label)},
         )
 
         if dfs_budget_hit[0]:
@@ -707,10 +736,21 @@ class MechanismSearchEngine:
 
     @staticmethod
     def _strip_phase(label: str) -> str:
-        """Remove phase markers: '*CO' → 'co', 'CH4(g)' → 'ch4'."""
+        """Remove phase markers: '*CO' → 'co', 'CH4(g)' → 'ch4'.
+
+        Only for phase-AGNOSTIC matching (e.g. goal tests). Do NOT use as
+        a visited/dedup key — see ``_visited_key``.
+        """
         s = label.strip().lower().replace(" ", "")
         s = s.replace("*", "").replace("(g)", "").replace("(s)", "").replace("(l)", "")
         return s
+
+    @staticmethod
+    def _visited_key(label: str) -> str:
+        """Dedup key that PRESERVES phase markers: '*CH4' and 'CH4(g)' are
+        distinct thermodynamic states (adsorbed vs desorbed) and must both
+        be creatable during the search."""
+        return label.strip().lower().replace(" ", "")
 
 
 __all__ = ["PathSearchNode", "MechanismSearchEngine"]

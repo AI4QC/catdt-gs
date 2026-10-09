@@ -163,8 +163,12 @@ class WorkflowContextMixin:
             clean_atoms = read(clean_path)
             if len(clean_atoms) == len(surface_indices):
                 return
-        except Exception:
-            pass
+        except Exception as exc:
+            logger.warning(
+                "Failed to read clean slab '%s' (%s); replacing the reference "
+                "surface with a slab derived from the adsorbed structure.",
+                clean_path, exc,
+            )
 
         if not surface_indices:
             return
@@ -432,12 +436,7 @@ class WorkflowContextMixin:
             # Get UMA predictor for sequential relax
             predictor = None
             try:
-                predictor = self.tools.get_shared_fairchem_predictor(
-                    cache_key="uma_shared", model_name="uma-s-1p1",
-                    use_gpu=True, device="cuda",
-                    work_subdir="_shared_fairchem_global",
-                    keep_files=False, verbose=False,
-                )
+                predictor = self.tools.get_shared_uma_predictor()
                 predictor._load_model()
             except Exception as exc:
                 logger.warning("Cannot get FairchemPredictor for sequential preplacement: %s", exc)
@@ -485,8 +484,10 @@ class WorkflowContextMixin:
                         if removable:
                             removable.sort(key=lambda i: -np.linalg.norm(
                                 new_structure.positions[i] - ads_centroid))
-                            for i_del in range(min(-delta, len(removable))):
-                                idx = removable[i_del]
+                            # Delete in a single pass in DESCENDING index order so
+                            # earlier deletions never invalidate later indices.
+                            to_delete = sorted(removable[: min(-delta, len(removable))], reverse=True)
+                            for idx in to_delete:
                                 del new_structure[idx]
                                 new_ads_indices = [j if j < idx else j - 1
                                                    for j in new_ads_indices if j != idx]
@@ -545,6 +546,7 @@ class WorkflowContextMixin:
                 self._set_surface_indices(new_structure, surface_indices, new_ads_indices)
 
                 # Relax with fixed surface (only adsorbate + top 2 layers free)
+                relax_converged: Optional[bool] = None
                 if predictor is not None:
                     try:
                         from ase.optimize import BFGS
@@ -558,7 +560,12 @@ class WorkflowContextMixin:
                         relax_struct.set_constraint(FixAtoms(indices=fixed))
 
                         opt = BFGS(relax_struct, logfile=str(iter_dir / f"{self._species_safe_name(str(label))}_relax.log"))
-                        opt.run(fmax=0.05, steps=200)
+                        relax_converged = bool(opt.run(fmax=0.05, steps=200))
+                        if not relax_converged:
+                            logger.warning(
+                                "Sequential preplacement relax for %s did NOT converge "
+                                "within 200 steps; keeping last geometry.", label,
+                            )
 
                         new_structure = relax_struct.copy()
                         try:
@@ -583,6 +590,7 @@ class WorkflowContextMixin:
                     "adsorbate_indices": new_ads_indices,
                     "fixed_atom_count": int(len(new_structure)),
                     "immutable_signature": self._fixed_coordinate_signature(new_structure, len(new_structure)),
+                    "relax_converged": relax_converged,
                 }
 
                 # Chain: next intermediate starts from this relaxed structure

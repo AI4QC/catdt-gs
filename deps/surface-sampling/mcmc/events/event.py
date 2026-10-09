@@ -129,11 +129,22 @@ class Exchange(Event):
             site2_ads (str): The adsorbate at the second site before the change.
         """
         super().__init__(system, proposal, criterion, **kwargs)
-        self.action = self.proposal.get_action()
-        self.site1_idx = self.action["site1_idx"]
-        self.site2_idx = self.action["site2_idx"]
-        self.site1_ads = self.action["site1_ads"]
-        self.site2_ads = self.action["site2_ads"]
+        try:
+            self.action = self.proposal.get_action()
+        except ValueError as exc:
+            if "at least two adsorbate types" not in str(exc):
+                raise
+            self.logger.debug("No valid canonical exchange move: %s", exc)
+            self.action = {"name": "noop"}
+        self.site1_idx = self.action.get("site1_idx")
+        self.site2_idx = self.action.get("site2_idx")
+        self.site1_ads = self.action.get("site1_ads")
+        self.site2_ads = self.action.get("site2_ads")
+
+    def acceptance(self, **kwargs) -> tuple[bool, SurfaceSystem]:
+        if self.action.get("name") == "noop":
+            return False, self.system
+        return super().acceptance(**kwargs)
 
     def forward(self) -> None:
         """Perform the forward step of the event and saves the state before and after the change."""

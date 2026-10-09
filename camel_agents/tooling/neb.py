@@ -17,97 +17,30 @@ from core.pathway.enhanced_neb_validator import EnhancedNEBValidator, validate_n
 
 from camel_agents.schemas import PathwayStepSpec, WorkflowState
 
+from core.fairchem_config import DEFAULT_FAIRCHEM_MODEL
+
 from .common import DEPS_BASE_PATH, logger
 
 
 class NEBToolsMixin:
-    def _reorder_product_to_match_reactant(
-        self,
+    def _reorder_product_to_match_reactant(self, *args: Any, **kwargs: Any):
+        """Delegate to the single MIC-aware implementation in geometry.WorkflowGeometryMixin."""
+        from .geometry import WorkflowGeometryMixin
+        return WorkflowGeometryMixin._reorder_product_to_match_reactant(self, *args, **kwargs)
+
+    @staticmethod
+    def _valid_atom_mapping_constraints(
         reactant: Atoms,
         product: Atoms,
-        product_adsorbate_indices: List[int],
-    ) -> tuple[Atoms, List[int], bool]:
-        """Reorder product atoms to match reactant atom ordering for NEB."""
-        if len(reactant) != len(product):
-            return product, list(product_adsorbate_indices), False
-
-        reactant_symbols = reactant.get_chemical_symbols()
-        product_symbols = product.get_chemical_symbols()
-        product_positions = product.get_positions()
-        reactant_positions = reactant.get_positions()
-        if sorted(reactant_symbols) != sorted(product_symbols):
-            return product, list(product_adsorbate_indices), False
-        if reactant_symbols == product_symbols:
-            diffs = product_positions - reactant_positions
-            cell = reactant.get_cell()
-            if bool(np.any(reactant.pbc)) and float(np.linalg.norm(cell[0])) > 0.1:
-                frac = np.linalg.solve(cell.T, diffs.T).T
-                frac -= np.round(frac)
-                diffs = (cell.T @ frac.T).T
-            displacements = np.linalg.norm(diffs, axis=1)
-            if np.max(displacements) < 3.0:
-                return product, list(product_adsorbate_indices), False
-
-        try:
-            from scipy.optimize import linear_sum_assignment  # type: ignore
-        except Exception:
-            linear_sum_assignment = None
-
-        assignment: Dict[int, int] = {}
-        by_symbol: Dict[str, Tuple[List[int], List[int]]] = {}
-        for ridx, sym in enumerate(reactant_symbols):
-            by_symbol.setdefault(sym, ([], []))[0].append(ridx)
-        for pidx, sym in enumerate(product_symbols):
-            by_symbol.setdefault(sym, ([], []))[1].append(pidx)
-
-        for sym, (r_group, p_group) in by_symbol.items():
-            if len(r_group) != len(p_group):
-                return product, list(product_adsorbate_indices), False
-            if not r_group:
-                continue
-
-            if linear_sum_assignment is not None:
-                cost = np.zeros((len(r_group), len(p_group)), dtype=float)
-                cell = reactant.get_cell()
-                pbc = reactant.pbc
-                use_mic = bool(np.any(pbc)) and float(np.linalg.norm(cell[0])) > 0.1
-                for i, ridx in enumerate(r_group):
-                    for j, pidx in enumerate(p_group):
-                        diff = product_positions[pidx] - reactant_positions[ridx]
-                        if use_mic:
-                            frac = np.linalg.solve(cell.T, diff)
-                            frac -= np.round(frac)
-                            diff = cell.T @ frac
-                        cost[i, j] = float(np.linalg.norm(diff))
-                row_ind, col_ind = linear_sum_assignment(cost)
-                for rr, cc in zip(row_ind.tolist(), col_ind.tolist()):
-                    assignment[r_group[rr]] = p_group[cc]
-            else:
-                remaining = list(p_group)
-                for ridx in r_group:
-                    chosen = min(
-                        remaining,
-                        key=lambda pidx: float(np.linalg.norm(product_positions[pidx] - reactant_positions[ridx])),
-                    )
-                    assignment[ridx] = chosen
-                    remaining.remove(chosen)
-
-        try:
-            reorder_sequence = [assignment[idx] for idx in range(len(reactant_symbols))]
-        except Exception:
-            return product, list(product_adsorbate_indices), False
-
-        if reorder_sequence == list(range(len(reactant_symbols))):
-            return product, list(product_adsorbate_indices), False
-
-        reordered_product = product[reorder_sequence]
-        old_to_new = {old: new for new, old in enumerate(reorder_sequence)}
-        new_ads = [old_to_new[idx] for idx in product_adsorbate_indices if idx in old_to_new]
-        new_ads = sorted(new_ads)
-        new_ads_set = set(new_ads)
-        reordered_product.info["adsorbate_indices"] = list(new_ads)
-        reordered_product.info["surface_indices"] = [i for i in range(len(reordered_product)) if i not in new_ads_set]
-        return reordered_product, new_ads, True
+        atom_mapping_constraints: Optional[List[Dict[str, Any]]],
+    ) -> List[Tuple[int, int]]:
+        """Delegate to the single implementation in geometry.WorkflowGeometryMixin."""
+        from .geometry import WorkflowGeometryMixin
+        return WorkflowGeometryMixin._valid_atom_mapping_constraints(
+            reactant=reactant,
+            product=product,
+            atom_mapping_constraints=atom_mapping_constraints,
+        )
 
     def run_neb_for_steps(
         self,
@@ -120,15 +53,7 @@ class NEBToolsMixin:
         from core.pathway.barrier_predictor import BarrierPredictor
 
         def _build_barrier():
-            predictor = self.get_shared_fairchem_predictor(
-                cache_key="uma_shared",
-                model_name="uma-s-1p1",
-                use_gpu=True,
-                device="cuda",
-                work_subdir="_shared_fairchem_global",
-                keep_files=False,
-                verbose=False,
-            )
+            predictor = self.get_shared_uma_predictor()
             return BarrierPredictor(
                 fairchem_predictor=predictor,
                 work_dir=output_dir,
@@ -163,16 +88,15 @@ class NEBToolsMixin:
             reactant_staged = list(step.get("reactant_staged_indices", []))
             product_staged = list(step.get("product_staged_indices", []))
 
-            product, product_ads, reordered = self._reorder_product_to_match_reactant(
+            product, product_ads, product_staged, reordered = self._reorder_product_to_match_reactant(
                 reactant=reactant,
                 product=product,
                 product_adsorbate_indices=product_ads,
+                product_staged_indices=product_staged,
+                atom_mapping_constraints=list(step.get("atom_mapping_constraints", [])),
             )
             if reordered:
                 logger.info("Reordered product atom order for NEB step %s", name)
-                if product_staged:
-                    logger.info("Clearing product staged indices for step %s after atom reorder", name)
-                    product_staged = []
 
             reactant_ads_set = set(idx for idx in reactant_ads if 0 <= idx < len(reactant))
             product_ads_set = set(idx for idx in product_ads if 0 <= idx < len(product))
@@ -346,12 +270,17 @@ class NEBToolsMixin:
         validator = EnhancedNEBValidator(auto_fix=auto_fix, fix_attempts=3)
         report = validator.validate_endpoint_pair(initial, final, expected_reaction_type)
 
-        # 如果自动修复成功，保存修复后的结构
+        # EnhancedNEBValidator does NOT expose the fixed Atoms objects, so an
+        # AUTO_FIXED status only means fixes were applied internally during
+        # re-validation — the ORIGINAL (unfixed) structures are what downstream
+        # NEB will use. Reflect that honestly by downgrading to WARNING.
         if report.status == ValidationStatus.AUTO_FIXED and auto_fix:
-            fixed_initial_path = output_dir / "initial_fixed.vasp"
-            fixed_final_path = output_dir / "final_fixed.vasp"
-            # 注意：这里需要 validator 返回修复后的结构，我们需要修改 validator 来支持
-            logger.info(f"Auto-fix applied. Fixed structures would be saved here.")
+            logger.warning(
+                "Validator reported AUTO_FIXED, but fixed structures are not "
+                "exposed by EnhancedNEBValidator; the original (unfixed) "
+                "structures will be used. Downgrading status to WARNING."
+            )
+            report.status = ValidationStatus.WARNING
 
         # 保存验证报告
         report_path = output_dir / "validation_report.json"
@@ -367,26 +296,56 @@ class NEBToolsMixin:
         return str(report_path)
 
     def _detect_adsorbate_indices(self, atoms: Atoms) -> List[int]:
+        """自动检测吸附物原子索引。
+
+        Heuristic order:
+        1. ``atoms.info['adsorbate_indices']`` — trusted if present and valid.
+        2. ASE tags — atoms carrying the maximum tag are treated as adsorbate
+           when tags partition the structure non-trivially.
+        3. z-position fallback — slab elements are identified as elements with
+           at least one atom in the LOWER half of the z-range (slab bottom);
+           this works on oxides where O dominates the element count. Adsorbate
+           atoms are non-slab-element atoms above the slab top (+0.5 Å).
         """
-        自动检测吸附物原子索引
-        假设：吸附物是表面上方 z 坐标最高的非金属原子
-        """
+        n = len(atoms)
+        if n == 0:
+            return []
+
+        # 1. Known indices from atoms.info
+        known = atoms.info.get("adsorbate_indices")
+        if isinstance(known, (list, tuple)):
+            valid_known = [int(i) for i in known if 0 <= int(i) < n]
+            if valid_known:
+                logger.info(f"Adsorbate indices from atoms.info: {valid_known}")
+                return sorted(valid_known)
+
+        # 2. ASE tags
+        tags = atoms.get_tags()
+        if len(tags) == n and len(np.unique(tags)) > 1:
+            max_tag = int(np.max(tags))
+            tagged = [i for i, tag in enumerate(tags.tolist()) if int(tag) == max_tag]
+            if 0 < len(tagged) < n:
+                logger.info(f"Adsorbate indices from ASE tags (tag={max_tag}): {tagged}")
+                return sorted(tagged)
+
+        # 3. z-position fallback (element-count heuristic, slab-bottom aware)
         positions = atoms.get_positions()
         symbols = atoms.get_chemical_symbols()
+        z = positions[:, 2]
+        z_min, z_max = float(np.min(z)), float(np.max(z))
+        z_cut = z_min + 0.5 * (z_max - z_min)
+        slab_elements = {symbols[i] for i in range(n) if z[i] <= z_cut}
+        if not slab_elements:
+            # Degenerate (flat) structure: fall back to dominant element only.
+            slab_elements = {Counter(symbols).most_common(1)[0][0]}
 
-        # 找到表面元素（数量最多的金属）
-        from collections import Counter
-        symbol_counts = Counter(symbols)
-        surface_elem = max(symbol_counts, key=symbol_counts.get)
+        slab_z = [z[i] for i in range(n) if symbols[i] in slab_elements]
+        surface_z = max(slab_z) if slab_z else z_max
 
-        # 表面 z 坐标（表面原子的最大 z）
-        surface_z = max(positions[i, 2] for i, s in enumerate(symbols) if s == surface_elem)
-
-        # 吸附物原子：在表面上方 > 0.5 Å 的非表面原子
-        adsorbate_indices = []
-        for i, (pos, sym) in enumerate(zip(positions, symbols)):
-            if sym != surface_elem and pos[2] > surface_z + 0.5:
-                adsorbate_indices.append(i)
+        adsorbate_indices = [
+            i for i in range(n)
+            if symbols[i] not in slab_elements and z[i] > surface_z + 0.5
+        ]
 
         logger.info(f"Auto-detected adsorbate indices: {adsorbate_indices}")
         return adsorbate_indices
@@ -501,8 +460,11 @@ class NEBToolsMixin:
                 logger.warning(f"  - {rec}")
 
         elif status == 'auto_fixed':
-            logger.info("Structure was auto-fixed. Using fixed structures for NEB.")
-            # TODO: 使用修复后的结构
+            logger.warning(
+                "Validation reported auto_fixed, but auto-fix is unavailable at "
+                "the NEB level (fixed structures are not exposed); proceeding "
+                "with the ORIGINAL structures."
+            )
 
         else:  # pass
             logger.info("Structure validation PASSED. Proceeding with NEB.")
@@ -510,16 +472,31 @@ class NEBToolsMixin:
         # 步骤 3: 运行 NEB（使用现有的 run_neb_for_steps 逻辑）
         logger.info("Step 2: Running NEB calculation...")
 
-        # 调用现有的 NEB 方法
-        neb_result_path = self.run_neb_for_steps(
-            pathway_pickle_path=None,  # 直接提供结构路径
-            initial_structure_path=initial_structure_path,
-            final_structure_path=final_structure_path,
-            n_images=n_images,
-            run_id=run_id,
-            workflow_step=workflow_step
+        # Build the steps payload expected by run_neb_for_steps from the
+        # structure files (each step needs 'name', 'reactant', 'product').
+        initial_atoms = read(initial_structure_path)
+        final_atoms = read(final_structure_path)
+        if 'adsorbate_indices' not in initial_atoms.info:
+            initial_atoms.info['adsorbate_indices'] = self._detect_adsorbate_indices(initial_atoms)
+        if 'adsorbate_indices' not in final_atoms.info:
+            final_atoms.info['adsorbate_indices'] = self._detect_adsorbate_indices(final_atoms)
+
+        step_name = f"{Path(initial_structure_path).stem}_to_{Path(final_structure_path).stem}"
+        steps_payload = [{
+            "name": step_name,
+            "reactant": initial_atoms,
+            "product": final_atoms,
+            "reactant_adsorbate_indices": list(initial_atoms.info.get("adsorbate_indices", [])),
+            "product_adsorbate_indices": list(final_atoms.info.get("adsorbate_indices", [])),
+        }]
+
+        neb_results = self.run_neb_for_steps(
+            steps=steps_payload,
+            output_dir=str(output_dir),
+            n_frames=int(n_images),
         )
 
+        neb_result_path = self._save_result_to_pickle(neb_results, output_dir / "neb_results.pkl")
         logger.info(f"NEB calculation completed: {neb_result_path}")
         return neb_result_path
 
@@ -622,12 +599,23 @@ class Agent45WorkflowToolsMixin:
         workflow: Any,
         step_structures: List[Dict[str, Any]],
         output_dir: str = "",
-        **kwargs: Any,
+        min_pair_fatal_threshold: float = 0.80,
+        force_fatal_threshold: float = 1.0,
+        force_warning_threshold: float = 0.5,
     ) -> Dict[str, Any]:
         return self._agent45_geometry(workflow).run_agent45_energy_gate(
             step_structures=step_structures,
             output_dir=output_dir,
+            min_pair_fatal_threshold=min_pair_fatal_threshold,
+            force_fatal_threshold=force_fatal_threshold,
+            force_warning_threshold=force_warning_threshold,
         )
+
+    def reset_site_retry_state(self, workflow: Any = None) -> None:
+        """Clear retained Agent4/5 site retry ranks (call between independent runs)."""
+        state = getattr(self, "_agent45_site_retry_state", None)
+        if isinstance(state, dict):
+            state.clear()
 
     def find_bond_change_sites(
         self,
@@ -812,14 +800,49 @@ class Agent45GeometryTools:
 
         # Enumerate nearby surface sites on the TARGET side near the anchor position.
         # The anchor position is taken directly from the source side (same cell).
-        sites = self.workflow.enumerate_surface_sites_near_anchor(
-            target_atoms,
-            target_ads,
-            np.array(source_pos, dtype=float),
-            element,
-            min_dist,
-            max_dist,
-        )
+        source_anchor = np.array(source_pos, dtype=float)
+        search_windows = [(float(min_dist), float(max_dist))]
+        widened = (max(0.8, float(min_dist) - 1.5), float(max_dist) + 2.0)
+        if widened != search_windows[0]:
+            search_windows.append(widened)
+
+        sites: List[Dict[str, Any]] = []
+        for lo, hi in search_windows:
+            sites = self.workflow.enumerate_surface_sites_near_anchor(
+                target_atoms,
+                target_ads,
+                source_anchor,
+                element,
+                lo,
+                hi,
+            )
+            if sites:
+                break
+
+        if str(element) == "H" and self._has_physical_surface_context(target_atoms, target_ads):
+            local_sites = self._enumerate_local_h_surface_sites(
+                target_atoms,
+                target_ads,
+                source_anchor,
+                max_sites=max(max_sites, 3),
+            )
+            if local_sites:
+                by_key: Dict[Tuple[float, float, float], Dict[str, Any]] = {}
+                for site in list(local_sites) + list(sites or []):
+                    pos = site.get("position", [])
+                    if not isinstance(pos, list) or len(pos) != 3:
+                        continue
+                    key = (round(float(pos[0]), 3), round(float(pos[1]), 3), round(float(pos[2]), 3))
+                    by_key.setdefault(key, site)
+                sites = sorted(
+                    by_key.values(),
+                    key=lambda site: (
+                        0 if bool(site.get("active_center_site", False)) else 1,
+                        0 if str(site.get("site_label", "")).startswith("local_H_") else 1,
+                        float(site.get("dist_from_anchor", float("inf"))),
+                        float(site.get("position", [0.0, 0.0, 0.0])[2]),
+                    ),
+                )
 
         candidate_sites: List[Dict[str, Any]] = []
         if sites:
@@ -839,8 +862,10 @@ class Agent45GeometryTools:
             "element": element,
             "side": target_side,
             "source_side": source_side,
+            "source_atom_index": int(source_atom_idx),
             "anchor_position": [float(x) for x in source_pos],
             "bond_partner_element": partner_element,
+            "bond_partner_index": int(partner_idx) if partner_idx is not None else None,
             "bond_partner_position": partner_position,
             "candidate_sites": candidate_sites,
         }
@@ -988,7 +1013,7 @@ class Agent45GeometryTools:
         owner = getattr(self.workflow, "tools", None)
         return owner if owner is not None else self.workflow
 
-    def _site_retry_state(self) -> Dict[Tuple[str, str, str], int]:
+    def _site_retry_state(self) -> Dict[Tuple[str, ...], int]:
         owner = self._site_retry_owner()
         state = getattr(owner, "_agent45_site_retry_state", None)
         if isinstance(state, dict):
@@ -997,9 +1022,31 @@ class Agent45GeometryTools:
         setattr(owner, "_agent45_site_retry_state", state)
         return state
 
-    @staticmethod
-    def _site_retry_key(step_name: str, side: str, fragment_label: str) -> Tuple[str, str, str]:
-        return (str(step_name), str(side), str(fragment_label))
+    def reset_site_retry_state(self) -> None:
+        """Clear all retained site retry ranks (call between independent runs)."""
+        self._site_retry_state().clear()
+
+    def _site_retry_run_scope(self) -> str:
+        """Best-effort run identifier so retry ranks don't bleed across runs."""
+        for owner in (self.workflow, getattr(self.workflow, "tools", None)):
+            if owner is None:
+                continue
+            for attr in ("run_id", "_current_run_id"):
+                value = getattr(owner, attr, None)
+                if value:
+                    return str(value)
+            state = getattr(owner, "state", None)
+            state_run_id = getattr(state, "run_id", None)
+            if state_run_id:
+                return str(state_run_id)
+        return ""
+
+    def _site_retry_key(self, step_name: str, side: str, fragment_label: str) -> Tuple[str, ...]:
+        base = (str(step_name), str(side), str(fragment_label))
+        scope = self._site_retry_run_scope()
+        # Prefix the run id when available so retry ranks never bleed across
+        # reactions/runs sharing one tools object.
+        return (scope,) + base if scope else base
 
     def _get_allowed_site_rank(
         self,
@@ -1011,7 +1058,11 @@ class Agent45GeometryTools:
         if not candidate_sites:
             return 1
         state = self._site_retry_state()
-        raw_rank = state.get(self._site_retry_key(step_name, side, fragment_label), 1)
+        # Exact fragment-label equality only — no substring fallback (a bare
+        # "H" must not inherit retry ranks recorded for "OH"/"CH" fragments).
+        raw_rank = state.get(self._site_retry_key(step_name, side, fragment_label), None)
+        if raw_rank is None:
+            raw_rank = 1
         try:
             rank = int(raw_rank)
         except Exception:
@@ -1048,6 +1099,124 @@ class Agent45GeometryTools:
         state[key] = max(1, min(int(next_rank), len(candidate_sites)))
 
     @staticmethod
+    def _candidate_site_distance(site: Dict[str, Any]) -> float:
+        return float(site.get("dist_from_anchor", site.get("distance_to_anchor", float("inf"))))
+
+    @staticmethod
+    def _candidate_site_label(site: Dict[str, Any]) -> str:
+        return str(site.get("site_label", site.get("site_type", "")))
+
+    @classmethod
+    def _candidate_site_priority(cls, site: Dict[str, Any]) -> int:
+        label = cls._candidate_site_label(site)
+        if label.startswith(("local_H_on_O", "local_H_on_N", "local_H_on_S")):
+            return 0
+        if label.startswith("local_H_"):
+            return 1
+        return 2
+
+    @classmethod
+    def _candidate_site_is_h_acceptor(cls, site: Dict[str, Any]) -> bool:
+        return cls._candidate_site_label(site).startswith(
+            ("local_H_on_O", "local_H_on_N", "local_H_on_S")
+        )
+
+    @classmethod
+    def _nearest_nonactive_local_h_site_distance(cls, candidate_sites: List[Dict[str, Any]]) -> float:
+        return cls._nearest_nonactive_local_h_site_metrics(candidate_sites)[0]
+
+    @classmethod
+    def _nearest_nonactive_local_h_site_metrics(cls, candidate_sites: List[Dict[str, Any]]) -> Tuple[float, float]:
+        best_dist = float("inf")
+        best_z = float("inf")
+        for site in candidate_sites:
+            if bool(site.get("active_center_site", False)):
+                continue
+            if not cls._candidate_site_is_h_acceptor(site):
+                continue
+            dist = cls._candidate_site_distance(site)
+            if dist >= best_dist:
+                continue
+            pos = site.get("position", [0.0, 0.0, float("inf")])
+            try:
+                z = float(pos[2])
+            except Exception:
+                z = float("inf")
+            best_dist = dist
+            best_z = z
+        return best_dist, best_z
+
+    @classmethod
+    def _candidate_site_is_clearly_far_active_acceptor(
+        cls,
+        site: Dict[str, Any],
+        *,
+        nearest_nonactive_local_dist: float,
+        nearest_nonactive_local_z: float,
+    ) -> bool:
+        if not bool(site.get("active_center_site", False)):
+            return False
+        if not cls._candidate_site_is_h_acceptor(site):
+            return False
+        if nearest_nonactive_local_dist == float("inf"):
+            return False
+        dist = cls._candidate_site_distance(site)
+        try:
+            site_z = float(site.get("position", [0.0, 0.0, float("inf")])[2])
+        except Exception:
+            site_z = float("inf")
+        nonactive_is_same_local_shell = (
+            nearest_nonactive_local_z < float("inf")
+            and site_z < float("inf")
+            and (nearest_nonactive_local_z - site_z) <= 2.0
+        )
+        return bool(
+            nonactive_is_same_local_shell
+            and (
+                (dist >= 3.50 and (dist - nearest_nonactive_local_dist) >= 0.75)
+                or (
+                    nearest_nonactive_local_z <= site_z + 2.50
+                    and (dist - nearest_nonactive_local_dist) >= 0.25
+                )
+            )
+        )
+
+    @classmethod
+    def _candidate_site_active_bucket(
+        cls,
+        site: Dict[str, Any],
+        *,
+        nearest_nonactive_local_dist: float,
+        nearest_nonactive_local_z: float = float("inf"),
+        active_acceptor_demoted: bool = False,
+    ) -> int:
+        """Prefer active-center H sites unless they are clearly not local.
+
+        Curved SMSI pockets can contain a chemically active Ti/O pair that is
+        several Angstrom away from the outgoing C-H atom after a carried Stage B
+        spectator.  In that case forcing the active O as site 1 makes the staged
+        H jump across the pocket and breaks NEB atom mapping.  A much closer
+        local H-on-O/Ti site should be offered first; the active-center sites
+        remain available as later candidates.
+        """
+        is_active = bool(site.get("active_center_site", False))
+        priority = cls._candidate_site_priority(site)
+        clearly_far_active = cls._candidate_site_is_clearly_far_active_acceptor(
+            site,
+            nearest_nonactive_local_dist=nearest_nonactive_local_dist,
+            nearest_nonactive_local_z=nearest_nonactive_local_z,
+        )
+        if is_active and not clearly_far_active:
+            if active_acceptor_demoted and priority == 1:
+                return 2
+            return 0
+        if not is_active and priority <= 1:
+            return 1
+        if is_active:
+            return 2
+        return 3
+
+    @staticmethod
     def _rank_candidate_sites_by_direction(
         candidate_sites: List[Dict[str, Any]],
         anchor_pos: Optional[np.ndarray],
@@ -1057,10 +1226,28 @@ class Agent45GeometryTools:
             return []
 
         ranked = [dict(site) for site in candidate_sites]
+        nearest_nonactive_local, nearest_nonactive_local_z = (
+            Agent45GeometryTools._nearest_nonactive_local_h_site_metrics(ranked)
+        )
+        active_acceptor_demoted = any(
+            Agent45GeometryTools._candidate_site_is_clearly_far_active_acceptor(
+                site,
+                nearest_nonactive_local_dist=nearest_nonactive_local,
+                nearest_nonactive_local_z=nearest_nonactive_local_z,
+            )
+            for site in ranked
+        )
         if anchor_pos is None or preferred_reference_pos is None:
             ranked.sort(
                 key=lambda site: (
-                    float(site.get("dist_from_anchor", float("inf"))),
+                    Agent45GeometryTools._candidate_site_active_bucket(
+                        site,
+                        nearest_nonactive_local_dist=nearest_nonactive_local,
+                        nearest_nonactive_local_z=nearest_nonactive_local_z,
+                        active_acceptor_demoted=active_acceptor_demoted,
+                    ),
+                    Agent45GeometryTools._candidate_site_priority(site),
+                    Agent45GeometryTools._candidate_site_distance(site),
                     float(site.get("position", [0.0, 0.0, 0.0])[0]),
                     float(site.get("position", [0.0, 0.0, 0.0])[1]),
                 )
@@ -1073,7 +1260,14 @@ class Agent45GeometryTools:
             if preferred_norm <= 1e-8:
                 ranked.sort(
                     key=lambda site: (
-                        float(site.get("dist_from_anchor", float("inf"))),
+                        Agent45GeometryTools._candidate_site_active_bucket(
+                            site,
+                            nearest_nonactive_local_dist=nearest_nonactive_local,
+                            nearest_nonactive_local_z=nearest_nonactive_local_z,
+                            active_acceptor_demoted=active_acceptor_demoted,
+                        ),
+                        Agent45GeometryTools._candidate_site_priority(site),
+                        Agent45GeometryTools._candidate_site_distance(site),
                         float(site.get("position", [0.0, 0.0, 0.0])[0]),
                         float(site.get("position", [0.0, 0.0, 0.0])[1]),
                     )
@@ -1094,7 +1288,14 @@ class Agent45GeometryTools:
 
                 ranked.sort(
                     key=lambda site: (
-                        round(float(site.get("dist_from_anchor", float("inf"))), 2),
+                        Agent45GeometryTools._candidate_site_active_bucket(
+                            site,
+                            nearest_nonactive_local_dist=nearest_nonactive_local,
+                            nearest_nonactive_local_z=nearest_nonactive_local_z,
+                            active_acceptor_demoted=active_acceptor_demoted,
+                        ),
+                        Agent45GeometryTools._candidate_site_priority(site),
+                        round(Agent45GeometryTools._candidate_site_distance(site), 2),
                         -_alignment(site),
                         float(site.get("position", [0.0, 0.0, 0.0])[0]),
                         float(site.get("position", [0.0, 0.0, 0.0])[1]),
@@ -1104,6 +1305,215 @@ class Agent45GeometryTools:
         for rank, site in enumerate(ranked, start=1):
             site["rank"] = rank
         return ranked
+
+    def _local_surface_top_z(
+        self,
+        structure: Atoms,
+        adsorbate_indices: List[int],
+        position: np.ndarray,
+        *,
+        radius: float = 3.0,
+        fallback: Optional[float] = None,
+    ) -> float:
+        positions = structure.get_positions()
+        ads_set = set(adsorbate_indices or [])
+        surf_indices = [i for i in range(len(structure)) if i not in ads_set]
+        if not surf_indices:
+            return float(fallback if fallback is not None else 0.0)
+
+        local: List[int] = []
+        for idx in surf_indices:
+            try:
+                dist = float(self.workflow._pbc_distance(structure, position, positions[idx]))
+            except Exception:
+                dist = float(np.linalg.norm(position - positions[idx]))
+            if dist <= radius:
+                local.append(idx)
+
+        if local:
+            return float(np.max(positions[local, 2]))
+        if fallback is not None:
+            return float(fallback)
+        return float(np.max(positions[surf_indices, 2]))
+
+    def _enumerate_local_h_surface_sites(
+        self,
+        target_atoms: Atoms,
+        target_ads: List[int],
+        anchor_pos: np.ndarray,
+        *,
+        max_sites: int,
+        active_center_indices: Optional[List[int]] = None,
+    ) -> List[Dict[str, Any]]:
+        """Generate local H-on-surface candidates around a bond-change anchor.
+
+        Pymatgen adsorption sites are generic molecular adsorption positions and
+        can put a single H too high above an oxide overlayer.  For staged H, add
+        local atop candidates on nearby exposed Ti/O/metal atoms, then let the
+        existing Agent4/5 validation and energy gate decide whether they pass.
+        """
+        positions = target_atoms.get_positions()
+        symbols = target_atoms.get_chemical_symbols()
+        ads_set = set(target_ads or [])
+        surf_indices = [i for i in range(len(target_atoms)) if i not in ads_set]
+        if not surf_indices:
+            return []
+
+        surf_top_z = float(np.max(positions[surf_indices, 2]))
+        active_centers = [
+            int(idx)
+            for idx in (active_center_indices or [])
+            if 0 <= int(idx) < len(target_atoms) and int(idx) in surf_indices and symbols[int(idx)] not in {"H", "C"}
+        ]
+        exposed: List[int] = []
+        if active_centers:
+            local_pool: set[int] = set(active_centers)
+            for center_idx in active_centers:
+                center_pos = positions[center_idx]
+                for idx in surf_indices:
+                    if symbols[idx] in {"H", "C"}:
+                        continue
+                    try:
+                        dist = float(self.workflow._pbc_distance(target_atoms, center_pos, positions[idx]))
+                    except Exception:
+                        dist = float(np.linalg.norm(center_pos - positions[idx]))
+                    if dist <= 3.2:
+                        local_pool.add(idx)
+            exposed = sorted(local_pool, key=lambda idx: (idx not in active_centers, symbols[idx] != "O", idx))
+        if not exposed:
+            exposed = [
+                idx for idx in surf_indices
+                if positions[idx, 2] >= surf_top_z - 2.5 and symbols[idx] not in {"H", "C"}
+            ]
+        if not exposed:
+            exposed = [idx for idx in surf_indices if symbols[idx] not in {"H", "C"}]
+
+        height_by_symbol = {
+            "O": [0.98, 1.20, 1.60],
+            "N": [1.02, 1.25],
+            "S": [1.35, 1.60],
+            "Ti": [1.80, 2.10, 2.40],
+        }
+        default_heights = [1.60, 1.90, 2.20]
+
+        ads_positions = [positions[i] for i in target_ads if 0 <= i < len(target_atoms)]
+        ads_h_positions = [
+            positions[i]
+            for i in target_ads
+            if 0 <= i < len(target_atoms) and symbols[i] == "H"
+        ]
+        candidates: List[Dict[str, Any]] = []
+        for idx in exposed:
+            sym = symbols[idx]
+            for height in height_by_symbol.get(sym, default_heights):
+                site_pos = np.array(
+                    [positions[idx, 0], positions[idx, 1], positions[idx, 2] + float(height)],
+                    dtype=float,
+                )
+                local_top_z = self._local_surface_top_z(
+                    target_atoms,
+                    target_ads,
+                    site_pos,
+                    fallback=float(np.max(positions[exposed, 2])) if active_centers and exposed else surf_top_z,
+                )
+                is_active_center_site = bool(idx in active_centers)
+                is_proton_acceptor_site = sym in {"O", "N", "S"}
+                if site_pos[2] < local_top_z + 0.5 and not is_proton_acceptor_site:
+                    continue
+                try:
+                    dist_anchor = float(self.workflow._pbc_distance(target_atoms, anchor_pos, site_pos))
+                except Exception:
+                    dist_anchor = float(np.linalg.norm(anchor_pos - site_pos))
+                if not (1.2 <= dist_anchor <= 6.5):
+                    continue
+
+                min_any = float("inf")
+                for atom_pos in positions:
+                    try:
+                        d_any = float(self.workflow._pbc_distance(target_atoms, site_pos, atom_pos))
+                    except Exception:
+                        d_any = float(np.linalg.norm(site_pos - atom_pos))
+                    min_any = min(min_any, d_any)
+                if min_any < 0.8:
+                    continue
+
+                too_close_to_existing_h = False
+                for h_pos in ads_h_positions:
+                    try:
+                        h_dist = float(self.workflow._pbc_distance(target_atoms, site_pos, h_pos))
+                    except Exception:
+                        h_dist = float(np.linalg.norm(site_pos - h_pos))
+                    if h_dist < 1.70:
+                        too_close_to_existing_h = True
+                        break
+                if too_close_to_existing_h:
+                    continue
+
+                min_ads = float("inf")
+                for atom_pos in ads_positions:
+                    try:
+                        d_ads = float(self.workflow._pbc_distance(target_atoms, site_pos, atom_pos))
+                    except Exception:
+                        d_ads = float(np.linalg.norm(site_pos - atom_pos))
+                    min_ads = min(min_ads, d_ads)
+                if ads_positions and min_ads > 5.0:
+                    continue
+
+                candidates.append(
+                    {
+                        "position": [float(v) for v in site_pos],
+                        "site_label": f"local_H_on_{sym}",
+                        "dist_from_anchor": dist_anchor,
+                        "active_center_site": is_active_center_site,
+                        "_host_symbol": sym,
+                        "_host_index": idx,
+                        "_min_ads": min_ads,
+                    }
+                )
+
+        nearest_nonactive_local, nearest_nonactive_local_z = self._nearest_nonactive_local_h_site_metrics(candidates)
+        active_acceptor_demoted = any(
+            self._candidate_site_is_clearly_far_active_acceptor(
+                site,
+                nearest_nonactive_local_dist=nearest_nonactive_local,
+                nearest_nonactive_local_z=nearest_nonactive_local_z,
+            )
+            for site in candidates
+        )
+        candidates.sort(
+            key=lambda site: (
+                self._candidate_site_active_bucket(
+                    site,
+                    nearest_nonactive_local_dist=nearest_nonactive_local,
+                    nearest_nonactive_local_z=nearest_nonactive_local_z,
+                    active_acceptor_demoted=active_acceptor_demoted,
+                ),
+                self._candidate_site_priority(site),
+                float(site.get("dist_from_anchor", float("inf"))),
+                float(site.get("_min_ads", float("inf"))),
+                float(site.get("position", [0.0, 0.0, 0.0])[2]),
+            )
+        )
+        for site in candidates:
+            site.pop("_min_ads", None)
+            site.pop("_host_symbol", None)
+            site.pop("_host_index", None)
+        return candidates[:max_sites]
+
+    def _has_physical_surface_context(
+        self,
+        structure: Atoms,
+        adsorbate_indices: List[int],
+    ) -> bool:
+        positions = structure.get_positions()
+        ads_set = set(adsorbate_indices or [])
+        surf_indices = [i for i in range(len(structure)) if i not in ads_set]
+        valid_ads = [i for i in adsorbate_indices if 0 <= i < len(structure)]
+        if not surf_indices or not valid_ads:
+            return False
+        surf_top_z = float(np.max(positions[surf_indices, 2]))
+        ads_min_z = float(np.min(positions[valid_ads, 2]))
+        return bool(surf_top_z >= ads_min_z - 1.5)
 
     def _build_step_staging_hints(self, step_entry: Dict[str, Any]) -> List[Dict[str, Any]]:
         """Build staging hints for one step using geometry-based RMSD matching.
@@ -1124,6 +1534,7 @@ class Agent45GeometryTools:
 
         reactant_ads = list(step_entry.get("reactant_adsorbate_indices", []))
         product_ads = list(step_entry.get("product_adsorbate_indices", []))
+        active_center_indices = list(step_entry.get("active_center_indices", []))
 
         raw_hints = self.find_bond_change_sites(
             clean_reactant=reactant,
@@ -1134,29 +1545,198 @@ class Agent45GeometryTools:
             max_site_dist=4.5,
             max_sites_per_hint=3,
         )
+        if not raw_hints and active_center_indices:
+            raw_hints = self._build_active_center_fallback_h_hints(
+                reactant=reactant,
+                reactant_ads=reactant_ads,
+                product=product,
+                product_ads=product_ads,
+                active_center_indices=active_center_indices,
+                max_sites_per_hint=3,
+            )
 
         hints: List[Dict[str, Any]] = []
         for rh in raw_hints:
             element = str(rh.get("element", ""))
             if not element:
                 continue
+            side = str(rh.get("side", ""))
+            source_side = str(rh.get("source_side", ""))
+            target_atoms = reactant if side == "reactant" else product
+            target_ads = reactant_ads if side == "reactant" else product_ads
             legacy_sites: List[Dict[str, Any]] = []
-            for rank, site in enumerate(rh.get("candidate_sites", []), start=1):
+            raw_sites = list(rh.get("candidate_sites", []))
+            injected_local_h_sites = False
+            if element == "H" and self._has_physical_surface_context(target_atoms, target_ads):
+                anchor_position = np.array(rh.get("anchor_position", []), dtype=float)
+                if anchor_position.shape == (3,):
+                    local_sites = self._enumerate_local_h_surface_sites(
+                        target_atoms,
+                        target_ads,
+                        anchor_position,
+                        max_sites=3,
+                        active_center_indices=active_center_indices,
+                    )
+                    merged: Dict[Tuple[float, float, float], Dict[str, Any]] = {}
+                    for site in local_sites:
+                        pos = site.get("position", [])
+                        if isinstance(pos, list) and len(pos) == 3:
+                            merged[(round(float(pos[0]), 3), round(float(pos[1]), 3), round(float(pos[2]), 3))] = {
+                                "position": [float(v) for v in pos],
+                                "site_type": str(site.get("site_label", "?")),
+                                "distance_to_anchor": float(site.get("dist_from_anchor", 0.0)),
+                                "active_center_site": bool(site.get("active_center_site", False)),
+                            }
+                    for site in raw_sites:
+                        pos = site.get("position", [])
+                        if isinstance(pos, list) and len(pos) == 3:
+                            merged.setdefault(
+                                (round(float(pos[0]), 3), round(float(pos[1]), 3), round(float(pos[2]), 3)),
+                                dict(site),
+                            )
+                    injected_local_h_sites = bool(local_sites)
+                    if injected_local_h_sites:
+                        raw_sites = sorted(
+                            merged.values(),
+                            key=lambda site: (
+                                0 if bool(site.get("active_center_site", False)) else 1,
+                                0 if str(site.get("site_type", "")).startswith("local_H_") else 1,
+                                float(site.get("distance_to_anchor", site.get("dist_from_anchor", float("inf")))),
+                                float(site.get("position", [0.0, 0.0, 0.0])[2]),
+                            ),
+                        )
+
+            anchor_position = np.array(rh.get("anchor_position", []), dtype=float)
+            bond_partner_position = rh.get("bond_partner_position")
+            preferred_reference_pos = None
+            rank_anchor_pos = anchor_position if anchor_position.shape == (3,) else None
+            if isinstance(bond_partner_position, list) and len(bond_partner_position) == 3:
+                bond_partner_arr = np.array(bond_partner_position, dtype=float)
+                if source_side == "product":
+                    rank_anchor_pos = bond_partner_arr
+                    preferred_reference_pos = anchor_position if anchor_position.shape == (3,) else None
+                else:
+                    preferred_reference_pos = bond_partner_arr
+
+            ranked_sites = self._rank_candidate_sites_by_direction(
+                candidate_sites=raw_sites,
+                anchor_pos=rank_anchor_pos,
+                preferred_reference_pos=preferred_reference_pos,
+            )
+            for rank, site in enumerate(ranked_sites, start=1):
                 legacy_sites.append(
                     {
                         "rank": rank,
                         "position": [round(float(v), 2) for v in site.get("position", [])],
-                        "site_label": str(site.get("site_type", "?")),
-                        "dist_from_anchor": round(float(site.get("distance_to_anchor", 0.0)), 2),
+                        "site_label": str(site.get("site_type", site.get("site_label", "?"))),
+                        "dist_from_anchor": round(
+                            float(site.get("distance_to_anchor", site.get("dist_from_anchor", 0.0))),
+                            2,
+                        ),
+                        "active_center_site": bool(site.get("active_center_site", False)),
                     }
                 )
             hints.append(
                 {
-                    "side": str(rh.get("side", "")),
+                    "side": side,
                     "fragment_elements": [element],
                     "fragment_label": element,
+                    "source_side": source_side,
+                    "source_atom_index": rh.get("source_atom_index"),
+                    "bond_partner_index": rh.get("bond_partner_index"),
                     "anchor_symbol": str(rh.get("bond_partner_element") or "?"),
                     "candidate_sites": legacy_sites,
+                }
+            )
+        return hints
+
+    def _build_active_center_fallback_h_hints(
+        self,
+        *,
+        reactant: Atoms,
+        reactant_ads: List[int],
+        product: Atoms,
+        product_ads: List[int],
+        active_center_indices: List[int],
+        max_sites_per_hint: int,
+    ) -> List[Dict[str, Any]]:
+        """Build H staging hints from active-center sites when generic hints are empty."""
+        r_syms = reactant.get_chemical_symbols()
+        p_syms = product.get_chemical_symbols()
+        r_h = [int(i) for i in reactant_ads if 0 <= int(i) < len(reactant) and r_syms[int(i)] == "H"]
+        p_h = [int(i) for i in product_ads if 0 <= int(i) < len(product) and p_syms[int(i)] == "H"]
+        if len(r_h) == len(p_h):
+            return []
+
+        if len(r_h) > len(p_h):
+            source_atoms = reactant
+            source_ads = reactant_ads
+            target_atoms = product
+            target_ads = product_ads
+            source_side = "reactant"
+            target_side = "product"
+            source_h = r_h
+            target_h = p_h
+        else:
+            source_atoms = product
+            source_ads = product_ads
+            target_atoms = reactant
+            target_ads = reactant_ads
+            source_side = "product"
+            target_side = "reactant"
+            source_h = p_h
+            target_h = r_h
+
+        target_positions = target_atoms.get_positions()
+        source_positions = source_atoms.get_positions()
+        unmatched: List[Tuple[float, int]] = []
+        for h_idx in source_h:
+            if target_h:
+                nearest = min(
+                    float(self.workflow._pbc_distance(source_atoms, source_positions[h_idx], target_positions[j]))
+                    for j in target_h
+                )
+            else:
+                nearest = float("inf")
+            unmatched.append((nearest, h_idx))
+        unmatched.sort(reverse=True)
+        if not unmatched:
+            return []
+
+        hints: List[Dict[str, Any]] = []
+        for _, h_idx in unmatched[: abs(len(r_h) - len(p_h))]:
+            anchor_pos = np.array(source_positions[h_idx], dtype=float)
+            sites = self._enumerate_local_h_surface_sites(
+                target_atoms,
+                target_ads,
+                anchor_pos,
+                max_sites=max_sites_per_hint,
+                active_center_indices=active_center_indices,
+            )
+            if not sites:
+                continue
+            candidate_sites = [
+                {
+                    "position": [float(v) for v in site.get("position", [])],
+                    "site_type": str(site.get("site_label", "unknown")),
+                    "distance_to_anchor": float(site.get("dist_from_anchor", 0.0)),
+                    "active_center_site": bool(site.get("active_center_site", False)),
+                }
+                for site in sites[:max_sites_per_hint]
+            ]
+            if not candidate_sites:
+                continue
+            hints.append(
+                {
+                    "element": "H",
+                    "side": target_side,
+                    "source_side": source_side,
+                    "source_atom_index": int(h_idx),
+                    "anchor_position": [float(v) for v in anchor_pos],
+                    "bond_partner_element": "H",
+                    "bond_partner_index": None,
+                    "bond_partner_position": [float(v) for v in anchor_pos],
+                    "candidate_sites": candidate_sites,
                 }
             )
         return hints
@@ -1419,9 +1999,28 @@ class Agent45GeometryTools:
                         p = positions[idx]
                     nearest_any = f"{symbols[idx]} at [{p[0]:.2f},{p[1]:.2f},{p[2]:.2f}]"
 
+                hint = self._find_matching_staging_hint(step_entry, side, element)
+
                 # Surface z
                 surf_indices = [i for i in range(len(atoms)) if i not in set(ads_indices)]
                 surf_top_z = float(np.max(positions[surf_indices, 2])) if surf_indices else 0.0
+                local_top_z = surf_top_z
+                is_active_recessed_acceptor_site = False
+                if hint:
+                    candidate_sites = list(hint.get("candidate_sites", []))
+                    nearest_site, site_dist = self._nearest_candidate_site(atoms, candidate_sites, pos)
+                    if nearest_site is not None and site_dist <= 1.5:
+                        site_label = str(nearest_site.get("site_label", nearest_site.get("label", "")))
+                        is_active_recessed_acceptor_site = bool(
+                            nearest_site.get("active_center_site", False)
+                            and site_label.startswith("local_H_on_O")
+                        )
+                        local_top_z = self._local_surface_top_z(
+                            atoms,
+                            ads_indices,
+                            pos,
+                            fallback=surf_top_z,
+                        )
 
                 atom_ok = True
                 issues: List[str] = []
@@ -1431,11 +2030,10 @@ class Agent45GeometryTools:
                 if min_any_dist < 0.8:
                     atom_ok = False
                     issues.append(f"Overlaps ({min_any_dist:.3f} Å) with {nearest_any}")
-                if pos[2] < surf_top_z + 0.5:
+                if pos[2] < local_top_z + 0.5 and not is_active_recessed_acceptor_site:
                     atom_ok = False
-                    issues.append(f"Below surface (z={pos[2]:.2f}, surface top={surf_top_z:.2f})")
+                    issues.append(f"Below local surface (z={pos[2]:.2f}, local surface top={local_top_z:.2f})")
 
-                hint = self._find_matching_staging_hint(step_entry, side, element)
                 if hint:
                     candidate_sites = list(hint.get("candidate_sites", []))
                     allowed_rank = self._get_allowed_site_rank_for_hint(step_entry, hint)
@@ -1637,7 +2235,19 @@ class Agent45GeometryTools:
         struct.sort()  # sorts by species (atomic number), then frac coords
 
         sorted_atoms = adaptor.get_atoms(struct)
-        sorted_atoms.info = atoms.info.copy()
+        # Copy non-index metadata only: index-bearing keys recorded before the
+        # sort would point at stale pre-sort indices. adsorbate_indices /
+        # surface_indices are rewritten below from the tracked roles.
+        carried_info = dict(atoms.info)
+        for stale_key in (
+            "adsorbate_indices",
+            "surface_indices",
+            "staged_indices",
+            "_reorder_sequence",
+            "atom_mapping_constraints",
+        ):
+            carried_info.pop(stale_key, None)
+        sorted_atoms.info = carried_info
 
         new_ads: List[int] = []
         new_staged: List[int] = []
@@ -1774,17 +2384,9 @@ class Agent45GeometryTools:
 
     def _get_uma_predictor_for_energy_gate(self, output_dir: str = "") -> Any:
         owner = self._energy_gate_owner()
-        shared_getter = getattr(owner, "get_shared_fairchem_predictor", None)
+        shared_getter = getattr(owner, "get_shared_uma_predictor", None)
         if callable(shared_getter):
-            return shared_getter(
-                cache_key="uma_shared",
-                model_name="uma-s-1p1",
-                use_gpu=True,
-                device="cuda",
-                work_subdir="_shared_fairchem_global",
-                keep_files=False,
-                verbose=False,
-            )
+            return shared_getter()
 
         predictor = getattr(owner, "_agent45_uma_predictor", None)
         if predictor is not None:
@@ -1798,7 +2400,7 @@ class Agent45GeometryTools:
 
         predictor = FairchemPredictor(
             fairchem_root=str(DEPS_BASE_PATH / "fairchem"),
-            model_name="uma-s-1p1",
+            model_name=DEFAULT_FAIRCHEM_MODEL,
             use_gpu=True,
             device="cuda",
             work_dir=str(predictor_work_dir),
@@ -1923,12 +2525,26 @@ class Agent45GeometryTools:
         self,
         step_structures: List[Dict[str, Any]],
         output_dir: str = "",
-        **_kwargs: Any,
+        min_pair_fatal_threshold: float = 0.80,
+        force_fatal_threshold: float = 1.0,
+        force_warning_threshold: float = 0.5,
     ) -> Dict[str, Any]:
         """Agent4/5 endpoint UMA energy gate: evaluate energies and forces.
 
-        No relaxation — structures are used as-is from Agent4.
-        Only computes energies, forces, and overlap diagnostics.
+        Staged atoms (added by Agent4 for element balancing) are first pre-relaxed with
+        every other atom held fixed (FIRE, 40 steps, fmax 0.3 eV/Å; SI Table S3), and the
+        relaxed positions are written back to the step. Adsorbate core and slab stay exactly
+        as Agent4 designed them. Energies, forces and overlaps are then evaluated.
+        Set CATDT_AGENT4_STAGED_PRERELAX=0 to evaluate the designs strictly as-is.
+
+        Parameters
+        ----------
+        min_pair_fatal_threshold : float
+            Minimum allowed pair distance (Å); below this is FATAL overlap.
+        force_fatal_threshold : float
+            Max adsorbate force (eV/Å) at or above which the endpoint is FATAL.
+        force_warning_threshold : float
+            Max adsorbate force (eV/Å) at or above which a warning is issued.
         """
         if not step_structures:
             return {"status": "PASS", "summary": "(no step structures)",
@@ -1947,8 +2563,42 @@ class Agent45GeometryTools:
             step_report: Dict[str, Any] = {"step_index": step_idx, "step_name": step_name, "endpoints": {}}
 
             for endpoint in ("reactant", "product"):
-                atoms = step[endpoint]
+                atoms = step.get(endpoint) if isinstance(step, dict) else None
+                if not isinstance(atoms, Atoms):
+                    fatal_issues.append(
+                        f"{step_name}:{endpoint} malformed payload — missing ASE Atoms structure"
+                    )
+                    step_report["endpoints"][endpoint] = {"error": "missing_structure"}
+                    continue
                 adsorbate_indices = list(step.get(f"{endpoint}_adsorbate_indices", []))
+
+                staged = [int(i) for i in step.get(f"{endpoint}_staged_indices", []) or []
+                          if isinstance(i, (int, np.integer)) and 0 <= int(i) < len(atoms)]
+                prerelax_info: Dict[str, Any] = {"ran": False, "steps": 0}
+                if staged and os.getenv("CATDT_AGENT4_STAGED_PRERELAX", "1") != "0":
+                    relaxed, prerelax_info = self._constrained_subset_relax(
+                        atoms=atoms, movable_indices=staged, predictor=predictor,
+                        fmax=float(os.getenv("CATDT_AGENT4_STAGED_PRERELAX_FMAX", "0.3")),
+                        max_steps=int(os.getenv("CATDT_AGENT4_STAGED_PRERELAX_STEPS", "40")),
+                    )
+                    if not prerelax_info.get("error"):
+                        # keep Agent4's design: the staging-site rule judges the design,
+                        # the physical checks judge the relaxed structure
+                        step[f"{endpoint}_design_positions"] = np.asarray(atoms.get_positions()).copy()
+                        # Only staged atoms may have moved. After product reordering a staged atom
+                        # can sit inside the fixed-count range covered by the immutable signature,
+                        # so re-sign that range, but only after checking every other atom is unmoved.
+                        others = [i for i in range(len(atoms)) if i not in set(staged)]
+                        unmoved = bool(np.allclose(relaxed.positions[others], atoms.positions[others], atol=1e-8))
+                        prerelax_info["non_staged_unmoved"] = unmoved
+                        sig_key = f"{endpoint}_fixed_reference_signature"
+                        if unmoved and step.get(sig_key):
+                            fixed_count = int(step.get(f"{endpoint}_fixed_atom_count", len(relaxed)))
+                            step[sig_key] = self.workflow._fixed_coordinate_signature(relaxed, fixed_count)
+                            prerelax_info["signature_updated"] = True
+                        relaxed.info.update(atoms.info)
+                        step[endpoint] = relaxed
+                        atoms = relaxed
 
                 result = self._evaluate_endpoint_with_uma(
                     predictor=predictor, atoms=atoms,
@@ -1958,18 +2608,22 @@ class Agent45GeometryTools:
 
                 # Overlap check
                 min_pair = result["min_pair_distance"]
-                if 0 < min_pair < 0.80:
-                    fatal_issues.append(f"{step_name}:{endpoint} min pair distance {min_pair:.2f} Å < 0.80 Å")
+                if 0 < min_pair < float(min_pair_fatal_threshold):
+                    fatal_issues.append(
+                        f"{step_name}:{endpoint} min pair distance {min_pair:.2f} Å "
+                        f"< {float(min_pair_fatal_threshold):.2f} Å"
+                    )
 
                 max_force = max(
                     float(result.get("max_force_adsorbate", 0.0)),
                     float(result.get("max_force_focus", 0.0)),
                 )
-                if max_force >= 1.0:
+                if max_force >= float(force_fatal_threshold):
                     fatal_issues.append(
-                        f"{step_name}:{endpoint} max adsorbate force {max_force:.2f} eV/Å >= 1.00 eV/Å"
+                        f"{step_name}:{endpoint} max adsorbate force {max_force:.2f} eV/Å "
+                        f">= {float(force_fatal_threshold):.2f} eV/Å"
                     )
-                elif max_force >= 0.5:
+                elif max_force >= float(force_warning_threshold):
                     warning_issues.append(
                         f"{step_name}:{endpoint} max adsorbate force {max_force:.2f} eV/Å"
                     )
@@ -1979,6 +2633,7 @@ class Agent45GeometryTools:
                     f"fmax={result['max_force_adsorbate']:.2f} eV/Å, "
                     f"min_pair={min_pair:.2f} Å"
                 )
+                result["staged_prerelax"] = {"staged_indices": staged, **prerelax_info}
                 step_report["endpoints"][endpoint] = result
 
             step_reports.append(step_report)
@@ -2180,6 +2835,7 @@ class Agent45GeometryTools:
 
         reactant_staged_indices: List[int] = []
         product_staged_indices: List[int] = []
+        atom_mapping_constraints: List[Dict[str, Any]] = []
 
         has_llm_additions = bool(step.atoms_to_add)
 
@@ -2239,6 +2895,35 @@ class Agent45GeometryTools:
 
         incoming_offsets: Counter = Counter()
         outgoing_offsets: Counter = Counter()
+        step_entry = {
+            "name": step.step_name,
+            "reactant": reactant_neb,
+            "product": product_neb,
+            "reactant_adsorbate_indices": reactant_ads,
+            "product_adsorbate_indices": product_ads,
+        }
+        for src in [self.workflow, getattr(self.workflow, "tools", None)]:
+            if src is None:
+                continue
+            for baseline in list(getattr(src, "_agent45_baseline_steps", []) or []):
+                if not isinstance(baseline, dict):
+                    continue
+                if str(baseline.get("name", "")) != str(step.step_name):
+                    continue
+                hints = baseline.get("staging_hints")
+                if isinstance(hints, list):
+                    step_entry["staging_hints"] = [
+                        {
+                            **dict(hint),
+                            "fragment_elements": list(hint.get("fragment_elements", [])),
+                            "candidate_sites": [dict(site) for site in list(hint.get("candidate_sites", []))],
+                        }
+                        for hint in hints
+                        if isinstance(hint, dict)
+                    ]
+                break
+            if "staging_hints" in step_entry:
+                break
 
         def _pop_position(source: Dict[str, Dict[str, List[List[float]]]], side: str, element: str) -> Optional[List[float]]:
             slots = source.get(side, {}).get(element, [])
@@ -2271,6 +2956,18 @@ class Agent45GeometryTools:
                     reactant_neb.append(Atom(element, position=reactant_pos))
                     reactant_ads.append(len(reactant_neb) - 1)
                     reactant_staged_indices.append(len(reactant_neb) - 1)
+                    hint = self._find_matching_staging_hint(step_entry, "reactant", element)
+                    if hint and str(hint.get("source_side", "")) == "product":
+                        source_idx = hint.get("source_atom_index")
+                        if isinstance(source_idx, int):
+                            atom_mapping_constraints.append(
+                                {
+                                    "reactant_index": len(reactant_neb) - 1,
+                                    "product_index": int(source_idx),
+                                    "element": element,
+                                    "reason": "Stage B staged atom maps to the unmatched Stage A atom from the clean product.",
+                                }
+                            )
             else:
                 for _ in range(-delta):
                     outgoing_offsets[element] += 1
@@ -2295,6 +2992,18 @@ class Agent45GeometryTools:
                     product_neb.append(Atom(element, position=product_pos))
                     product_ads.append(len(product_neb) - 1)
                     product_staged_indices.append(len(product_neb) - 1)
+                    hint = self._find_matching_staging_hint(step_entry, "product", element)
+                    if hint and str(hint.get("source_side", "")) == "reactant":
+                        source_idx = hint.get("source_atom_index")
+                        if isinstance(source_idx, int):
+                            atom_mapping_constraints.append(
+                                {
+                                    "reactant_index": int(source_idx),
+                                    "product_index": len(product_neb) - 1,
+                                    "element": element,
+                                    "reason": "Stage B staged atom maps to the unmatched Stage A atom from the clean reactant.",
+                                }
+                            )
 
         ignored_additions = sum(
             len(pos_list)
@@ -2407,9 +3116,65 @@ class Agent45GeometryTools:
             "product_fixed_atom_count": int(product_fixed_len),
             "reactant_staged_indices": sorted(set(reactant_staged_indices)),
             "product_staged_indices": sorted(set(product_staged_indices)),
+            "atom_mapping_constraints": atom_mapping_constraints,
             "reactant_min_distance": self.workflow._min_pair_distance(reactant_neb, reactant_ads),
             "product_min_distance": self.workflow._min_pair_distance(product_neb, product_ads),
         }
+
+    @staticmethod
+    def _mic_xy(atoms: Atoms, vec_xy: Any) -> np.ndarray:
+        """Shortest periodic image of a lateral vector (surface cell vectors a, b)."""
+        a, b = np.asarray(atoms.cell[0][:2], float), np.asarray(atoms.cell[1][:2], float)
+        v = np.asarray(vec_xy, float)
+        best = v
+        for i in (-1, 0, 1):
+            for j in (-1, 0, 1):
+                cand = v + i * a + j * b
+                if np.linalg.norm(cand) < np.linalg.norm(best):
+                    best = cand
+        return best
+
+    def _equivalent_surface_translation(
+        self, atoms: Atoms, surface_indices: List[int], wanted_xy: Any, tol: float = 0.25,
+    ) -> Optional[np.ndarray]:
+        """Lateral translation closest to ``wanted_xy`` that maps the slab onto itself.
+
+        Candidates are the vectors between same-element atoms of the top slab layer; each is
+        accepted only if every slab atom lands on a slab atom of the same element (minimum
+        image, within ``tol``). Returns None when no candidate is a symmetry of the slab.
+        """
+        idx = [i for i in surface_indices if 0 <= i < len(atoms)]
+        if not idx:
+            return None
+        pos = atoms.positions[idx]
+        sym = [atoms[i].symbol for i in idx]
+        top = [k for k in range(len(idx)) if pos[k, 2] > pos[:, 2].max() - 0.6]
+        wanted = np.asarray(wanted_xy, float)
+        cands = {}
+        for k0 in top[:1]:
+            for k in top:
+                if sym[k] != sym[k0]:
+                    continue
+                v = self._mic_xy(atoms, pos[k, :2] - pos[k0, :2])
+                cands[(round(v[0], 3), round(v[1], 3))] = v
+        best, best_d = None, float("inf")
+        for v in sorted(cands.values(), key=lambda v: float(np.linalg.norm(self._mic_xy(atoms, wanted - v)))):
+            d = float(np.linalg.norm(self._mic_xy(atoms, wanted - v)))
+            if d >= best_d:
+                continue
+            ok = True
+            for k in range(len(idx)):
+                target = pos[k].copy()
+                target[:2] += v
+                dists = [np.linalg.norm(np.r_[self._mic_xy(atoms, target[:2] - pos[m, :2]), target[2] - pos[m, 2]])
+                         for m in range(len(idx)) if sym[m] == sym[k]]
+                if not dists or min(dists) > tol:
+                    ok = False
+                    break
+            if ok:
+                best, best_d = v, d
+                break
+        return best
 
     def build_step_structures(
         self,
@@ -2461,30 +3226,54 @@ class Agent45GeometryTools:
             if r_ads_idx and p_ads_idx:
                 r_centroid = np.mean([reactant_neb.positions[i] for i in r_ads_idx if i < len(reactant_neb)], axis=0)
                 p_centroid = np.mean([product_neb.positions[i] for i in p_ads_idx if i < len(product_neb)], axis=0)
-                xy_drift = float(np.linalg.norm(r_centroid[:2] - p_centroid[:2]))
+                # Minimum-image lateral offset: a product sitting next to the reactant across the
+                # periodic boundary has not drifted.
+                wanted_xy = self._mic_xy(product_neb, r_centroid[:2] - p_centroid[:2])
+                xy_drift = float(np.linalg.norm(wanted_xy))
                 if xy_drift > 2.0:
-                    shift_xy = r_centroid[:2] - p_centroid[:2]
-                    for idx in p_ads_idx:
-                        if idx < len(product_neb):
-                            product_neb.positions[idx][:2] += shift_xy
+                    # Move the product adsorbate only by a translation that maps the slab onto
+                    # itself, so it stays on an equivalent site (an arbitrary shift can push a
+                    # relaxed adsorbate from a hollow onto a top site). No such translation
+                    # (e.g. a defective surface): leave the product where it is.
+                    surf_idx = [i for i in range(len(product_neb)) if i not in set(p_ads_idx)]
+                    shift_xy = self._equivalent_surface_translation(product_neb, surf_idx, wanted_xy)
+                    if shift_xy is not None and float(np.linalg.norm(shift_xy)) > 1e-6:
+                        for idx in p_ads_idx:
+                            if idx < len(product_neb):
+                                product_neb.positions[idx][:2] += shift_xy
                     logger.info(
-                        "Step '%s': product adsorbate xy drifted %.2f A from reactant; "
-                        "shifted product adsorbate xy by (%.2f, %.2f)",
-                        step.step_name, xy_drift, shift_xy[0], shift_xy[1],
+                        "Step '%s': product adsorbate xy drifted %.2f A (minimum image) from reactant; "
+                        "%s",
+                        step.step_name, xy_drift,
+                        "shifted by the surface-equivalent translation (%.2f, %.2f)" % (shift_xy[0], shift_xy[1])
+                        if shift_xy is not None else "no surface-equivalent translation, product left in place",
                     )
 
             # Reorder product atoms to match reactant ordering so that
             # interpolation and NEB see consistent atom indices.
             product_ads_built = list(built["product_adsorbate_indices"])
-            reordered_prod, reordered_ads, did_reorder = self.workflow._reorder_product_to_match_reactant(
+            product_staged_built = list(built["product_staged_indices"])
+            mapping_constraints_built = list(built.get("atom_mapping_constraints", []))
+            reordered_prod, reordered_ads, reordered_staged, did_reorder = self.workflow._reorder_product_to_match_reactant(
                 reactant=reactant_neb,
                 product=product_neb,
                 product_adsorbate_indices=product_ads_built,
+                product_staged_indices=product_staged_built,
+                atom_mapping_constraints=mapping_constraints_built,
             )
             if did_reorder:
                 product_neb = reordered_prod
                 built["product_adsorbate_indices"] = reordered_ads
-                built["product_staged_indices"] = []  # indices invalidated by reorder
+                built["product_staged_indices"] = reordered_staged
+                old_to_new = {old: new for new, old in enumerate(reordered_prod.info.get("_reorder_sequence", []))}
+                if old_to_new:
+                    for constraint in mapping_constraints_built:
+                        try:
+                            old_p = int(constraint.get("product_index"))
+                        except Exception:
+                            continue
+                        if old_p in old_to_new:
+                            constraint["product_index"] = int(old_to_new[old_p])
 
             baseline_entry = baseline_lookup.get(step.step_name, {})
             baseline_hints = list(baseline_entry.get("staging_hints", [])) if isinstance(baseline_entry, dict) else []
@@ -2513,6 +3302,7 @@ class Agent45GeometryTools:
                     "product_fixed_atom_count": int(built["product_fixed_atom_count"]),
                     "reactant_staged_indices": list(built["reactant_staged_indices"]),
                     "product_staged_indices": list(built["product_staged_indices"]),
+                    "atom_mapping_constraints": list(built.get("atom_mapping_constraints", [])),
                     "reactant_min_distance": float(built["reactant_min_distance"]),
                     "product_min_distance": float(built["product_min_distance"]),
                     "product_source": product_source,
@@ -2581,21 +3371,22 @@ class Agent45GeometryTools:
         step_name: str,
         threshold: float,
     ) -> str:
-        """Generate actionable suggestion for the closest overlapping atom pair."""
+        """Generate actionable suggestion for the closest overlapping atom pair.
+
+        Uses ``get_all_distances(mic=True)`` so the closest pair is found
+        consistently with the caller's MIC-based overlap detection.
+        """
         for label, atoms in [("reactant", reactant), ("product", product)]:
             positions = atoms.get_positions()
             symbols = atoms.get_chemical_symbols()
             n = len(atoms)
             if n < 2:
                 continue
-            min_d = float("inf")
-            best_i, best_j = 0, 1
-            for i in range(n):
-                for j in range(i + 1, n):
-                    d = float(np.linalg.norm(positions[i] - positions[j]))
-                    if d < min_d:
-                        min_d = d
-                        best_i, best_j = i, j
+            dists = atoms.get_all_distances(mic=True)
+            np.fill_diagonal(dists, np.inf)
+            best_i, best_j = np.unravel_index(int(np.argmin(dists)), dists.shape)
+            best_i, best_j = int(best_i), int(best_j)
+            min_d = float(dists[best_i, best_j])
             if min_d < threshold:
                 pi = positions[best_i]
                 pj = positions[best_j]
@@ -2718,17 +3509,11 @@ class Agent45GeometryTools:
             elif endpoints_identical:
                 warning_issues.append(f"{step_name}: reactant and product endpoints are numerically identical")
 
-            endpoint_min = min(
-                v
-                for v in (
-                    self.workflow._min_distance_any_pair(reactant),
-                    self.workflow._min_distance_any_pair(product),
-                )
-                if v > 0
-            ) if any(v > 0 for v in (
-                self.workflow._min_distance_any_pair(reactant),
-                self.workflow._min_distance_any_pair(product),
-            )) else -1.0
+            # Compute each endpoint's distance matrix once and reuse.
+            reactant_min = self.workflow._min_distance_any_pair(reactant)
+            product_min = self.workflow._min_distance_any_pair(product)
+            positive_mins = [v for v in (reactant_min, product_min) if v > 0]
+            endpoint_min = min(positive_mins) if positive_mins else -1.0
 
             # H-X bonds are shorter (O-H ~0.97, C-H ~1.09, N-H ~1.01)
             # so use a lower threshold when H is involved in the closest pair
@@ -2826,7 +3611,12 @@ class Agent45GeometryTools:
                 if not matching_staged:
                     continue
 
+                # The site rule constrains Agent4's DESIGN. If the energy gate has since
+                # pre-relaxed the staged atoms, judge the positions Agent4 proposed.
                 endpoint_positions = endpoint_atoms.get_positions()
+                design_positions = step.get(f"{side}_design_positions")
+                if design_positions is not None and np.shape(design_positions) == endpoint_positions.shape:
+                    endpoint_positions = np.asarray(design_positions, float)
                 best_idx = min(
                     matching_staged,
                     key=lambda idx_ep: self._nearest_candidate_site(endpoint_atoms, candidate_sites, endpoint_positions[idx_ep])[1],
@@ -2943,6 +3733,18 @@ class Agent45GeometryTools:
                     allowed_rank = self._get_allowed_site_rank_for_hint(step, hint)
                     current_rank = self._candidate_site_rank(candidate_sites, nearest_site)
                     if current_rank != allowed_rank:
+                        # Agent4 keeps proposing a different candidate site, so the "try site N
+                        # first" rank is never reached and can never be promoted: the design is
+                        # rejected forever. Advance the rank after two such rejections.
+                        retry_state = self._site_retry_state()
+                        miss_key = self._site_retry_key(
+                            step_name, side, str(hint.get("fragment_label", ""))
+                        ) + ("rank_miss",)  # _site_retry_key returns a tuple
+                        misses = int(retry_state.get(miss_key, 0)) + 1
+                        retry_state[miss_key] = misses
+                        if misses >= 2 and allowed_rank < len(candidate_sites):
+                            retry_state[miss_key] = 0
+                            self._promote_allowed_site_rank_for_hint(step, hint, allowed_rank + 1)
                         continue
                     next_rank = min(current_rank + 1, len(candidate_sites))
                     if next_rank <= current_rank:

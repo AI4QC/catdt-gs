@@ -87,8 +87,11 @@ class UMASurfaceCalculator(Calculator):
     def get_potential_energy(self, atoms=None, **kwargs):
         if atoms is None:
             atoms = self.atoms
-        if "energy" not in self.results:
-            self.calculate(atoms, ["energy"])
+        # Follow ASE Calculator semantics: recompute when the atoms changed
+        # since the last calculation instead of blindly reusing cached results.
+        system_changes = self.check_state(atoms)
+        if system_changes or "energy" not in self.results:
+            self.calculate(atoms, ["energy"], system_changes or all_changes)
         return float(self.results["energy"])
 
     def _compute_surface_energy(self, atoms: ase.Atoms) -> float:
@@ -208,8 +211,13 @@ class UMAPourbaixCalculator(UMASurfaceCalculator):
         # Adsorbate corrections (OH ZPE-TS), same logic as NFFPourbaix
         try:
             from ase.formula import Formula
-        except ImportError:
-            from pymatgen.core import Composition as Formula
+        except ImportError as exc:
+            # No pymatgen fallback: Composition does not implement the ase
+            # Formula API (count/divmod/from_dict) used below.
+            raise ImportError(
+                "ase.formula.Formula is required for adsorbate corrections "
+                "in UMAPourbaixCalculator._get_delta_g1"
+            ) from exc
         if self.adsorbate_corrections:
             formula = Formula(atoms.get_chemical_formula())
             for adsorbate, correction in self.adsorbate_corrections.items():

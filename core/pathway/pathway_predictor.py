@@ -15,8 +15,7 @@ Pathway Predictor - 反应路径完整分析模块
     # 初始化预测器
     predictor = PathwayPredictor(
         fairchem_root="/path/to/fairchem",
-        model_name="uma-s-1p1",
-        use_gpu=True,
+        use_gpu=True,  # 势函数见 core/fairchem_config.py (CATDT_FAIRCHEM_MODEL)
     )
 
     # 方式1: 从吸附质列表预测完整反应路径
@@ -60,6 +59,9 @@ import numpy as np
 from ase import Atoms
 from ase.io import read, write
 
+from core.fairchem_config import DEFAULT_FAIRCHEM_MODEL
+from .fairchem_predictor import ATOMIC_REFERENCE_ENERGIES
+
 try:
     import matplotlib.pyplot as plt
     HAS_MATPLOTLIB = True
@@ -74,9 +76,9 @@ class PathwayStep:
     name: str
     reactant_adsorbate: str
     product_adsorbate: str
-    reactant_energy: float  # eV
-    product_energy: float  # eV
-    reaction_energy: float  # eV — gas-phase-corrected ΔE (pathway convention)
+    reactant_energy: Optional[float]  # eV; None 表示上游预测失败、能量不可用
+    product_energy: Optional[float]  # eV; None 表示上游预测失败、能量不可用
+    reaction_energy: Optional[float]  # eV — gas-phase-corrected ΔE; None 表示不可用
     activation_energy: Optional[float] = None  # eV
     transition_state_energy: Optional[float] = None  # eV
     is_rate_determining: bool = False
@@ -89,8 +91,9 @@ class PathwayStep:
 
     def __repr__(self):
         barrier_str = f", E_act={self.activation_energy:.3f} eV" if self.activation_energy else ""
+        de_str = f"{self.reaction_energy:.3f} eV" if self.reaction_energy is not None else "N/A"
         return (f"PathwayStep({self.name}: {self.reactant_adsorbate} -> {self.product_adsorbate}, "
-                f"ΔE={self.reaction_energy:.3f} eV{barrier_str})")
+                f"ΔE={de_str}{barrier_str})")
 
 
 @dataclass
@@ -139,7 +142,10 @@ class CompletePathwayResult:
             rds_marker = " [RDS]" if step.is_rate_determining else ""
             lines.append(f"\nStep {step.step_index + 1}: {step.name}{rds_marker}")
             lines.append(f"  {step.reactant_adsorbate} -> {step.product_adsorbate}")
-            lines.append(f"  Reaction energy (ΔE): {step.reaction_energy:+.4f} eV")
+            if step.reaction_energy is not None:
+                lines.append(f"  Reaction energy (ΔE): {step.reaction_energy:+.4f} eV")
+            else:
+                lines.append("  Reaction energy (ΔE): N/A (step failed)")
 
             if step.activation_energy is not None:
                 lines.append(f"  Activation energy (E_act): {step.activation_energy:.4f} eV")
@@ -187,16 +193,9 @@ class PathwayPredictor:
         是否输出详细信息
     """
 
-    # 原子参考能量 (eV) - 与 FairchemPredictor 保持一致
+    # 原子参考能量 (eV) - 从 fairchem_predictor 导入（单一数据源）
     # 当原子从表面离开或加入时，使用这些能量进行校正
-    ATOMIC_REFERENCE_ENERGIES = {
-        "H": -3.477,
-        "C": -7.282,
-        "N": -8.083,
-        "O": -7.204,
-        "F": -4.891,
-        "S": -4.659,
-    }
+    ATOMIC_REFERENCE_ENERGIES = ATOMIC_REFERENCE_ENERGIES
 
     @staticmethod
     def parse_adsorbate_formula(formula: str) -> Counter:
@@ -327,7 +326,7 @@ class PathwayPredictor:
     def __init__(
         self,
         fairchem_root: str,
-        model_name: str = "uma-s-1p1",
+        model_name: str = DEFAULT_FAIRCHEM_MODEL,
         model_path: Optional[str] = None,
         use_gpu: bool = True,
         work_dir: Optional[str] = None,
@@ -567,6 +566,27 @@ class PathwayPredictor:
 
                 self.logger.info(f"\nStep {i + 1}: {reactant_ads} -> {product_ads}")
 
+                # 上游吸附能预测失败的物种不会出现在 adsorbate_energies 中：
+                # 跳过该步并记录为失败，而不是 KeyError 杀掉整条路径
+                missing = [a for a in (reactant_ads, product_ads) if a not in adsorbate_energies]
+                if missing:
+                    self.logger.warning(
+                        f"  Skipping step {step_name}: adsorption energy unavailable for "
+                        f"{missing} (upstream prediction failed). Recording step as failed."
+                    )
+                    steps.append(PathwayStep(
+                        step_index=i,
+                        name=step_name,
+                        reactant_adsorbate=reactant_ads,
+                        product_adsorbate=product_ads,
+                        reactant_energy=adsorbate_energies.get(reactant_ads),
+                        product_energy=adsorbate_energies.get(product_ads),
+                        reaction_energy=None,
+                        activation_energy=None,
+                        transition_state_energy=None,
+                    ))
+                    continue
+
                 reactant_energy = adsorbate_energies[reactant_ads]
                 product_energy = adsorbate_energies[product_ads]
 
@@ -651,6 +671,24 @@ class PathwayPredictor:
                 reactant_ads = str(adsorbates[i])
                 product_ads = str(adsorbates[i + 1])
 
+                # 同上：上游失败的物种缺席时跳过该步并记录为失败
+                missing = [a for a in (reactant_ads, product_ads) if a not in adsorbate_energies]
+                if missing:
+                    self.logger.warning(
+                        f"  Skipping step {reactant_ads} -> {product_ads}: adsorption energy "
+                        f"unavailable for {missing} (upstream prediction failed)."
+                    )
+                    steps.append(PathwayStep(
+                        step_index=i,
+                        name=f"{reactant_ads}_to_{product_ads}",
+                        reactant_adsorbate=reactant_ads,
+                        product_adsorbate=product_ads,
+                        reactant_energy=adsorbate_energies.get(reactant_ads),
+                        product_energy=adsorbate_energies.get(product_ads),
+                        reaction_energy=None,
+                    ))
+                    continue
+
                 reactant_energy = adsorbate_energies[reactant_ads]
                 product_energy = adsorbate_energies[product_ads]
 
@@ -698,11 +736,16 @@ class PathwayPredictor:
                 self.logger.info(f"  {rate_determining_step.name}")
                 self.logger.info(f"  Barrier: {max_barrier:.4f} eV")
 
-        # 4. 计算总反应能
-        overall_reaction_energy = (
-            adsorbate_energies[str(adsorbates[-1])] -
-            adsorbate_energies[str(adsorbates[0])]
-        )
+        # 4. 计算总反应能（端点物种缺席时记为 NaN 而不是 KeyError）
+        first_ads_energy = adsorbate_energies.get(str(adsorbates[0]))
+        last_ads_energy = adsorbate_energies.get(str(adsorbates[-1]))
+        if first_ads_energy is None or last_ads_energy is None:
+            self.logger.warning(
+                "Overall reaction energy unavailable: endpoint adsorbate energy missing"
+            )
+            overall_reaction_energy = float("nan")
+        else:
+            overall_reaction_energy = last_ads_energy - first_ads_energy
 
         self.logger.info("\n" + "=" * 80)
         self.logger.info("Pathway analysis complete")
@@ -813,7 +856,9 @@ class PathwayPredictor:
 
             activation_energy = None
             ts_energy = None
-            reaction_energy = 0.0
+            reaction_energy = None
+            reactant_e = None
+            product_e = None
 
             try:
                 neb_result = self._barrier_predictor.predict_from_structures(
@@ -840,23 +885,32 @@ class PathwayPredictor:
                 reaction_energy = neb_result.reaction_energy
                 if neb_result.transition_state_index is not None:
                     ts_energy = neb_result.energies[neb_result.transition_state_index]
+                if len(neb_result.energies) >= 2:
+                    reactant_e = neb_result.energies[0]
+                    product_e = neb_result.energies[-1]
 
-                self.logger.info(
-                    f"  Ea_fwd={activation_energy:.3f} eV, "
-                    f"Ea_rev={neb_result.activation_energy_reverse:.3f} eV, "
-                    f"dE={reaction_energy:.3f} eV, "
-                    f"converged={neb_result.converged}"
-                )
+                if activation_energy is not None:
+                    self.logger.info(
+                        f"  Ea_fwd={activation_energy:.3f} eV, "
+                        f"Ea_rev={neb_result.activation_energy_reverse:.3f} eV, "
+                        f"dE={reaction_energy:.3f} eV, "
+                        f"converged={neb_result.converged}"
+                    )
+                else:
+                    self.logger.warning(
+                        f"  NEB returned no barrier for step {i+1} "
+                        f"(status={getattr(neb_result, 'status', 'unknown')})"
+                    )
 
             except Exception as e:
                 self.logger.error(f"  NEB failed for step {i+1}: {e}")
 
-            # Store energies for profile
-            reactant_e = neb_result.energies[0] if activation_energy is not None else 0.0
-            product_e = neb_result.energies[-1] if activation_energy is not None else 0.0
-            if reactant_label not in adsorbate_energies:
+            # Store energies for profile — 不可用时保持 None，不得用 0.0 占位
+            # 与真实能量混在一起
+            if reactant_e is not None and reactant_label not in adsorbate_energies:
                 adsorbate_energies[reactant_label] = reactant_e
-            adsorbate_energies[product_label] = product_e
+            if product_e is not None:
+                adsorbate_energies[product_label] = product_e
 
             pathway_steps.append(PathwayStep(
                 step_index=i,
@@ -885,10 +939,16 @@ class PathwayPredictor:
             self.logger.info(f"\nRate-determining step: {rate_determining_step.name}")
             self.logger.info(f"  Barrier: {max_barrier:.4f} eV")
 
-        # Overall reaction energy
-        first_e = adsorbate_energies.get(adsorbates[0], 0.0)
-        last_e = adsorbate_energies.get(adsorbates[-1], 0.0)
-        overall_reaction_energy = last_e - first_e
+        # Overall reaction energy（端点能量缺失时记为 NaN，避免 0.0 占位）
+        first_e = adsorbate_energies.get(adsorbates[0])
+        last_e = adsorbate_energies.get(adsorbates[-1])
+        if first_e is None or last_e is None:
+            self.logger.warning(
+                "Overall reaction energy unavailable: endpoint energy missing"
+            )
+            overall_reaction_energy = float("nan")
+        else:
+            overall_reaction_energy = last_e - first_e
 
         return CompletePathwayResult(
             surface_formula=surface_formula,
@@ -997,17 +1057,28 @@ class PathwayPredictor:
         cumulative_energy = 0.0
 
         for step in result.steps:
-            ea_fwd = step.activation_energy if step.activation_energy is not None else 0.0
-            reaction_e = step.reaction_energy if step.reaction_energy is not None else 0.0
+            # 反应能不可用（步骤失败）→ 跳过该步，不能用 0.0 占位混入真实剖面
+            if step.reaction_energy is None:
+                self.logger.warning(
+                    f"Skipping step {step.name} in energy profile: "
+                    f"reaction energy unavailable (step failed)"
+                )
+                continue
 
-            # TS energy = current level + forward barrier
-            ts_energy = cumulative_energy + ea_fwd
-            energies.append(ts_energy)
-            labels.append(f"TS{step.step_index + 1}")
-            is_ts.append(True)
+            if step.activation_energy is not None:
+                # TS energy = current level + forward barrier
+                ts_energy = cumulative_energy + step.activation_energy
+                energies.append(ts_energy)
+                labels.append(f"TS{step.step_index + 1}")
+                is_ts.append(True)
+            else:
+                self.logger.warning(
+                    f"No barrier available for step {step.name}; "
+                    f"omitting TS point in energy profile"
+                )
 
             # Product energy = current level + reaction energy
-            cumulative_energy += reaction_e
+            cumulative_energy += step.reaction_energy
             energies.append(cumulative_energy)
             labels.append(step.product_adsorbate)
             is_ts.append(False)

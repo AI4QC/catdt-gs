@@ -8,6 +8,7 @@ Workflow Dashboard - 实时监控和可视化仪表板
 4. 结果可视化
 """
 
+import html as html_lib
 import json
 import logging
 from pathlib import Path
@@ -117,6 +118,9 @@ class WorkflowDashboard:
         self.refresh_interval = refresh_interval
         self._update_thread: Optional[threading.Thread] = None
         self._stop_event = threading.Event()
+        # Guards self.metrics: update_step (caller thread) mutates it while
+        # the background renderer thread iterates it.
+        self._metrics_lock = threading.Lock()
         
         # 历史数据（用于趋势图）
         self.energy_history: deque = deque(maxlen=1000)
@@ -155,47 +159,48 @@ class WorkflowDashboard:
         error: Optional[str] = None
     ):
         """更新步骤状态"""
-        # 查找或创建步骤
-        step = next((s for s in self.metrics.steps if s.step_name == step_name), None)
-        
-        if step is None:
-            step = StepMetrics(step_name=step_name, status=status)
-            self.metrics.steps.append(step)
-        
-        # 更新状态
-        old_status = step.status
-        step.status = status
-        
-        # 时间戳管理
-        if status == "running" and old_status != "running":
-            step.start_time = datetime.now()
-        elif status in ["completed", "failed"] and old_status not in ["completed", "failed"]:
-            step.end_time = datetime.now()
-        
-        if progress is not None:
-            step.progress = progress
-        
-        if metrics:
-            step.metrics.update(metrics)
-        
-        if error:
-            step.error = error
-        
-        # 更新当前步骤
-        if status == "running":
-            self.metrics.current_step = step_name
-        
-        # 更新工作流状态
-        if all(s.status in ["completed", "failed", "skipped"] for s in self.metrics.steps):
-            self.metrics.end_time = datetime.now()
-            self.metrics.status = "completed" if all(s.status == "completed" for s in self.metrics.steps) else "failed"
-        
-        # 记录历史
-        self.progress_history.append({
-            "time": datetime.now().isoformat(),
-            "progress": self.metrics.overall_progress,
-            "step": step_name
-        })
+        with self._metrics_lock:
+            # 查找或创建步骤
+            step = next((s for s in self.metrics.steps if s.step_name == step_name), None)
+
+            if step is None:
+                step = StepMetrics(step_name=step_name, status=status)
+                self.metrics.steps.append(step)
+
+            # 更新状态
+            old_status = step.status
+            step.status = status
+
+            # 时间戳管理
+            if status == "running" and old_status != "running":
+                step.start_time = datetime.now()
+            elif status in ["completed", "failed"] and old_status not in ["completed", "failed"]:
+                step.end_time = datetime.now()
+
+            if progress is not None:
+                step.progress = progress
+
+            if metrics:
+                step.metrics.update(metrics)
+
+            if error:
+                step.error = error
+
+            # 更新当前步骤
+            if status == "running":
+                self.metrics.current_step = step_name
+
+            # 更新工作流状态
+            if all(s.status in ["completed", "failed", "skipped"] for s in self.metrics.steps):
+                self.metrics.end_time = datetime.now()
+                self.metrics.status = "completed" if all(s.status == "completed" for s in self.metrics.steps) else "failed"
+
+            # 记录历史
+            self.progress_history.append({
+                "time": datetime.now().isoformat(),
+                "progress": self.metrics.overall_progress,
+                "step": step_name
+            })
     
     def log_energy(self, step_name: str, energy: float, **kwargs):
         """记录能量值"""
@@ -208,24 +213,26 @@ class WorkflowDashboard:
     
     def generate_dashboard(self) -> Path:
         """生成监控页面"""
-        html = self._generate_html()
-        
+        with self._metrics_lock:
+            html = self._generate_html()
+            metrics_dict = self.metrics.to_dict()
+
         dashboard_path = self.output_dir / "index.html"
         with open(dashboard_path, 'w', encoding='utf-8') as f:
             f.write(html)
-        
+
         # 同时保存 JSON 数据
         json_path = self.output_dir / "metrics.json"
         with open(json_path, 'w') as f:
-            json.dump(self.metrics.to_dict(), f, indent=2, default=str)
-        
+            json.dump(metrics_dict, f, indent=2, default=str)
+
         return dashboard_path
     
     def _generate_html(self) -> str:
         """生成 HTML 页面"""
         m = self.metrics
         
-        # 步骤表格行
+        # 步骤表格行（用户来源的字符串一律 html.escape，防止注入）
         step_rows = []
         for step in m.steps:
             duration_str = f"{step.duration:.1f}s" if step.duration else "N/A"
@@ -237,17 +244,20 @@ class WorkflowDashboard:
                 "failed": "red",
                 "skipped": "orange"
             }.get(step.status, "black")
-            
-            metrics_str = "<br>".join(f"{k}: {v}" for k, v in step.metrics.items()) if step.metrics else "-"
-            
+
+            metrics_str = "<br>".join(
+                f"{html_lib.escape(str(k))}: {html_lib.escape(str(v))}"
+                for k, v in step.metrics.items()
+            ) if step.metrics else "-"
+
             step_rows.append(f"""
                 <tr>
-                    <td>{step.step_name}</td>
-                    <td style="color: {status_color}">{step.status.upper()}</td>
+                    <td>{html_lib.escape(str(step.step_name))}</td>
+                    <td style="color: {status_color}">{html_lib.escape(str(step.status).upper())}</td>
                     <td>{progress_bar}</td>
                     <td>{duration_str}</td>
                     <td>{metrics_str}</td>
-                    <td>{step.error or '-'}</td>
+                    <td>{html_lib.escape(str(step.error)) if step.error else '-'}</td>
                 </tr>
             """)
         
@@ -260,7 +270,7 @@ class WorkflowDashboard:
 <!DOCTYPE html>
 <html>
 <head>
-    <title>CatDT Workflow Dashboard - {m.run_id}</title>
+    <title>CatDT Workflow Dashboard - {html_lib.escape(str(m.run_id))}</title>
     <meta http-equiv="refresh" content="{self.refresh_interval}">
     <style>
         body {{
@@ -346,7 +356,7 @@ class WorkflowDashboard:
 <body>
     <div class="header">
         <h1>🧪 CatDT Workflow Dashboard</h1>
-        <p>Run ID: <strong>{m.run_id}</strong></p>
+        <p>Run ID: <strong>{html_lib.escape(str(m.run_id))}</strong></p>
         <p class="timestamp">Started: {m.start_time.strftime('%Y-%m-%d %H:%M:%S')}</p>
         <p class="timestamp">Last Update: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}</p>
     </div>
@@ -374,7 +384,7 @@ class WorkflowDashboard:
         <h3>Overall Progress</h3>
         {overall_progress_bar}
         <p>{m.overall_progress*100:.1f}% complete</p>
-        {f'<p>Current Step: <strong>{m.current_step}</strong></p>' if m.current_step else ''}
+        {f'<p>Current Step: <strong>{html_lib.escape(str(m.current_step))}</strong></p>' if m.current_step else ''}
     </div>
     
     <div class="status-card">

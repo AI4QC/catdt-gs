@@ -72,8 +72,8 @@ class CAREBridge:
         """Check whether the given species fall inside CARE's supported domain."""
         care_available = _check_care_available()
 
-        if species_elements is None:
-            species_elements = set()
+        # Work on a copy — never mutate the caller's set.
+        species_elements = set(species_elements) if species_elements is not None else set()
         if species_labels:
             for label in species_labels:
                 # Extract elements from labels like "*CO", "H2(g)", "CH3OH"

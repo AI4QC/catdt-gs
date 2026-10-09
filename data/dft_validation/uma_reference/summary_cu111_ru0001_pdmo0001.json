@@ -1,0 +1,174 @@
+{
+ "slabs": {
+  "cu111": {
+   "natoms": 27,
+   "formula": "Cu27",
+   "uma_energy": -81.01462041598808
+  },
+  "ru0001": {
+   "natoms": 27,
+   "formula": "Ru27",
+   "uma_energy": -215.58877534339516,
+   "converged": true,
+   "fmax": 0.004788408987224102,
+   "top_element": null
+  },
+  "pdmo0001": {
+   "natoms": 36,
+   "formula": "Mo18Pd18",
+   "uma_energy": -254.18228257154038,
+   "converged": true,
+   "fmax": 0.0021869002375751734,
+   "top_element": "Mo"
+  }
+ },
+ "steps": {
+  "S09_CO2+H_to_COOH": {
+   "slab": "cu111",
+   "note": "carboxyl route",
+   "natoms": 31,
+   "converged": true,
+   "n_images": 21,
+   "ts_index": 13,
+   "Ea_uma": 1.935934066772461,
+   "dE_uma": 0.8321313858032227,
+   "E_IS": -106.90573575361546,
+   "E_TS": -104.969801686843,
+   "E_FS": -106.07360436781224,
+   "max_image_jump": 1.0521049189667708,
+   "ts_bond": 1.418166638891683
+  },
+  "S12_N+H_to_NH": {
+   "slab": "ru0001",
+   "note": "N hydrogenation [endpoints and path from CatDT Agent 4/5]",
+   "natoms": 29,
+   "converged": true,
+   "ts_index": 5,
+   "n_images": 9,
+   "Ea_uma": 1.1921119689941406,
+   "dE_uma": 0.058643341064453125,
+   "E_IS": -228.17760489241954,
+   "E_TS": -226.9854929234254,
+   "E_FS": -228.11896155135508
+  },
+  "S13_CO+H_to_CHO": {
+   "slab": "pdmo0001",
+   "note": "CO hydrogenation (hcp-PdMo route)",
+   "natoms": 39,
+   "converged": true,
+   "rung": 2,
+   "n_images": 13,
+   "ts_index": 6,
+   "Ea_uma": 0.7756209373474121,
+   "dE_uma": 0.2320094108581543,
+   "E_IS": -274.58556334139945,
+   "E_TS": -273.80994240405204,
+   "E_FS": -274.3535539305413
+  },
+  "S14_CO2_to_CO+O": {
+   "slab": "pdmo0001",
+   "note": "RWGS C-O scission (hcp-PdMo route)",
+   "natoms": 39,
+   "converged": true,
+   "n_images": 23,
+   "ts_index": 5,
+   "Ea_uma": 0.36171650886535645,
+   "dE_uma": -1.2694190740585327,
+   "E_IS": -277.88423982185947,
+   "E_TS": -277.5225233129941,
+   "E_FS": -279.153658895918,
+   "max_image_jump": 1.103289160411188,
+   "ts_bond": 1.8350412007803807
+  },
+  "S08_CO2+H_to_HCOO": {
+   "slab": "cu111",
+   "note": "formate route",
+   "natoms": 31,
+   "converged": true,
+   "n_images": 3,
+   "ts_index": 1,
+   "Ea_uma": 1.0747075080871582,
+   "dE_uma": 0.012607574462890625,
+   "E_IS": -106.90651538236912,
+   "E_TS": -105.83180787428196,
+   "E_FS": -106.89390780790623,
+   "ts_bond": 1.4790361546455415,
+   "max_image_jump": 4.350876736945655
+  },
+  "S10_HCOO+H_to_H2COO": {
+   "slab": "cu111",
+   "note": "formate hydrogenation (TDTS type of Cu1-O3/ZrO2)",
+   "natoms": 32,
+   "converged": true,
+   "n_images": 31,
+   "ts_index": 21,
+   "Ea_uma": 1.612440586090088,
+   "dE_uma": 0.8692607879638672,
+   "E_IS": -110.42716124452629,
+   "E_TS": -108.8147206584362,
+   "E_FS": -109.55790045656242,
+   "max_image_jump": 1.052182528177566,
+   "ts_bond": 1.4260708080536368
+  },
+  "S11_N2_to_2N": {
+   "slab": "ru0001",
+   "note": "N2 dissociation (ammonia synthesis)",
+   "natoms": 29,
+   "converged": true,
+   "n_images": 36,
+   "ts_index": 11,
+   "Ea_uma": 1.731292724609375,
+   "dE_uma": 0.9938993453979492,
+   "E_IS": -232.04324650741282,
+   "E_TS": -230.31195378280344,
+   "E_FS": -231.04934716201487,
+   "ts_bond": 1.7083249874437298,
+   "max_image_jump": 0.945698606711748
+  }
+ },
+ "pairs": {
+  "P04_HCOO_vs_COOH": {
+   "slab": "cu111",
+   "A": "HCOO",
+   "B": "COOH",
+   "E_A": -106.90737321241673,
+   "E_B": -106.10775449140843,
+   "gap_uma": 0.7996187210083008
+  },
+  "P05_CHO_vs_COH": {
+   "slab": "pdmo0001",
+   "A": "CHO",
+   "B": "COH",
+   "E_A": -274.35355345370414,
+   "E_B": -273.8005916273797,
+   "gap_uma": 0.5529618263244629
+  }
+ },
+ "sites": {
+  "pdmo0001__CO": {
+   "n_placements": 8,
+   "n_unique": 4,
+   "uma_energies": [
+    -270.70406809874913,
+    -270.5977634532108,
+    -270.1920646769657,
+    -270.1899913890018
+   ],
+   "uma_best_site": "site_00"
+  },
+  "pdmo0001__H": {
+   "n_placements": 4,
+   "n_unique": 4,
+   "uma_energies": [
+    -258.446338067334,
+    -258.43727720765384,
+    -258.32963169602664,
+    -257.7916020253113
+   ],
+   "uma_best_site": "site_00"
+  }
+ },
+ "failed": {
+  "S14b_CH3O+H_to_CH3OH": "RuntimeError('no intact placement for CH3OH')"
+ }
+}

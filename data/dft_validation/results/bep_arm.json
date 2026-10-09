@@ -1,0 +1,47 @@
+{
+ "reference": "OC20NEB DFT NEB barriers (CatTSunami mapping files)",
+ "n_reactions": 636,
+ "seed": 0,
+ "single_line": {
+  "n_train": 317,
+  "n_test": 319,
+  "coefficients": {
+   "all": {
+    "alpha": 0.551705867956195,
+    "beta": 1.3834996540194617
+   }
+  },
+  "mae": 0.4510227286250893,
+  "rmse": 0.5833634668479165,
+  "within_0p1": 14.733542319749215,
+  "within_0p3": 39.18495297805642,
+  "max_abs_err": 1.9720262653255698
+ },
+ "per_reaction_type": {
+  "n_train": 317,
+  "n_test": 319,
+  "coefficients": {
+   "desorption": {
+    "alpha": 1.3429246876659802,
+    "beta": 0.27381395892573895
+   },
+   "dissociation": {
+    "alpha": 0.5915180830996022,
+    "beta": 1.281567084091576
+   },
+   "transfer": {
+    "alpha": 0.5235475194588365,
+    "beta": 1.4545040952515742
+   }
+  },
+  "mae": 0.44029057566984076,
+  "rmse": 0.5738125675344372,
+  "within_0p1": 13.793103448275861,
+  "within_0p3": 43.260188087774296,
+  "max_abs_err": 1.9062711158100083
+ },
+ "fit_wall_time_s": 0.004,
+ "wall_time_per_barrier_s": 5e-06,
+ "force_calls_per_barrier": 0,
+ "energy_evaluations_per_barrier": 2
+}

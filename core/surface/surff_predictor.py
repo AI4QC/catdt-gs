@@ -385,9 +385,11 @@ class SurFFPredictor:
 
         db_idx = 0
         for item in dataset:
+            # Bind sid before the try block so the except handler can
+            # always reference it.
+            sid = item.get('slab_id', '<unknown>')
             try:
                 poscar_path = item['POSCAR_pth']
-                sid = item['slab_id']
 
                 crystal = Poscar.from_file(poscar_path).structure
                 natoms = len(crystal)
@@ -428,8 +430,14 @@ class SurFFPredictor:
 
         self._log(f"  Created LMDB with {db_idx} entries")
 
-    def _run_relaxation(self, lmdb_dir: str, traj_dir: str):
-        """运行MLFF弛豫"""
+    def _run_relaxation(self, lmdb_dir: str, traj_dir: str, timeout: float = 7200.0):
+        """运行MLFF弛豫
+
+        Parameters
+        ----------
+        timeout : float, default=7200.0
+            子进程超时时间（秒）
+        """
         self._log("Running ML relaxation...")
 
         # Convert absolute paths to relative paths from ocp root
@@ -437,7 +445,7 @@ class SurFFPredictor:
         traj_rel = os.path.relpath(os.path.abspath(traj_dir), self.ocp_root)
 
         cmd = [
-            "python", "main.py",
+            sys.executable, "main.py",
             "--mode", "run-relaxations",
             "--config-yml", "configs/equiformer_v2_002_relax.yml",
             "--checkpoint", self.checkpoint_path,
@@ -451,15 +459,31 @@ class SurFFPredictor:
         if not self.use_gpu:
             cmd.append("--cpu")
 
+        # Always capture stderr so failures are reported with the real error
+        # (verbose mode previously left stderr=None -> "Unknown error").
         result = subprocess.run(
             cmd,
             cwd=self.ocp_root,
-            capture_output=not self.verbose,
+            capture_output=True,
             text=True,
+            timeout=timeout,
         )
 
+        if self.verbose:
+            # Tee captured output to console and a log file
+            if result.stdout:
+                print(result.stdout, end="")
+            if result.stderr:
+                print(result.stderr, end="", file=sys.stderr)
+            log_path = os.path.join(os.path.abspath(traj_dir), "relaxation_stderr.log")
+            try:
+                with open(log_path, "w") as f:
+                    f.write(result.stderr or "")
+            except OSError as e:
+                self._log(f"  Warning: could not write {log_path}: {e}")
+
         if result.returncode != 0:
-            error_msg = result.stderr if result.stderr else "Unknown error"
+            error_msg = result.stderr.strip() if result.stderr else "Unknown error"
             raise RuntimeError(f"Relaxation failed: {error_msg}")
 
         self._log("  Relaxation completed")
@@ -483,6 +507,12 @@ class SurFFPredictor:
             energy = final_atoms.get_potential_energy()
             cell = final_atoms.get_cell()
             area = np.linalg.norm(np.cross(cell[0], cell[1]))
+            # TODO(verify): this computes E_slab/(2A) with no bulk-reference
+            # subtraction. The standard surface energy is
+            # γ = (E_slab − N·E_bulk)/(2A); E_slab/(2A) is only correct if the
+            # SurFF checkpoint outputs excess energies (slab minus bulk
+            # reference) directly. Verify against SurFF's reference
+            # implementation before trusting absolute γ values.
             surface_energy = energy / (2 * area)
 
             results.append({
@@ -500,7 +530,7 @@ class SurFFPredictor:
         crystal_dir: str,
         crystal_id: str,
         save_dir: str,
-    ) -> Dict:
+    ) -> Tuple[Dict, Optional[str]]:
         """计算Wulff构型"""
         from pymatgen.analysis.wulff import WulffShape
         from pymatgen.io.vasp import Poscar

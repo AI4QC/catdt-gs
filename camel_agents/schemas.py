@@ -171,6 +171,11 @@ class CatDTConfig(BaseModel):
         ge=0,
         description="Optional canonical adsorbate count override for VSSR-MC.",
     )
+    mc_adsorbate_counts: Optional[Dict[str, int]] = Field(
+        None,
+        description="Optional fixed canonical composition for VSSR-MC virtual sites, "
+                    "e.g. {'Ti': 3, 'O': 6}. Overrides mc_num_adsorbates_override.",
+    )
     mc_use_seed_for_virtual_sites: bool = Field(
         False,
         description="Generate VSSR virtual sites on the seed structure instead of "
@@ -187,6 +192,11 @@ class CatDTConfig(BaseModel):
         ge=0,
         description="Optional radius in A for excluding VSSR virtual sites "
                     "around pre-existing non-molecular atoms before Agent3b.",
+    )
+    mc_min_virtual_site_distance_A: Optional[float] = Field(
+        None,
+        ge=0,
+        description="Optional minimum distance in A between VSSR virtual sites.",
     )
     stop_after_agent3b: bool = Field(
         False,

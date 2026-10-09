@@ -1,9 +1,11 @@
 import numpy as np
 import pytest
+from ase import Atoms
 
 from mcmc.events.criterion import TestingCriterion
 from mcmc.events.event import Change, Exchange
 from mcmc.events.proposal import ChangeProposal, SwitchProposal
+from mcmc.system import SurfaceSystem
 from tests.events.test_fixtures import system
 
 
@@ -144,3 +146,30 @@ def test_exchange_acceptance(system, switch_proposal, criterion):
         assert ~np.allclose(event.system.occ, system.occ)
     else:
         assert np.allclose(event.system.occ, system.occ)
+
+
+def test_exchange_acceptance_noops_when_only_one_adsorbate_type_present():
+    atoms = Atoms(
+        "NiTiTi",
+        positions=[
+            [0, 0, 0],
+            [0, 0, 3],
+            [1, 1, 3],
+        ],
+    )
+    atoms.set_array("ads_group", np.array([0, 1, 2]))
+    one_type_system = SurfaceSystem(
+        atoms,
+        ads_coords=[(0, 0, 3), (1, 1, 3)],
+        occ=[1, 2],
+    )
+    proposal = SwitchProposal(one_type_system, ("Ti", "O"))
+    start_occ = one_type_system.occ.copy()
+    start_formula = one_type_system.real_atoms.get_chemical_formula()
+
+    event = Exchange(one_type_system, proposal, criterion)
+    accept, new_system = event.acceptance()
+
+    assert accept is False
+    assert np.allclose(new_system.occ, start_occ)
+    assert new_system.real_atoms.get_chemical_formula() == start_formula

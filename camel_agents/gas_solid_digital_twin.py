@@ -55,8 +55,18 @@ from ase.io import read, write
 from core.surface.surff_predictor import SurFFPredictor, PredictionResult as SurFFResult
 from core.reconstruction.adsorbdiff_predictor import AdsorbDiffPredictor, PredictionOutput as AdsorbDiffOutput
 from core.reconstruction.adsorbml_predictor import AdsorbMLPredictor
+from core.fairchem_config import DEFAULT_FAIRCHEM_MODEL
 from core.reconstruction.vssr_mc_predictor import VSSRMCPredictor, VSSRMCResult
 from core.pathway.pathway_predictor import PathwayPredictor, CompletePathwayResult
+
+# MC temperature conversion (K → dimensionless kT units for VSSR-MC sampling)
+BOLTZMANN_EV_PER_K = 8.617333262e-5  # eV/K
+MC_KT_REFERENCE_EV = 0.025  # ≈ kT at ~290 K; normalizes mc_temperature to ~1.0 near room temp
+MC_KT_MIN = 0.5  # lower clamp: keeps MC acceptance from freezing out
+MC_KT_MAX = 2.0  # upper clamp: keeps MC acceptance from becoming random walk
+
+# Default wall-clock limit for the isolated VSSR-MC subprocess
+VSSR_MC_SUBPROCESS_TIMEOUT_SEC = 4 * 3600
 
 
 # =============================================================================
@@ -157,7 +167,7 @@ class GasSolidDigitalTwin:
         fairchem_root: str,
         surff_checkpoint: Optional[str] = None,
         adsorbdiff_checkpoint: Optional[str] = None,
-        fairchem_model: str = "uma-s-1p1",
+        fairchem_model: str = DEFAULT_FAIRCHEM_MODEL,
         fairchem_model_path: Optional[str] = None,
         vssr_mc_model: str = "CHGNetNFF",
         vssr_mc_device: str = "cuda",
@@ -168,7 +178,7 @@ class GasSolidDigitalTwin:
         use_llm_controller: bool = False,
         llm_model: Optional[str] = None,
         adsorption_backend: str = "adsorbml",
-        adsorbml_model: str = "uma-s-1p1",
+        adsorbml_model: str = DEFAULT_FAIRCHEM_MODEL,
         adsorbml_num_sites: int = 20,
         adsorbml_placement_mode: str = "random_site_heuristic_placement",
         adsorbml_interstitial_gap: float = 0.1,
@@ -341,7 +351,6 @@ class GasSolidDigitalTwin:
         self.logger.info(f"Step 2: Predicting adsorption sites for {adsorbate}...")
 
         current_surface = surface.copy()
-        n_surface_atoms = len(surface)  # 记录原始表面原子数
         expansion_factor = 1  # 追踪扩胞倍数
 
         for attempt in range(max_expansion_attempts + 1):
@@ -374,7 +383,6 @@ class GasSolidDigitalTwin:
                     from ase.build import make_supercell
                     P = np.diag([expansion_factor, expansion_factor, 1])
                     current_surface = make_supercell(surface, P)
-                    n_surface_atoms = len(current_surface)  # 更新表面原子数
                     self.logger.info(f"  → Surface expanded from {len(surface)} to {len(current_surface)} atoms")
                 else:
                     self.logger.warning(f"  ⚠️  Max expansion attempts ({max_expansion_attempts}) reached, using current result")
@@ -458,10 +466,19 @@ class GasSolidDigitalTwin:
         adsorbate_indices: Optional[List[int]] = None,
         clean_slab: Optional[Atoms] = None,
         num_adsorbates_override: Optional[int] = None,
+        adsorbate_counts: Optional[Dict[str, int]] = None,
         chem_pots: Optional[Dict[str, float]] = None,
+        offset_data: Optional[Dict[str, Any]] = None,
         use_seed_for_virtual_sites: bool = False,
         adsorbate_exclusion_radius_A: Optional[float] = None,
         existing_atom_exclusion_radius_A: Optional[float] = None,
+        min_virtual_site_distance_A: Optional[float] = None,
+        max_virtual_site_distance_to_surface_A: Optional[float] = None,
+        virtual_site_planar_distance_A: Optional[float] = None,
+        virtual_site_near_reduce: Optional[float] = None,
+        virtual_site_no_obtuse_hollow: Optional[bool] = None,
+        virtual_site_min_count: Optional[int] = None,
+        virtual_site_local_expansion_radius_A: Optional[float] = None,
     ) -> VSSRMCResult:
         """
         步骤3: 使用VSSR-MC模拟表面重构（不考虑电势）
@@ -480,9 +497,14 @@ class GasSolidDigitalTwin:
         self.logger.info(f"  Adsorbates: {', '.join(adsorbates)}")
 
         # Convert temperature from K to kT units for MC sampling
-        k_B = 8.617333262e-5  # eV/K
-        mc_temperature = k_B * temperature / 0.025  # Normalize to ~1.0 at 300K
-        mc_temperature = max(0.5, min(2.0, mc_temperature))
+        mc_temperature_raw = BOLTZMANN_EV_PER_K * temperature / MC_KT_REFERENCE_EV  # ~1.0 at 300K
+        mc_temperature = max(MC_KT_MIN, min(MC_KT_MAX, mc_temperature_raw))
+        if mc_temperature != mc_temperature_raw:
+            self.logger.warning(
+                f"  MC temperature clamped from {mc_temperature_raw:.3f} to {mc_temperature:.3f} kT "
+                f"(allowed range [{MC_KT_MIN}, {MC_KT_MAX}]); "
+                f"requested physical temperature {temperature} K is outside the sampled range"
+            )
         self.logger.info(f"  MC temperature: {mc_temperature:.3f} kT")
 
         # Run VSSR-MC in a subprocess to avoid mpi4py/UCX state corruption
@@ -497,10 +519,19 @@ class GasSolidDigitalTwin:
             adsorbate_indices=adsorbate_indices,
             clean_slab=clean_slab,
             num_adsorbates_override=num_adsorbates_override,
+            adsorbate_counts=adsorbate_counts,
             chem_pots=chem_pots,
+            offset_data=offset_data,
             use_seed_for_virtual_sites=use_seed_for_virtual_sites,
             adsorbate_exclusion_radius_A=adsorbate_exclusion_radius_A,
             existing_atom_exclusion_radius_A=existing_atom_exclusion_radius_A,
+            min_virtual_site_distance_A=min_virtual_site_distance_A,
+            max_virtual_site_distance_to_surface_A=max_virtual_site_distance_to_surface_A,
+            virtual_site_planar_distance_A=virtual_site_planar_distance_A,
+            virtual_site_near_reduce=virtual_site_near_reduce,
+            virtual_site_no_obtuse_hollow=virtual_site_no_obtuse_hollow,
+            virtual_site_min_count=virtual_site_min_count,
+            virtual_site_local_expansion_radius_A=virtual_site_local_expansion_radius_A,
         )
 
         self.logger.info(f"  Sampling complete: {len(result.structures)} structures sampled")
@@ -521,11 +552,23 @@ class GasSolidDigitalTwin:
         chem_pots: Optional[Dict[str, float]] = None,
         use_seed_for_virtual_sites: bool = False,
         num_adsorbates_override: Optional[int] = None,
+        adsorbate_counts: Optional[Dict[str, int]] = None,
+        offset_data: Optional[Dict[str, Any]] = None,
         adsorbate_exclusion_radius_A: Optional[float] = None,
         existing_atom_exclusion_radius_A: Optional[float] = None,
+        min_virtual_site_distance_A: Optional[float] = None,
+        max_virtual_site_distance_to_surface_A: Optional[float] = None,
+        virtual_site_planar_distance_A: Optional[float] = None,
+        virtual_site_near_reduce: Optional[float] = None,
+        virtual_site_no_obtuse_hollow: Optional[bool] = None,
+        virtual_site_min_count: Optional[int] = None,
+        virtual_site_local_expansion_radius_A: Optional[float] = None,
+        timeout_sec: float = VSSR_MC_SUBPROCESS_TIMEOUT_SEC,
     ) -> VSSRMCResult:
         """
         Run VSSR-MC in a subprocess to isolate it from GPU/MPI state corruption.
+
+        timeout_sec caps the subprocess wall-clock time (default 4 h).
         """
         import json
         import pickle
@@ -595,10 +638,19 @@ class GasSolidDigitalTwin:
         # adsorbate_indices are used above to remove/protect the molecule when
         # generating clean_slab and constraints; they must not become a Ti/O
         # fixed-count target.
+        final_counts = {
+            str(elem): int(count)
+            for elem, count in (adsorbate_counts or {}).items()
+            if int(count) > 0
+        }
         final_num_ads = (
-            int(num_adsorbates_override)
-            if num_adsorbates_override is not None
-            else 0
+            sum(final_counts.values())
+            if final_counts
+            else (
+                int(num_adsorbates_override)
+                if num_adsorbates_override is not None
+                else 0
+            )
         )
         use_canonical = final_num_ads > 0
         # When use_seed_for_virtual_sites=True, skip passing the clean_slab
@@ -620,10 +672,30 @@ class GasSolidDigitalTwin:
             "output_dir": output_dir,
             "clean_slab_path": effective_clean_slab_path,
         }
+        if final_counts:
+            config["adsorbate_counts"] = final_counts
         if adsorbate_exclusion_radius_A is not None:
             config["adsorbate_exclusion_radius_A"] = float(adsorbate_exclusion_radius_A)
         if existing_atom_exclusion_radius_A is not None:
             config["existing_atom_exclusion_radius_A"] = float(existing_atom_exclusion_radius_A)
+        if min_virtual_site_distance_A is not None:
+            config["min_virtual_site_distance_A"] = float(min_virtual_site_distance_A)
+        if max_virtual_site_distance_to_surface_A is not None:
+            config["max_virtual_site_distance_to_surface_A"] = float(
+                max_virtual_site_distance_to_surface_A
+            )
+        if virtual_site_planar_distance_A is not None:
+            config["virtual_site_planar_distance_A"] = float(virtual_site_planar_distance_A)
+        if virtual_site_near_reduce is not None:
+            config["virtual_site_near_reduce"] = float(virtual_site_near_reduce)
+        if virtual_site_no_obtuse_hollow is not None:
+            config["virtual_site_no_obtuse_hollow"] = bool(virtual_site_no_obtuse_hollow)
+        if virtual_site_min_count is not None:
+            config["virtual_site_min_count"] = int(virtual_site_min_count)
+        if virtual_site_local_expansion_radius_A is not None:
+            config["virtual_site_local_expansion_radius_A"] = float(
+                virtual_site_local_expansion_radius_A
+            )
         if chem_pots:
             # mcmc calculator expects chem_pots for EVERY element in the slab;
             # user config may only supply overrides. Fill defaults to 0.
@@ -631,6 +703,8 @@ class GasSolidDigitalTwin:
             full_chem_pots = {el: 0.0 for el in all_elements}
             full_chem_pots.update({k: float(v) for k, v in chem_pots.items()})
             config["chem_pots"] = full_chem_pots
+        if offset_data is not None:
+            config["offset_data"] = offset_data
 
         # Pass surface/adsorbate indices for proper constraint handling
         if surface_indices is not None:
@@ -667,17 +741,24 @@ class GasSolidDigitalTwin:
 
         try:
             import sys as _sys
-            proc = subprocess.run(
-                [
-                    _sys.executable,
-                    script_path,
-                    "--surface", surface_path,
-                    "--config", config_path,
-                    "--output", output_path,
-                ],
-                capture_output=True,
-                text=True,
-            )
+            try:
+                proc = subprocess.run(
+                    [
+                        _sys.executable,
+                        script_path,
+                        "--surface", surface_path,
+                        "--config", config_path,
+                        "--output", output_path,
+                    ],
+                    capture_output=True,
+                    text=True,
+                    timeout=timeout_sec,
+                )
+            except subprocess.TimeoutExpired as exc:
+                raise RuntimeError(
+                    f"VSSR-MC subprocess timed out after {timeout_sec:.0f} s "
+                    f"({total_sweeps} sweeps requested); increase timeout_sec or reduce sweeps"
+                ) from exc
 
             # Log subprocess output
             if proc.stdout:
@@ -1798,7 +1879,7 @@ def run_gas_solid_catalysis(
 
     # 检查是否有本地模型路径
     fairchem_model_path = kwargs.pop('fairchem_model_path', None)
-    fairchem_model = kwargs.pop('fairchem_model', 'uma-s-1p1')
+    fairchem_model = kwargs.pop('fairchem_model', DEFAULT_FAIRCHEM_MODEL)
 
     # 如果没有提供本地路径，尝试使用项目中的模型
     if fairchem_model_path is None:

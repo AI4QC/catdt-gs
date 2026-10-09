@@ -202,9 +202,20 @@ class CatMAPPredictor:
         self.atomic_reservoir_list: List[str] = []
 
         # Solver settings
-        self.decimal_precision: int = 100
-        self.tolerance: float = 1e-50
-        self.max_iterations: int = 100
+        self.decimal_precision: int = int(os.getenv("CATDT_CATMAP_DECIMAL_PRECISION", "100"))
+        self.tolerance: float = float(os.getenv("CATDT_CATMAP_TOLERANCE", "1e-50"))
+        self.max_iterations: int = int(os.getenv("CATDT_CATMAP_MAX_ITERATIONS", "100"))
+        use_numbers = os.getenv("CATDT_CATMAP_USE_NUMBERS_SOLVER")
+        self.use_numbers_solver: Optional[bool] = None
+        if use_numbers is not None:
+            self.use_numbers_solver = use_numbers.strip().lower() in {"1", "true", "yes", "on"}
+        self.max_bisections: int = int(os.getenv("CATDT_CATMAP_MAX_BISECTIONS", "5"))
+        self.max_damping_iterations: Optional[int] = None
+        if os.getenv("CATDT_CATMAP_MAX_DAMPING_ITERATIONS") is not None:
+            self.max_damping_iterations = int(os.getenv("CATDT_CATMAP_MAX_DAMPING_ITERATIONS", "10"))
+        self.max_initial_guesses: Optional[int] = None
+        if os.getenv("CATDT_CATMAP_MAX_INITIAL_GUESSES") is not None:
+            self.max_initial_guesses = int(os.getenv("CATDT_CATMAP_MAX_INITIAL_GUESSES", "3"))
 
         # Results storage
         self.model = None
@@ -606,7 +617,13 @@ class CatMAPPredictor:
         lines.append(f"decimal_precision = {self.decimal_precision}")
         lines.append(f"tolerance = {self.tolerance}")
         lines.append(f"max_rootfinding_iterations = {self.max_iterations}")
-        lines.append("max_bisections = 5")
+        lines.append(f"max_bisections = {self.max_bisections}")
+        if self.use_numbers_solver is not None:
+            lines.append(f"use_numbers_solver = {self.use_numbers_solver}")
+        if self.max_damping_iterations is not None:
+            lines.append(f"max_damping_iterations = {self.max_damping_iterations}")
+        if self.max_initial_guesses is not None:
+            lines.append(f"max_initial_guesses = {self.max_initial_guesses}")
         lines.append("")
 
         with open(filepath, 'w') as f:
@@ -850,7 +867,13 @@ class CatMAPPredictor:
         lines.append(f"decimal_precision = {self.decimal_precision}")
         lines.append(f"tolerance = {self.tolerance}")
         lines.append(f"max_rootfinding_iterations = {self.max_iterations}")
-        lines.append("max_bisections = 5")
+        lines.append(f"max_bisections = {self.max_bisections}")
+        if self.use_numbers_solver is not None:
+            lines.append(f"use_numbers_solver = {self.use_numbers_solver}")
+        if self.max_damping_iterations is not None:
+            lines.append(f"max_damping_iterations = {self.max_damping_iterations}")
+        if self.max_initial_guesses is not None:
+            lines.append(f"max_initial_guesses = {self.max_initial_guesses}")
         lines.append("")
 
         with open(filepath, 'w') as f:

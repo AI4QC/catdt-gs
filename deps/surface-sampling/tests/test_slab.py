@@ -87,6 +87,28 @@ def test_get_adsorbate_indices(system):
     assert adsorbates == {"As": [0], "Ga": [1], "None": [2]}
 
 
+def test_get_adsorbate_indices_merges_noncontiguous_same_type():
+    atoms = Atoms(
+        "NiTiOTi",
+        positions=[
+            [0, 0, 0],
+            [0, 0, 3],
+            [1, 1, 3],
+            [2, 2, 3],
+        ],
+    )
+    atoms.set_array("ads_group", np.array([0, 1, 2, 3]))
+    surface = SurfaceSystem(
+        atoms,
+        ads_coords=[(0, 0, 3), (1, 1, 3), (2, 2, 3)],
+        occ=[1, 2, 3],
+    )
+
+    adsorbates = get_adsorbate_indices(surface)
+
+    assert adsorbates == {"Ti": [0, 2], "O": [1]}
+
+
 def test_compute_boltzmann_weights(system):
     """Test computing the Boltzmann weights for each adsorbate type for per-atom energies."""
     # Set up the test case

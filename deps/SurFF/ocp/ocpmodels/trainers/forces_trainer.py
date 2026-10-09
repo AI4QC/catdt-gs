@@ -190,7 +190,7 @@ class ForcesTrainer(BaseTrainer):
             desc="device {}".format(rank),
             disable=disable_tqdm,
         ):
-            with torch.cuda.amp.autocast(enabled=self.scaler is not None):
+            with torch.amp.autocast("cuda", enabled=self.scaler is not None):
                 out = self._forward(batch_list)
 
             if self.normalizers is not None and "target" in self.normalizers:
@@ -343,7 +343,7 @@ class ForcesTrainer(BaseTrainer):
                 batch = next(train_loader_iter)
 
                 # Forward, loss, backward.
-                with torch.cuda.amp.autocast(enabled=self.scaler is not None):
+                with torch.amp.autocast("cuda", enabled=self.scaler is not None):
                     out = self._forward(batch)
                     loss = self._compute_loss(out, batch)
                 loss = self.scaler.scale(loss) if self.scaler else loss

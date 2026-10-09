@@ -1,0 +1,141 @@
+{
+ "slabs": {
+  "ni111": {
+   "natoms": 27,
+   "formula": "Ni27",
+   "uma_energy": -121.42893635752498
+  }
+ },
+ "steps": {
+  "S01_CO+H_to_CHO": {
+   "slab": "ni111",
+   "note": "C-H formation (referee example, CHO branch)",
+   "natoms": 30,
+   "converged": true,
+   "rung": 1,
+   "n_images": 9,
+   "ts_index": 5,
+   "Ea_uma": 1.5242090225219727,
+   "dE_uma": 1.2785286903381348,
+   "E_IS": -141.63409081131354,
+   "E_TS": -140.10988178879157,
+   "E_FS": -140.3555621209754
+  },
+  "S03_CO_to_C+O": {
+   "slab": "ni111",
+   "note": "C-O scission (carbide route)",
+   "natoms": 29,
+   "converged": true,
+   "rung": 1,
+   "n_images": 9,
+   "ts_index": 6,
+   "Ea_uma": 2.8530430793762207,
+   "dE_uma": 1.5526432991027832,
+   "E_IS": -137.69546713925038,
+   "E_TS": -134.84242405987416,
+   "E_FS": -136.1428238401476
+  },
+  "S04_CHO+H_to_CHOH": {
+   "slab": "ni111",
+   "note": "O-H formation",
+   "natoms": 31,
+   "converged": true,
+   "n_images": 24,
+   "ts_index": 18,
+   "Ea_uma": 1.0413060188293457,
+   "dE_uma": 0.3526649475097656,
+   "E_IS": -144.13467231952782,
+   "E_TS": -143.09336630069848,
+   "E_FS": -143.78200737201806,
+   "max_image_jump": 0.5641483606809738,
+   "ts_bond": 1.3773698044917677
+  },
+  "S05_COH+H_to_CHOH": {
+   "slab": "ni111",
+   "note": "C-H formation",
+   "natoms": 31,
+   "converged": true,
+   "n_images": 11,
+   "ts_index": 7,
+   "Ea_uma": 0.9998254776000408,
+   "dE_uma": 0.9491033554077148,
+   "E_IS": -144.61272636615868,
+   "E_TS": -143.61290088855864,
+   "E_FS": -143.66362301075097,
+   "max_image_jump": 0.6093346082367211,
+   "ts_bond": 1.3546688049806364
+  },
+  "S07_C3H6_to_C3H5+H": {
+   "slab": "ni111",
+   "note": "PDH deep dehydrogenation (coke precursor)",
+   "natoms": 36,
+   "converged": true,
+   "n_images": 9,
+   "ts_index": 4,
+   "Ea_uma": 0.6542038917541504,
+   "dE_uma": -0.04738950729378644,
+   "E_IS": -169.72583223544206,
+   "E_TS": -169.0716283436879,
+   "E_FS": -169.77322174273584,
+   "max_image_jump": 0.44000399060724005,
+   "ts_bond": 1.6833854843772331
+  },
+  "S02_CO+H_to_COH": {
+   "slab": "ni111",
+   "note": "O-H formation (referee example, COH branch)",
+   "natoms": 30,
+   "converged": true,
+   "n_images": 11,
+   "ts_index": 6,
+   "Ea_uma": 1.976710319519043,
+   "dE_uma": 0.9169888496398926,
+   "E_IS": -141.61633148819342,
+   "E_TS": -139.63962116867438,
+   "E_FS": -140.69934263855353,
+   "max_image_jump": 0.657193518184165,
+   "ts_bond": 1.335668753313867
+  },
+  "S06_C3H7_to_C3H6+H": {
+   "slab": "ni111",
+   "note": "PDH rate-determining step (beta-H elimination)",
+   "natoms": 37,
+   "converged": true,
+   "rung": 2,
+   "n_images": 13,
+   "ts_index": 6,
+   "Ea_uma": 0.3052229881286621,
+   "dE_uma": -0.24462318420412998,
+   "E_IS": -173.4161410500223,
+   "E_TS": -173.11091806189364,
+   "E_FS": -173.66076423422643
+  }
+ },
+ "pairs": {
+  "P01_CHO_vs_COH": {
+   "slab": "ni111",
+   "A": "CHO",
+   "B": "COH",
+   "E_A": -140.3555611673011,
+   "E_B": -140.699344069065,
+   "gap_uma": -0.343782901763916
+  },
+  "P02_CH2O_vs_CHOH": {
+   "slab": "ni111",
+   "A": "CH2O",
+   "B": "CHOH",
+   "E_A": -143.81429306232567,
+   "E_B": -143.6636249180996,
+   "gap_uma": 0.15066814422607422
+  },
+  "P03_1-C3H7_vs_2-C3H7": {
+   "slab": "ni111",
+   "A": "C3H7_1",
+   "B": "C3H7_2",
+   "E_A": -173.5349416901285,
+   "E_B": -173.41646148459262,
+   "gap_uma": 0.11848020553588867
+  }
+ },
+ "sites": {},
+ "failed": {}
+}

@@ -19,89 +19,6 @@ sys.setrecursionlimit(50000)
 _this_dir = os.path.dirname(os.path.abspath(__file__))
 _project_root = os.path.join(_this_dir, "..", "..")
 sys.path.insert(0, _project_root)  # project root for `core.reconstruction.*`
-sys.path.insert(0, os.path.join(_this_dir, ".."))  # core/
-sys.path.insert(0, _this_dir)  # core/reconstruction/
-
-
-def patch_chgnet_cutoff():
-    """Monkey-patch CHGNet's atom_graph_cutoff to 10.0 to avoid isolated atom issues"""
-    import nff.io.chgnet as chgnet_io
-    from chgnet.graph import CrystalGraphConverter
-    from chgnet.data.dataset import StructureData
-
-    # Store original function
-    original_convert_data_batch = chgnet_io.convert_data_batch
-
-    def patched_convert_data_batch(data_batch, cutoff=5.0, shuffle=True):
-        """Patched version that uses higher atom_graph_cutoff"""
-        from nff.io import AtomsBatch
-        from nff.utils.cuda import batch_detach, detach
-        from pymatgen.io.ase import AseAtomsAdaptor
-        import torch
-
-        detached_batch = batch_detach(data_batch)
-        nxyz = detached_batch["nxyz"]
-        atoms_batch = AtomsBatch(
-            nxyz[:, 0].long(),
-            props=detached_batch,
-            positions=nxyz[:, 1:],
-            cell=(detached_batch["lattice"][0] if "lattice" in detached_batch else None),
-            pbc="lattice" in detached_batch,
-            cutoff=cutoff,
-            dense_nbrs=False,
-        )
-        atoms_list = atoms_batch.get_list_atoms()
-
-        pymatgen_structures = [AseAtomsAdaptor.get_structure(ab) for ab in atoms_list]
-
-        energies = torch.atleast_1d(data_batch.get("energy"))
-        if energies is not None and len(energies) > 0:
-            energies_per_atom = energies
-        else:
-            energies_per_atom = torch.Tensor([0.0] * len(pymatgen_structures))
-
-        energy_grads = data_batch.get("energy_grad")
-        num_atoms = detach(data_batch["num_atoms"]).tolist()
-        stresses = data_batch.get("stress")
-        magmoms = data_batch.get("magmoms")
-
-        if energy_grads is not None and len(energy_grads) > 0:
-            forces = [-x for x in energy_grads] if isinstance(energy_grads, list) else -energy_grads
-        else:
-            forces = None
-
-        if forces is not None and len(forces) > 0:
-            forces = torch.split(torch.atleast_2d(forces), num_atoms)
-        else:
-            forces = [torch.zeros_like(torch.Tensor(ab.get_positions())) for ab in atoms_list]
-
-        if stresses is not None and len(stresses) > 0:
-            stresses = torch.split(torch.atleast_2d(stresses), num_atoms)
-        if magmoms is not None and len(magmoms) > 0:
-            magmoms = torch.split(torch.atleast_2d(magmoms), num_atoms)
-
-        # Defaults (same as CHGNet 0.3.0). The real fix for isolated atoms
-        # (e.g. evaporated adatoms after MD) is to drop them BEFORE VSSR-MC
-        # in scripts/pdh_smsi/run_vssr_mc.py — bumping cutoff here slows
-        # line_graph_adjacency_list enough to stall a 76-atom slab.
-        graph_converter = CrystalGraphConverter(
-            atom_graph_cutoff=6.0,
-            bond_graph_cutoff=3.0,
-        )
-
-        return StructureData(
-            structures=pymatgen_structures,
-            energies=energies_per_atom,
-            forces=forces,
-            stresses=stresses,
-            magmoms=magmoms,
-            shuffle=shuffle,
-            graph_converter=graph_converter,  # Pass custom graph_converter
-        )
-
-    # Apply patch
-    chgnet_io.convert_data_batch = patched_convert_data_batch
-    print("Patched CHGNet atom_graph_cutoff to 10.0")
 
 
 def main():
@@ -110,15 +27,6 @@ def main():
     parser.add_argument("--config", required=True, help="Path to JSON config file")
     parser.add_argument("--output", required=True, help="Path to output pickle file")
     args = parser.parse_args()
-
-    # Apply CHGNet graph-cutoff patch before any CHGNet/NFF import triggered
-    # by VSSRMCPredictor construction. Without this, larger-lattice slabs
-    # (e.g. Cu fcc) can yield isolated-atom graphs at the default 6 Å cutoff,
-    # which send StructureData.__getitem__ into a random-retry RecursionError.
-    try:
-        patch_chgnet_cutoff()
-    except Exception as exc:
-        print(f"WARN: CHGNet cutoff patch failed ({exc}); proceeding with defaults")
 
     # Load surface (with adsorbate)
     with open(args.surface, "rb") as f:
@@ -140,7 +48,7 @@ def main():
         print("clean_slab_path not provided; virtual sites will be enumerated on the seed structure.")
 
     # Import VSSR-MC predictor
-    from vssr_mc_predictor import VSSRMCPredictor
+    from core.reconstruction.vssr_mc_predictor import VSSRMCPredictor
 
     # Create predictor
     predictor = VSSRMCPredictor(
@@ -161,6 +69,7 @@ def main():
             adsorbates=config.get("adsorbates", []),
             canonical=config.get("canonical", False),
             num_adsorbates=config.get("num_adsorbates", 0),
+            adsorbate_counts=config.get("adsorbate_counts"),
             total_sweeps=config.get("total_sweeps", 50),
             sweep_size=config.get("sweep_size", 20),
             temperature=config.get("temperature", 1.0),
@@ -180,6 +89,34 @@ def main():
             sample_kwargs.setdefault("system_settings", {})[
                 "existing_atom_exclusion_radius_A"
             ] = float(config["existing_atom_exclusion_radius_A"])
+        if config.get("min_virtual_site_distance_A") is not None:
+            sample_kwargs.setdefault("system_settings", {})[
+                "min_virtual_site_distance_A"
+            ] = float(config["min_virtual_site_distance_A"])
+        if config.get("max_virtual_site_distance_to_surface_A") is not None:
+            sample_kwargs.setdefault("system_settings", {})[
+                "max_virtual_site_distance_to_surface_A"
+            ] = float(config["max_virtual_site_distance_to_surface_A"])
+        if config.get("virtual_site_planar_distance_A") is not None:
+            sample_kwargs.setdefault("system_settings", {})[
+                "planar_distance"
+            ] = float(config["virtual_site_planar_distance_A"])
+        if config.get("virtual_site_near_reduce") is not None:
+            sample_kwargs.setdefault("system_settings", {})[
+                "near_reduce"
+            ] = float(config["virtual_site_near_reduce"])
+        if config.get("virtual_site_no_obtuse_hollow") is not None:
+            sample_kwargs.setdefault("system_settings", {})[
+                "no_obtuse_hollow"
+            ] = bool(config["virtual_site_no_obtuse_hollow"])
+        if config.get("virtual_site_min_count") is not None:
+            sample_kwargs.setdefault("system_settings", {})[
+                "virtual_site_min_count"
+            ] = int(config["virtual_site_min_count"])
+        if config.get("virtual_site_local_expansion_radius_A") is not None:
+            sample_kwargs.setdefault("system_settings", {})[
+                "virtual_site_local_expansion_radius_A"
+            ] = float(config["virtual_site_local_expansion_radius_A"])
         # Allow passing pre-computed offset_data to ensure consistent
         # energy reference across multiple reconstruction steps
         if config.get("offset_data") is not None:

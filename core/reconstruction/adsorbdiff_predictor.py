@@ -62,6 +62,9 @@ class AdsorptionResult:
     forces_max: float  # 最大残余力 (eV/Å)
     trajectory_path: Optional[str] = None  # 轨迹文件路径
     site_info: Optional[AdsorptionSite] = None  # 初始位点信息
+    # 几何代理打分（无量纲，非 eV）。仅当没有弛豫模型、energy 字段
+    # 实际存放的是代理能量时设置，用于区分代理值和真实物理能量。
+    proxy_score: Optional[float] = None
 
     def __repr__(self):
         return (f"AdsorptionResult(E={self.energy:.4f} eV, "
@@ -692,6 +695,8 @@ class AdsorbDiffPredictor:
         self._log(f"  Created {len(adslab_list)} configurations")
 
         # 运行扩散和弛豫
+        # 没有弛豫模型时 _run_relaxation 返回几何代理能量（无量纲，非 eV）
+        use_proxy_energy = self.relax_checkpoint_path is None
         results = []
         traj_dir = os.path.join(output_dir, "trajectories")
         os.makedirs(traj_dir, exist_ok=True)
@@ -737,10 +742,20 @@ class AdsorbDiffPredictor:
                     position=metadata.get("site", np.array([0, 0, 0])),
                     binding_type=self.placement_mode,
                 ),
+                # 代理模式下把代理值同时存到 proxy_score，避免与真实 eV 能量混淆
+                proxy_score=energy if use_proxy_energy else None,
             )
             results.append(result)
 
         # 找到最优配置
+        if use_proxy_energy:
+            msg = (
+                "Ranking adsorption configurations by GEOMETRIC proxy score, "
+                "not physical energies (no relax_checkpoint_path provided). "
+                "The 'energy' fields are dimensionless proxy values."
+            )
+            warnings.warn(msg)
+            self._log(f"\n⚠ WARNING: {msg}")
         best_result = min(results, key=lambda x: x.energy)
 
         output = PredictionOutput(
@@ -750,7 +765,7 @@ class AdsorbDiffPredictor:
             results=results,
             best_result=best_result,
             output_dir=output_dir,
-            use_proxy_energy=(self.relax_checkpoint_path is None),
+            use_proxy_energy=use_proxy_energy,
         )
 
         self._log(f"\n{output.summary()}")

@@ -229,10 +229,19 @@ class SimulationToolsMixin:
         surface_indices: Optional[List[int]] = None,  # Slab surface atom indices (free for MC)
         adsorbate_indices: Optional[List[int]] = None,  # Pre-existing adsorbate atom indices (free but not "surface")
         num_adsorbates_override: Optional[int] = None,  # Force canonical MC target count (e.g. N=top-2-layer atoms for alloy reconstruction)
+        adsorbate_counts: Optional[Dict[str, int]] = None,  # Fixed canonical composition for VSSR-MC virtual sites.
         chem_pots: Optional[Dict[str, float]] = None,  # Per-element chemical potentials (eV). Default 0 for all.
+        offset_data: Optional[Dict[str, Any]] = None,  # Explicit VSSR reference energies/stoichiometry.
         use_seed_for_virtual_sites: bool = False,  # If True, skip passing clean_slab → sites on seed (with overlayer)
         adsorbate_exclusion_radius_A: Optional[float] = None,
         existing_atom_exclusion_radius_A: Optional[float] = None,
+        min_virtual_site_distance_A: Optional[float] = None,
+        max_virtual_site_distance_to_surface_A: Optional[float] = None,
+        virtual_site_planar_distance_A: Optional[float] = None,
+        virtual_site_near_reduce: Optional[float] = None,
+        virtual_site_no_obtuse_hollow: Optional[bool] = None,
+        virtual_site_min_count: Optional[int] = None,
+        virtual_site_local_expansion_radius_A: Optional[float] = None,
     ) -> str:
         """
         Simulates surface reconstruction using VSSR-MC for a given surface and adsorbate elements.
@@ -274,10 +283,19 @@ class SimulationToolsMixin:
             adsorbate_indices=adsorbate_indices,
             clean_slab=clean_slab_atoms,
             num_adsorbates_override=num_adsorbates_override,
+            adsorbate_counts=adsorbate_counts,
             chem_pots=chem_pots,
+            offset_data=offset_data,
             use_seed_for_virtual_sites=use_seed_for_virtual_sites,
             adsorbate_exclusion_radius_A=adsorbate_exclusion_radius_A,
             existing_atom_exclusion_radius_A=existing_atom_exclusion_radius_A,
+            min_virtual_site_distance_A=min_virtual_site_distance_A,
+            max_virtual_site_distance_to_surface_A=max_virtual_site_distance_to_surface_A,
+            virtual_site_planar_distance_A=virtual_site_planar_distance_A,
+            virtual_site_near_reduce=virtual_site_near_reduce,
+            virtual_site_no_obtuse_hollow=virtual_site_no_obtuse_hollow,
+            virtual_site_min_count=virtual_site_min_count,
+            virtual_site_local_expansion_radius_A=virtual_site_local_expansion_radius_A,
         )
 
         # Save lowest energy reconstructed structure to VASP
@@ -371,22 +389,26 @@ class SimulationToolsMixin:
         # This logic needs to correctly identify atoms belonging to the initial adsorbate from the surface_path
         current_adsorbate_indices = []
         if initial_adsorbate_present_on_surface_smi and initial_adsorbate_present_on_surface_smi != "*":
-            # 🔧 实现吸附物识别：找到最上层的非Pt原子
+            # 🔧 实现吸附物识别：找到最上层的非表面元素原子
             import numpy as np
-            
+            from collections import Counter
+
             symbols = initial_surface_atoms.get_chemical_symbols()
             positions = initial_surface_atoms.positions
-            
-            # 找到所有非Pt原子
-            non_pt_indices = [i for i, sym in enumerate(symbols) if sym != "Pt"]
-            
-            if non_pt_indices:
+
+            # 表面元素 = 结构中数量最多的元素（不再硬编码 Pt）
+            surface_elem = Counter(symbols).most_common(1)[0][0]
+
+            # 找到所有非表面元素原子
+            non_surface_indices = [i for i, sym in enumerate(symbols) if sym != surface_elem]
+
+            if non_surface_indices:
                 # 按z坐标排序，取最上层的原子作为吸附物
-                z_coords = positions[non_pt_indices, 2]
+                z_coords = positions[non_surface_indices, 2]
                 z_threshold = z_coords.max() - 2.0  # 最上层2Å内的原子
-                
+
                 adsorbate_mask = z_coords > z_threshold
-                current_adsorbate_indices = [non_pt_indices[i] for i, is_ads in enumerate(adsorbate_mask) if is_ads]
+                current_adsorbate_indices = [non_surface_indices[i] for i, is_ads in enumerate(adsorbate_mask) if is_ads]
                 
                 logger.info(f"Identified {len(current_adsorbate_indices)} adsorbate atoms from surface: {initial_adsorbate_present_on_surface_smi}")
                 logger.info(f"  Adsorbate atom indices: {current_adsorbate_indices}")
@@ -486,7 +508,23 @@ class SimulationToolsMixin:
         logger.info(f"Running KMC simulation for pathway {pathway_result_path} at {temperature_k}K, pressures {pressures} into {output_dir}")
 
         dt = self._get_dt_instance(use_visualization=True)
-        pathway_result: CompletePathwayResult = self._load_result_from_pickle(pathway_result_path)
+
+        # Only unpickle paths that exist; warn when outside the tool's output tree.
+        resolved_pathway_path = Path(pathway_result_path).resolve()
+        if not resolved_pathway_path.exists():
+            raise FileNotFoundError(
+                f"pathway_result_path does not exist: {pathway_result_path}"
+            )
+        base_dir = Path(self.output_base_dir).resolve()
+        try:
+            resolved_pathway_path.relative_to(base_dir)
+        except ValueError:
+            logger.warning(
+                "pathway_result_path %s is outside output_base_dir %s; "
+                "loading after existence check.",
+                resolved_pathway_path, base_dir,
+            )
+        pathway_result: CompletePathwayResult = self._load_result_from_pickle(str(resolved_pathway_path))
 
         kmc_result = dt.run_kmc_simulation(
             pathway_result=pathway_result,
@@ -615,15 +653,7 @@ class SimulationToolsMixin:
         fixed_site: Optional[List[float]] = None,
         skip_surface_relaxation: bool = False,
     ) -> Dict[str, Any]:
-        predictor = self.get_shared_fairchem_predictor(
-            cache_key="uma_shared",
-            model_name="uma-s-1p1",
-            use_gpu=True,
-            device="cuda",
-            work_subdir="_shared_fairchem_global",
-            keep_files=False,
-            verbose=False,
-        )
+        predictor = self.get_shared_uma_predictor()
         result = predictor.predict_pathway_energies(
             surface=surface_path,
             adsorbates=intermediates,
@@ -662,16 +692,11 @@ class SimulationToolsMixin:
         from ase.optimize import BFGS
         from ase.constraints import FixAtoms
 
-        predictor = self.get_shared_fairchem_predictor(
-            cache_key="uma_shared", model_name="uma-s-1p1",
-            use_gpu=True, device="cuda",
-            work_subdir="_shared_fairchem_global",
-            keep_files=False, verbose=False,
-        )
+        predictor = self.get_shared_uma_predictor()
         predictor._load_model()
 
         atoms = ase_read(structure_path)
-        atoms.pbc = [True, True, True]
+        # Preserve the structure's incoming pbc (do not force z-periodicity on slabs).
         atoms.calc = predictor._calculator
 
         free_set = set(int(i) for i in (adsorbate_indices or []))
@@ -680,7 +705,11 @@ class SimulationToolsMixin:
         fixed = [i for i in range(len(atoms)) if i not in free_set]
         atoms.set_constraint(FixAtoms(indices=fixed))
 
-        opt = BFGS(atoms, logfile=output_path.replace('.vasp', '_relax.log'))
+        # Build a log path that can never collide with output_path, even when
+        # output_path has no '.vasp' suffix.
+        out_path = Path(output_path)
+        relax_log_path = out_path.parent / (out_path.stem + "_relax.log")
+        opt = BFGS(atoms, logfile=str(relax_log_path))
         opt.run(fmax=fmax, steps=max_steps)
 
         energy = float(atoms.get_potential_energy())

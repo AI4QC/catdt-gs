@@ -1,0 +1,8 @@
+set,n_sites,uma_pick,dft_min,same,uma_pick_above_dft_min_eV
+mos2_sv2__CO,3,site_00,site_00,True,0.0
+mos2_sv2__H,22,site_00,site_02,True,0.0
+ni_tiox__H,17,site_00,site_00,True,0.0
+pdmo0001__CO,4,site_00,site_00,True,0.0
+pdmo0001__H,4,site_00,site_02,False,0.196
+tio2_110__CH3,8,site_00,site_00,True,0.0
+tio2_110__H,5,site_00,site_00,True,0.0

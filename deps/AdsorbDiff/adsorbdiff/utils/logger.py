@@ -5,10 +5,17 @@ This source code is licensed under the MIT license found in the
 LICENSE file in the root directory of this source tree.
 """
 import logging
+import os
 from abc import ABC, abstractmethod
 
 import torch
-import wandb
+try:
+    if os.getenv("CATDT_DISABLE_WANDB", "1") == "1":
+        wandb = None
+    else:
+        import wandb
+except Exception:
+    wandb = None
 
 from adsorbdiff.utils.registry import registry
 
@@ -52,6 +59,11 @@ class Logger(ABC):
 class WandBLogger(Logger):
     def __init__(self, config) -> None:
         super().__init__(config)
+        if wandb is None:
+            raise RuntimeError(
+                "WandBLogger requested but wandb import is disabled/unavailable. "
+                "Set CATDT_DISABLE_WANDB=0 and install wandb to enable."
+            )
         project = (
             self.config["logger"].get("project", None)
             if isinstance(self.config["logger"], dict)

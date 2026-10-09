@@ -29,7 +29,29 @@ import numpy as np
 from ase import Atoms
 from ase.io import read, write
 
+try:
+    import fcntl
+except ImportError:  # non-POSIX platforms
+    fcntl = None
+
 from .common import logger
+
+
+# Named scoring weights for Agent4/5 bank retrieval (see _score_bank_entry).
+AGENT45_CASE_SCORE_WEIGHTS: Dict[str, float] = {
+    "token": 0.50,
+    "transition": 0.30,
+    "quality_bonus": 0.05,
+    "rxn_match": 0.15,
+    "rxn_mismatch": -0.10,
+}
+AGENT45_BANK_ITEM_SCORE_WEIGHTS: Dict[str, float] = {
+    "token": 0.55,
+    "transition": 0.25,
+    "quality_bonus": 0.05,
+    "rxn_match": 0.12,
+    "rxn_mismatch": -0.08,
+}
 
 
 # ---------------------------------------------------------------------------
@@ -182,10 +204,12 @@ class CheckpointManager:
             # 原子性重命名
             temp_file.rename(checkpoint_file)
 
-            # 同时保存 JSON 版本便于查看
+            # 同时保存 JSON 版本便于查看（同样使用 temp + os.replace 原子写入）
             json_file = checkpoint_file.with_suffix(".json")
-            with open(json_file, 'w') as f:
+            json_temp = json_file.with_suffix(".json.tmp")
+            with open(json_temp, 'w') as f:
                 json.dump(checkpoint.to_dict(), f, indent=2, default=str)
+            os.replace(json_temp, json_file)
 
             self._current_checkpoint = checkpoint
             logger.info(f"Checkpoint saved: {checkpoint_file}")
@@ -234,13 +258,21 @@ class CheckpointManager:
         if not run_dir.exists():
             return None
 
-        matches = list(run_dir.glob(f"checkpoint_*_{step_name}.pkl"))
+        # Anchor the step segment exactly: "neb" must not match "pre_neb".
+        pattern = re.compile(rf"^checkpoint_\d+_{re.escape(step_name)}\.pkl$")
+        matches = sorted(
+            p for p in run_dir.glob("checkpoint_*.pkl") if pattern.match(p.name)
+        )
 
         if not matches:
             return None
 
-        with open(matches[0], 'rb') as f:
-            return pickle.load(f)
+        try:
+            with open(matches[0], 'rb') as f:
+                return pickle.load(f)
+        except Exception as e:
+            logger.error(f"Failed to load checkpoint {matches[0]}: {e}")
+            return None
 
     def list_checkpoints(self, run_id: str) -> List[Dict]:
         """列出所有检查点"""
@@ -317,7 +349,7 @@ class CheckpointManager:
             try:
                 pickle.dumps(value)
                 return {"_pickled": pickle.dumps(value).hex()}
-            except:
+            except Exception:
                 return {"_str": str(value)}
 
     def _is_serializable(self, value: Any) -> bool:
@@ -325,7 +357,7 @@ class CheckpointManager:
         try:
             json.dumps(value)
             return True
-        except:
+        except Exception:
             return False
 
     def _save_artifact(
@@ -557,11 +589,28 @@ class Agent45MementoToolsMixin:
         path = self._agent45_memento_casebank_path()
         return self._load_agent45_jsonl_items(path=path)
 
+    def _agent45_jsonl_bank_cache(self) -> Dict[str, Tuple[float, List[Dict[str, Any]]]]:
+        cache = getattr(self, "_agent45_jsonl_bank_cache_store", None)
+        if not isinstance(cache, dict):
+            cache = {}
+            setattr(self, "_agent45_jsonl_bank_cache_store", cache)
+        return cache
+
     def _load_agent45_jsonl_items(self, path: Path) -> List[Dict[str, Any]]:
         if not path.exists():
             return []
 
+        # Parsed-bank cache keyed by (path, mtime): avoid re-reading and
+        # re-parsing the whole JSONL on every retrieval call.
+        cache = self._agent45_jsonl_bank_cache()
+        cache_key = str(path.resolve())
+        mtime = float(path.stat().st_mtime)
+        cached = cache.get(cache_key)
+        if cached is not None and cached[0] == mtime:
+            return cached[1]
+
         items: List[Dict[str, Any]] = []
+        skipped = 0
         with open(path, "r", encoding="utf-8") as fh:
             for line in fh:
                 raw = line.strip()
@@ -570,9 +619,18 @@ class Agent45MementoToolsMixin:
                 try:
                     obj = json.loads(raw)
                 except Exception:
+                    skipped += 1
                     continue
                 if isinstance(obj, dict):
                     items.append(obj)
+                else:
+                    skipped += 1
+        if skipped:
+            logger.warning(
+                "Skipped %d corrupt/non-dict JSONL line(s) while loading %s",
+                skipped, path,
+            )
+        cache[cache_key] = (mtime, items)
         return items
 
     def _load_agent45_knowledge_items(self) -> List[Dict[str, Any]]:
@@ -778,7 +836,10 @@ class Agent45MementoToolsMixin:
         tokenizer = AutoTokenizer.from_pretrained(pretrained_model_name_or_path=model_name, use_fast=True)
         backbone = AutoModel.from_pretrained(pretrained_model_name_or_path=model_name, use_safetensors=True)
         model = model_cls(backbone).to(device)
-        state_dict = torch.load(str(model_path), map_location=device)
+        try:
+            state_dict = torch.load(str(model_path), map_location=device, weights_only=True)
+        except TypeError:  # older torch without weights_only
+            state_dict = torch.load(str(model_path), map_location=device)
         model.load_state_dict(state_dict)
         model.eval()
 
@@ -854,78 +915,77 @@ class Agent45MementoToolsMixin:
         match = re.search(r"reaction_type=(\w+)", str(query_text or ""))
         return match.group(1).upper() if match else ""
 
-    def _score_agent45_case(self, query_text: str, case: Dict[str, Any]) -> float:
+    def _score_bank_entry(
+        self,
+        query_text: str,
+        entry: Dict[str, Any],
+        token_fields: Tuple[str, ...],
+        transition_list_fields: Tuple[str, ...],
+        transition_text_fields: Tuple[str, ...],
+        quality: float,
+        weights: Dict[str, float],
+    ) -> float:
+        """Shared token/transition/reaction-type scorer for Agent4/5 banks."""
         query_tokens = set(self._tokenize_case_text(query_text))
-        case_tokens = set(
-            self._tokenize_case_text(case.get("question", ""))
-            + self._tokenize_case_text(case.get("reaction_description", ""))
-            + self._tokenize_case_text(case.get("feedback", ""))
-        )
+        entry_tokens: set = set()
+        for field_name in token_fields:
+            entry_tokens.update(self._tokenize_case_text(entry.get(field_name, "")))
 
         token_score = 0.0
-        if query_tokens and case_tokens:
-            token_score = len(query_tokens & case_tokens) / max(len(query_tokens | case_tokens), 1)
+        if query_tokens and entry_tokens:
+            token_score = len(query_tokens & entry_tokens) / max(len(query_tokens | entry_tokens), 1)
 
         query_transitions = set(self._extract_transition_tokens(query_text))
-        case_transitions = set(
-            list(case.get("transition_signature", []) or [])
-            + self._extract_transition_tokens(case.get("question", ""))
-        )
+        entry_transitions: set = set()
+        for field_name in transition_list_fields:
+            entry_transitions.update(str(x) for x in list(entry.get(field_name, []) or []))
+        for field_name in transition_text_fields:
+            entry_transitions.update(self._extract_transition_tokens(entry.get(field_name, "")))
         trans_score = 0.0
-        if query_transitions and case_transitions:
-            trans_score = len(query_transitions & case_transitions) / max(len(query_transitions), 1)
+        if query_transitions and entry_transitions:
+            trans_score = len(query_transitions & entry_transitions) / max(len(query_transitions), 1)
 
-        reward = float(case.get("reward", 0.0) or 0.0)
-        reward_bonus = 0.05 if reward > 0 else 0.0
-
-        # Reaction type matching: boost same-type cases, penalize cross-type
+        # Reaction type matching: boost same-type entries, penalize cross-type
         query_rxn = self._extract_reaction_type_from_query(query_text)
-        case_rxn = str(case.get("reaction_type", "")).strip().upper()
+        entry_rxn = str(entry.get("reaction_type", "")).strip().upper()
         rxn_bonus = 0.0
-        if query_rxn and case_rxn:
-            rxn_bonus = 0.15 if query_rxn == case_rxn else -0.10
+        if query_rxn and entry_rxn:
+            rxn_bonus = weights["rxn_match"] if query_rxn == entry_rxn else weights["rxn_mismatch"]
 
-        score = 0.50 * token_score + 0.30 * trans_score + reward_bonus + rxn_bonus
+        score = (
+            weights["token"] * token_score
+            + weights["transition"] * trans_score
+            + weights["quality_bonus"] * quality
+            + rxn_bonus
+        )
         return float(max(0.0, score))
+
+    def _score_agent45_case(self, query_text: str, case: Dict[str, Any]) -> float:
+        reward = float(case.get("reward", 0.0) or 0.0)
+        return self._score_bank_entry(
+            query_text=query_text,
+            entry=case,
+            token_fields=("question", "reaction_description", "feedback"),
+            transition_list_fields=("transition_signature",),
+            transition_text_fields=("question",),
+            quality=1.0 if reward > 0 else 0.0,
+            weights=AGENT45_CASE_SCORE_WEIGHTS,
+        )
 
     def _score_agent45_knowledge_or_skill_item(self, query_text: str, item: Dict[str, Any]) -> float:
-        query_tokens = set(self._tokenize_case_text(query_text))
-        item_tokens = set(
-            self._tokenize_case_text(item.get("title", ""))
-            + self._tokenize_case_text(item.get("knowledge", ""))
-            + self._tokenize_case_text(item.get("skill", ""))
-            + self._tokenize_case_text(item.get("guidance", ""))
-            + self._tokenize_case_text(item.get("action_template", ""))
-            + self._tokenize_case_text(item.get("applicability", ""))
-            + self._tokenize_case_text(item.get("reaction_type", ""))
-        )
-        token_score = 0.0
-        if query_tokens and item_tokens:
-            token_score = len(query_tokens & item_tokens) / max(len(query_tokens | item_tokens), 1)
-
-        query_transitions = set(self._extract_transition_tokens(query_text))
-        item_transitions = set(
-            list(item.get("transition_signature", []) or [])
-            + list(item.get("transitions", []) or [])
-            + self._extract_transition_tokens(item.get("knowledge", ""))
-            + self._extract_transition_tokens(item.get("skill", ""))
-        )
-        trans_score = 0.0
-        if query_transitions and item_transitions:
-            trans_score = len(query_transitions & item_transitions) / max(len(query_transitions), 1)
-
         confidence = float(item.get("confidence", item.get("score", 0.0)) or 0.0)
-        confidence_bonus = 0.05 * max(0.0, min(confidence, 1.0))
-
-        # Reaction type matching: boost same-type items, penalize cross-type
-        query_rxn = self._extract_reaction_type_from_query(query_text)
-        item_rxn = str(item.get("reaction_type", "")).strip().upper()
-        rxn_bonus = 0.0
-        if query_rxn and item_rxn:
-            rxn_bonus = 0.12 if query_rxn == item_rxn else -0.08
-
-        score = 0.55 * token_score + 0.25 * trans_score + confidence_bonus + rxn_bonus
-        return float(max(0.0, score))
+        return self._score_bank_entry(
+            query_text=query_text,
+            entry=item,
+            token_fields=(
+                "title", "knowledge", "skill", "guidance",
+                "action_template", "applicability", "reaction_type",
+            ),
+            transition_list_fields=("transition_signature", "transitions"),
+            transition_text_fields=("knowledge", "skill"),
+            quality=max(0.0, min(confidence, 1.0)),
+            weights=AGENT45_BANK_ITEM_SCORE_WEIGHTS,
+        )
 
     @staticmethod
     def _agent45_item_short_text(item: Dict[str, Any], keys: List[str], max_len: int = 220) -> str:
@@ -1076,8 +1136,6 @@ class Agent45MementoToolsMixin:
                 "prompt_block": "(no memento cases)",
                 "retrieval_mode": "non_parametric",
             }
-
-        _ = self._memento_extract_pairs(cases, key_field="question", value_field="plan")
 
         scored: List[Dict[str, Any]] = []
         for case in cases:
@@ -1388,8 +1446,18 @@ class Agent45MementoToolsMixin:
         }
 
         path = self._agent45_memento_casebank_path()
+        line = json.dumps(case, ensure_ascii=False) + "\n"
         with open(path, "a", encoding="utf-8") as fh:
-            fh.write(json.dumps(case, ensure_ascii=False) + "\n")
+            # Guard concurrent appends with an exclusive lock (POSIX only);
+            # write the full line in a single write() call.
+            if fcntl is not None:
+                fcntl.flock(fh.fileno(), fcntl.LOCK_EX)
+            try:
+                fh.write(line)
+                fh.flush()
+            finally:
+                if fcntl is not None:
+                    fcntl.flock(fh.fileno(), fcntl.LOCK_UN)
         return str(path)
 
     @staticmethod
@@ -1602,7 +1670,10 @@ class Agent45MementoToolsMixin:
         model = model_cls(backbone).to(device)
 
         if bool(resume_from_checkpoint) and model_path.exists():
-            state_dict = torch.load(str(model_path), map_location=device)
+            try:
+                state_dict = torch.load(str(model_path), map_location=device, weights_only=True)
+            except TypeError:  # older torch without weights_only
+                state_dict = torch.load(str(model_path), map_location=device)
             model.load_state_dict(state_dict)
 
         optimizer = torch.optim.AdamW(model.parameters(), lr=float(learning_rate))

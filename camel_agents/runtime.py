@@ -169,7 +169,12 @@ class CamelWorkflowAgent:
             if hasattr(output_model, "model_validate"):
                 return output_model.model_validate(payload)
             return output_model(**payload)
-        except Exception:
+        except Exception as exc:
+            logger.debug(
+                "Output-model validation failed for %s: %s",
+                getattr(output_model, "__name__", output_model),
+                exc,
+            )
             return None
 
     @staticmethod

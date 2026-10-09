@@ -30,6 +30,7 @@ import numpy as np
 from core.viz.visualization_manager import CatalysisVisualizationManager
 
 # Import existing digital twin
+from core.fairchem_config import DEFAULT_FAIRCHEM_MODEL
 from camel_agents.gas_solid_digital_twin import GasSolidDigitalTwin
 from ase.io import read, write
 from ase import Atoms
@@ -46,9 +47,15 @@ def check_adsorbate_distance(atoms: Atoms, threshold: float = 3.0) -> tuple:
     (is_too_close, min_distance, needs_expansion)
     """
     from scipy.spatial.distance import pdist
+    from collections import Counter
 
-    # 找出吸附分子（非Pt原子）
-    surface_atoms = [i for i, s in enumerate(atoms.get_chemical_symbols()) if s == 'Pt']
+    # 找出吸附分子（非表面元素原子）。表面元素取结构中数量最多的元素，
+    # 与 gas_solid_digital_twin 中的启发式保持一致。
+    symbols = atoms.get_chemical_symbols()
+    if not symbols:
+        return False, float('inf'), False
+    surface_element = Counter(symbols).most_common(1)[0][0]
+    surface_atoms = [i for i, s in enumerate(symbols) if s == surface_element]
     ads_atoms = [i for i in range(len(atoms)) if i not in surface_atoms]
 
     if len(ads_atoms) <= 1:
@@ -102,7 +109,7 @@ class VisualizedGasSolidDigitalTwin(GasSolidDigitalTwin):
         surface_sampling_root: str,
         fairchem_root: str,
         use_gpu: bool = True,
-        fairchem_model: str = "uma-s-1p1",
+        fairchem_model: str = DEFAULT_FAIRCHEM_MODEL,
         fairchem_model_path: Optional[str] = None,
         # VSSR-MC model and electrochemical parameters (forwarded to parent)
         vssr_mc_model: str = "CHGNetNFF",
@@ -110,7 +117,7 @@ class VisualizedGasSolidDigitalTwin(GasSolidDigitalTwin):
         ph: Optional[float] = None,
         # Agent2 adsorption backend (forwarded to parent)
         adsorption_backend: str = "adsorbml",
-        adsorbml_model: str = "uma-s-1p1",
+        adsorbml_model: str = DEFAULT_FAIRCHEM_MODEL,
         adsorbml_num_sites: int = 20,
         adsorbml_placement_mode: str = "random_site_heuristic_placement",
         adsorbml_interstitial_gap: float = 0.1,
@@ -201,7 +208,11 @@ class VisualizedGasSolidDigitalTwin(GasSolidDigitalTwin):
         image_path: str,
         reaction_context: str = ""
     ) -> Dict[str, Any]:
-        """使用 OpenAI-compatible LLM 审查吸附结构合理性。"""
+        """使用 OpenAI-compatible LLM 审查吸附结构合理性。
+
+        NOTE: 当前审查为纯文本审查 — image_path 只作为元信息写入 prompt，
+        图片本身从未发送给 LLM。
+        """
         if not self.enable_llm_review or self.llm_client is None:
             return {
                 "is_reasonable": True,
@@ -261,8 +272,12 @@ Return strict JSON:
             if json_match:
                 review_result = json.loads(json_match.group())
             else:
+                # Fails open, but flagged as un-reviewed so callers/reports
+                # can distinguish a real PASS from a parsing failure.
                 review_result = {
                     "is_reasonable": True,
+                    "reviewed": False,
+                    "reason": "Failed to parse LLM response",
                     "issues": [],
                     "suggestions": [],
                     "confidence": 0.5,
@@ -281,8 +296,12 @@ Return strict JSON:
 
         except Exception as e:
             logger.error(f"    ❌ LLM review failed: {e}")
+            # Fails open (is_reasonable=True) so the pipeline keeps running,
+            # but "reviewed": False marks that no actual review happened.
             return {
                 "is_reasonable": True,
+                "reviewed": False,
+                "reason": f"LLM review error: {str(e)}",
                 "issues": [f"LLM review error: {str(e)}"],
                 "suggestions": [],
                 "confidence": 0.0
@@ -447,8 +466,8 @@ Return strict JSON:
                             try:
                                 atoms = read(cif_file)
                                 traj.write(atoms)
-                            except:
-                                pass
+                            except Exception as e:
+                                logger.warning(f"     ⚠️  Failed to read MC frame {cif_file}: {e}")
                         traj.close()
 
                         if os.path.exists(traj_file):
@@ -519,7 +538,8 @@ Return strict JSON:
                                         rotation='10x,10y,0z',
                                         show_unit_cell=2,
                                     )
-                                except:
+                                except Exception as e:
+                                    logger.warning(f"     ⚠️  ASE preview render failed for {inter}: {e}")
                                     # 如果ASE write失败，使用viz_manager
                                     if self.viz_manager:
                                         temp_img_path = self.viz_manager._render_structure(
@@ -782,7 +802,7 @@ def run_visualized_catalysis_workflow(
         Results and visualization paths
     """
     # 检查本地模型
-    fairchem_model = kwargs.get('fairchem_model', 'uma-s-1p1')
+    fairchem_model = kwargs.get('fairchem_model', DEFAULT_FAIRCHEM_MODEL)
     fairchem_model_path = kwargs.get('fairchem_model_path', None)
 
     # 如果没有提供本地路径，尝试使用项目中的模型
@@ -820,5 +840,9 @@ def run_visualized_catalysis_workflow(
         num_adsorption_sites=kwargs.get('num_adsorption_sites', 5),
         reconstruction_sweeps=kwargs.get('reconstruction_sweeps', 10),
         calculate_barriers=kwargs.get('calculate_barriers', False),
+        neb_frames=kwargs.get('neb_frames', 10),
+        neb_fmax=kwargs.get('neb_fmax', 0.05),
+        run_kmc=kwargs.get('run_kmc', False),
+        pressures=kwargs.get('pressures', None),
         output_dir=kwargs.get('output_dir', 'output/visualized_workflow'),
     )

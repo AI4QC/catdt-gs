@@ -14,6 +14,15 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 
+def _load_rl_monitor_module():
+    module_path = ROOT / "scripts" / "monitor_agent45_rl_progress.py"
+    spec = importlib.util.spec_from_file_location("monitor_agent45_rl_progress", module_path)
+    module = importlib.util.module_from_spec(spec)
+    assert spec is not None and spec.loader is not None
+    spec.loader.exec_module(module)
+    return module
+
+
 def test_rng_state_round_trip_is_lossless():
     mod = importlib.import_module("test_memento_multireaction")
     rng = random.Random(20260309)
@@ -136,6 +145,82 @@ def test_checkpoint_resume_replays_pending_post_iteration_hooks_for_completed_it
     assert state["post_iteration_state"]["retriever_done"] is False
     assert state["post_iteration_state"]["bank_extract_done"] is False
     assert state["post_iteration_state"]["eval_done"] is False
+
+
+def test_resolve_candidate_split_uses_cached_split_without_scanning(tmp_path, monkeypatch):
+    mod = importlib.import_module("test_memento_multireaction")
+
+    cache_path = tmp_path / "train_eval_split.json"
+    payload = {
+        "surface_source": "oc20_is2re_val",
+        "oc20_lmdb_path": "/tmp/fake/data.lmdb",
+        "seed": 42,
+        "eval_set_size": 50,
+        "oc20_min_atoms": 36,
+        "oc20_max_atoms": 0,
+        "oc20_max_scan_entries": 0,
+        "train_candidates": [
+            {"key": "1", "sid": 11, "natoms": 64, "composition": "Cu64"},
+            {"key": "2", "sid": 22, "natoms": 72, "composition": "Cu72"},
+        ],
+        "eval_candidates": [
+            {"key": "9", "sid": 99, "natoms": 80, "composition": "Cu80"},
+        ],
+    }
+    cache_path.write_text(json.dumps(payload), encoding="utf-8")
+
+    monkeypatch.setattr(
+        mod,
+        "_list_oc20_candidates",
+        lambda **kwargs: (_ for _ in ()).throw(AssertionError("LMDB scan should not run when cache exists")),
+    )
+
+    train_candidates, eval_candidates = mod._resolve_candidate_split(
+        output_base_dir=tmp_path,
+        lmdb_path=Path("/tmp/fake/data.lmdb"),
+        min_atoms=36,
+        max_atoms=0,
+        max_scan_entries=0,
+        eval_size=50,
+        seed=42,
+    )
+
+    assert train_candidates == payload["train_candidates"]
+    assert eval_candidates == payload["eval_candidates"]
+
+
+def test_resolve_candidate_split_builds_and_persists_cache_when_missing(tmp_path, monkeypatch):
+    mod = importlib.import_module("test_memento_multireaction")
+
+    listed_candidates = [
+        {"key": "1", "sid": 11, "natoms": 64, "composition": "Cu64"},
+        {"key": "2", "sid": 22, "natoms": 72, "composition": "Cu72"},
+        {"key": "3", "sid": 33, "natoms": 80, "composition": "Cu80"},
+    ]
+    split_train = listed_candidates[:2]
+    split_eval = listed_candidates[2:]
+
+    monkeypatch.setattr(mod, "_list_oc20_candidates", lambda **kwargs: list(listed_candidates))
+    monkeypatch.setattr(mod, "_split_train_eval_candidates", lambda **kwargs: (list(split_train), list(split_eval)))
+
+    train_candidates, eval_candidates = mod._resolve_candidate_split(
+        output_base_dir=tmp_path,
+        lmdb_path=Path("/tmp/fake/data.lmdb"),
+        min_atoms=36,
+        max_atoms=0,
+        max_scan_entries=0,
+        eval_size=50,
+        seed=42,
+    )
+
+    assert train_candidates == split_train
+    assert eval_candidates == split_eval
+
+    written = json.loads((tmp_path / "train_eval_split.json").read_text(encoding="utf-8"))
+    assert written["train_candidates"] == split_train
+    assert written["eval_candidates"] == split_eval
+    assert written["seed"] == 42
+    assert written["eval_set_size"] == 50
 
 
 def test_run_eval_block_reads_memory_but_disables_write(tmp_path, monkeypatch):
@@ -489,3 +574,111 @@ def test_rebuild_generation_full_bank_state_replays_bank_updates_every_10_episod
         {"from_episode": 30, "to_episode": 40, "train_iteration": 4},
         {"from_episode": 40, "to_episode": 50, "train_iteration": 5},
     ]
+
+
+def test_monitor_phase_is_bank_building_when_bank_extract_pending():
+    mon = _load_rl_monitor_module()
+
+    phase = mon.infer_progress_phase(
+        checkpoint={
+            "completed_episode_count": 100,
+            "post_iteration_state": {
+                "iteration": 10,
+                "retriever_done": True,
+                "bank_extract_done": False,
+                "eval_done": False,
+            },
+        },
+        has_rl_process=True,
+        has_bank_builder_process=False,
+    )
+
+    assert phase == "bank_building"
+
+
+def test_monitor_phase_is_evaluating_when_bank_done_but_eval_pending():
+    mon = _load_rl_monitor_module()
+
+    phase = mon.infer_progress_phase(
+        checkpoint={
+            "completed_episode_count": 100,
+            "post_iteration_state": {
+                "iteration": 10,
+                "retriever_done": True,
+                "bank_extract_done": True,
+                "eval_done": False,
+            },
+        },
+        has_rl_process=True,
+        has_bank_builder_process=False,
+    )
+
+    assert phase == "evaluating"
+
+
+def test_monitor_phase_is_training_when_post_iteration_hooks_are_complete():
+    mon = _load_rl_monitor_module()
+
+    phase = mon.infer_progress_phase(
+        checkpoint={
+            "completed_episode_count": 100,
+            "post_iteration_state": {
+                "iteration": 11,
+                "retriever_done": False,
+                "bank_extract_done": False,
+                "eval_done": False,
+            },
+        },
+        has_rl_process=True,
+        has_bank_builder_process=False,
+    )
+
+    assert phase == "training"
+
+
+def test_monitor_process_summary_filters_wrapper_processes():
+    mon = _load_rl_monitor_module()
+
+    summary = mon.collect_process_summary(
+        process_rows=[
+            {
+                "pid": 1,
+                "ppid": 0,
+                "stat": "Ss",
+                "etime": "00:10",
+                "cpu": 0.0,
+                "mem": 0.0,
+                "cmd": "tmux new-session -d -s rl_train_resume bash -lc 'python -u test_memento_multireaction.py ...'",
+            },
+            {
+                "pid": 2,
+                "ppid": 1,
+                "stat": "Ss",
+                "etime": "00:09",
+                "cpu": 0.0,
+                "mem": 0.0,
+                "cmd": "bash -lc cd /repo && python -u test_memento_multireaction.py ...",
+            },
+            {
+                "pid": 3,
+                "ppid": 2,
+                "stat": "Sl",
+                "etime": "00:08",
+                "cpu": 10.0,
+                "mem": 1.0,
+                "cmd": "python -u test_memento_multireaction.py --output-base-dir output/run",
+            },
+            {
+                "pid": 4,
+                "ppid": 3,
+                "stat": "Sl",
+                "etime": "00:03",
+                "cpu": 0.2,
+                "mem": 0.3,
+                "cmd": "/opt/conda/envs/catdt/bin/python /srv/catdt/scripts/build_agent45_banks.py --casebank x",
+            },
+        ]
+    )
+
+    assert [row["pid"] for row in summary["rl_processes"]] == [3]
+    assert [row["pid"] for row in summary["bank_builders"]] == [4]

@@ -1,8 +1,10 @@
 """Performs sampling of surface reconstructions using an MCMC-based algorithm."""
 
 import logging
+import random
 from collections import defaultdict
 from collections.abc import Iterable
+from collections import Counter
 from pathlib import Path
 
 import numpy as np
@@ -13,6 +15,7 @@ from mcmc.events.criterion import (
     TestingCriterion,
 )
 from mcmc.events.event import Change, Exchange
+from mcmc.slab import change_site
 from mcmc.events.proposal import ChangeProposal, SwitchProposal
 from mcmc.system import SurfaceSystem
 from mcmc.utils import create_anneal_schedule, setup_folders
@@ -31,6 +34,7 @@ class MCMC:
         adsorbates=None,
         canonical=False,
         num_ads_atoms=0,
+        adsorbate_counts=None,
         testing=False,
         filter_distance: float = 0.0,
         **kwargs,
@@ -69,6 +73,7 @@ class MCMC:
         self.adsorbates = adsorbates
         self.canonical = canonical
         self.num_ads_atoms = num_ads_atoms
+        self.adsorbate_counts = dict(adsorbate_counts or {})
         self.testing = testing
         self.filter_distance = filter_distance
         self.kwargs = kwargs
@@ -83,9 +88,11 @@ class MCMC:
         self.run_folder = ""
 
         if self.canonical:
-            assert (
-                self.num_ads_atoms > 0
-            ), "for canonical runs, need number of adsorbed atoms greater than 0"
+            if self.adsorbate_counts:
+                self.num_ads_atoms = sum(int(v) for v in self.adsorbate_counts.values())
+            assert self.num_ads_atoms > 0, (
+                "for canonical runs, need number of adsorbed atoms greater than 0"
+            )
 
     def initialize(
         self,
@@ -177,11 +184,60 @@ class MCMC:
 
             for site_idx in sites_idx:
                 self.step_semigrand(site_idx=site_idx)
+        elif self.adsorbate_counts:
+            self.logger.info("Randomly adsorbing fixed composition: %s", self.adsorbate_counts)
+            n_sites = len(self.surface.ads_coords)
+            target_counts = {
+                str(elem): int(count)
+                for elem, count in self.adsorbate_counts.items()
+                if int(count) > 0
+            }
+            target_total = sum(target_counts.values())
+            if target_total > n_sites:
+                raise ValueError(
+                    f"adsorbate_counts target {target_total} exceeds n_sites={n_sites}: "
+                    f"{target_counts}"
+                )
+            site_indices = list(range(n_sites))
+            random.shuffle(site_indices)
+            cursor = 0
+            for elem, count in target_counts.items():
+                if elem not in self.adsorbates:
+                    raise ValueError(
+                        f"adsorbate_counts contains {elem!r}, but adsorbates={self.adsorbates}"
+                    )
+                for site_idx in site_indices[cursor : cursor + count]:
+                    self.surface = change_site(self.surface, site_idx, elem)
+                cursor += count
+            self.num_ads_atoms = target_total
         else:
             self.logger.info("Randomly adsorbing sites")
-            # Perform semi-grand canonical until num_ads_atoms are obtained
+            # Cap the target at the number of available adsorption sites —
+            # otherwise, if num_ads_atoms > len(ads_coords), the loop can
+            # never reach the target and runs forever (each site holds at
+            # most one adsorbate). Seen on post-MD Cu(111) slabs where
+            # AdsorbateSiteFinder yields few sites.
+            n_sites = len(self.surface.ads_coords)
+            if self.num_ads_atoms > n_sites:
+                self.logger.warning(
+                    "num_ads_atoms=%s exceeds n_sites=%s; capping target",
+                    self.num_ads_atoms, n_sites,
+                )
+                self.num_ads_atoms = n_sites
+            # Safety bound: prepare_canonical shouldn't need more than
+            # 20 * n_sites rejections to reach target on a healthy system.
+            max_attempts = 20 * max(n_sites, 1)
+            attempts = 0
             while self.surface.num_adsorbates < self.num_ads_atoms:
                 self.step_semigrand()
+                attempts += 1
+                if attempts > max_attempts:
+                    self.logger.warning(
+                        "prepare_canonical: giving up after %d attempts "
+                        "(reached %d/%d adsorbates)",
+                        attempts, self.surface.num_adsorbates, self.num_ads_atoms,
+                    )
+                    break
 
         self.surface.real_atoms.write(
             self.run_folder / f"{self.surface.surface_name}_canonical_init.cif"

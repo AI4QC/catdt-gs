@@ -371,7 +371,7 @@ class CatalystSurfaceVisualizer:
                 try:
                     # Control cell visualization based on user preference
                     data.cell.vis.enabled = self.show_cell
-                except:
+                except Exception:
                     pass  # Cell visualization may not be available
 
             # Create viewport
@@ -492,6 +492,12 @@ class CatalystSurfaceVisualizer:
         show_progress: bool = True
     ) -> None:
         """Visualize trajectory as GIF animation."""
+        if os.environ.get("CATDT_SKIP_CORE_VIZ", "").strip().lower() in {"1", "true", "yes"}:
+            print("Skipping trajectory visualization due to CATDT_SKIP_CORE_VIZ")
+            return
+        if os.environ.get("CATDT_SKIP_TRAJECTORY_VIZ", "").strip().lower() in {"1", "true", "yes"}:
+            print("Skipping trajectory visualization due to CATDT_SKIP_TRAJECTORY_VIZ")
+            return
         if not output_file.endswith('.gif'):
             output_file = str(Path(output_file).with_suffix('.gif'))
 
@@ -552,12 +558,12 @@ def auto_detect_file_type(filename: str) -> Tuple[bool, int]:
             return len(structures) > 1, len(structures)
         else:
             return False, 1
-    except:
+    except Exception as e:
         try:
             read(filename)
             return False, 1
-        except:
-            raise ValueError(f"Cannot read file: {filename}")
+        except Exception:
+            raise ValueError(f"Cannot read file: {filename}") from e
 
 
 def main():
@@ -641,7 +647,7 @@ Installation:
         supercell = tuple(map(int, args.supercell.split(',')))
         if len(supercell) != 3:
             raise ValueError
-    except:
+    except Exception:
         print("Error: --supercell must be in format 'nx,ny,nz' (e.g., '2,2,1')")
         return 1
 

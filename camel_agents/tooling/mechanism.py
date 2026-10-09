@@ -14,6 +14,207 @@ from typing import Any, Dict, List, Optional, Set, Tuple
 logger = logging.getLogger(__name__)
 
 
+class _StepEnergyEvaluator:
+    """Single source of truth for the energy convention shared by ALL
+    mechanism-search strategies (agent-guided / quick / pruning / mcts).
+
+    Species value (``dG_ads``) — the corrected adsorption free energy
+
+        ΔG_ads(X) = E(slab+X, relaxed) − E(clean slab) − G_gas(X; T, P)
+
+    computed by ``ThermalStateEnergyBackend`` (UMA relaxation + gas
+    reference from the CatDT molecule DB at the operating conditions).
+    Special cases under the SAME convention:
+
+      * gas-phase label ``X(g)`` → 0.0 by definition: the desorbed state
+        (clean slab + X in the gas reservoir at (T, P)) IS the reference
+        state of the convention — this is a meaningful value, not a
+        placeholder;
+      * composite ``A+B`` co-adsorption → ΔG_ads(A) + ΔG_ads(B) when every
+        component is evaluable (infinite-separation approximation), else
+        None;
+      * anything unevaluable → None. None means INCOMPARABLE — downstream
+        ranking/pruning must keep such states and never compare them
+        against numeric values. No fabricated values are ever returned.
+
+    Step value (``step_dG``) — the exact step free energy
+
+        ΔG_step = ΔG_ads(child) − ΔG_ads(parent)
+                  + [G_gas(child) − G_gas(parent) − Σ_e Δn_e μ_e(T, P)]
+
+    delegated to ``FreeEnergyRouter.step_dG`` with composite-aware gas
+    references summed per component.
+    """
+
+    def __init__(
+        self,
+        tools: Any,
+        ctx: Dict[str, Any],
+        energy_backend: str = "thermal_uma",
+        energy_cache: Any = None,
+    ):
+        from core.pathway.energy_cache import EnergyCache
+        from core.pathway.free_energy_router import (
+            FreeEnergyRouter, ThermalStateEnergyBackend,
+        )
+        from core.pathway.catdt_molecule_db import load_default as _load_db
+
+        self.surface_path = ctx.get("surface_structure_path")
+        self.fixed_site = ctx.get("fixed_adsorption_site")
+        env = ctx.get("environment", {}) or {}
+        self.T = float(env.get("T", 298.0))
+        self.P = float(env.get("P", 1e5))
+
+        # Gas-phase free-energy DB: required for the ΔG_ads convention
+        # (gas references + exchanged-species chemical potentials).
+        try:
+            gas_db = _load_db()
+            if not gas_db.molecules:
+                gas_db = None
+                logger.warning(
+                    "CatDT molecule DB is empty; ΔG_ads convention "
+                    "unavailable — species energies will be None. Build "
+                    "with `python scripts/build_catdt_molecule_db.py`."
+                )
+        except Exception as exc:
+            logger.warning("Failed to load CatDT molecule DB (%s).", exc)
+            gas_db = None
+        self.gas_db = gas_db
+
+        self.router = FreeEnergyRouter(
+            thermal_backend=ThermalStateEnergyBackend(
+                tools=tools,
+                gas_db=gas_db,
+                temperature_K=self.T,
+                pressure_Pa=self.P,
+            ),
+            default_backend=energy_backend,
+        )
+        self.energy_cache = energy_cache or EnergyCache(
+            surface_key=self.surface_path or "default",
+        )
+        self.total_evaluated = 0
+
+    # ----- composition helpers -----
+
+    @staticmethod
+    def _components(label: str) -> List[str]:
+        return [c.strip() for c in label.split("+") if c.strip()]
+
+    def elements(self, label: str) -> Dict[str, int]:
+        """Full element composition; composite labels sum ALL components
+        (``parse_species_elements`` alone only parses the first one)."""
+        from core.pathway.candidate_generators import parse_species_elements
+        if "+" not in label:
+            return parse_species_elements(label)
+        total: Dict[str, int] = {}
+        for comp in self._components(label):
+            for e, n in parse_species_elements(comp).items():
+                total[e] = total.get(e, 0) + n
+        return total
+
+    def gas_G(self, label: str) -> Optional[float]:
+        """Σ over components of the gas reference G_gas(component formula)
+        at (T, P), resolved through ``gas_db.mu_for_delta`` — the SAME
+        resolver the ΔG_ads values were built with (whole-molecule G
+        preferred, element-reference decomposition fallback)."""
+        if self.gas_db is None:
+            return None
+        from core.pathway.candidate_generators import parse_species_elements
+        total = 0.0
+        for comp in self._components(label):
+            formula = {
+                e: n for e, n in parse_species_elements(comp).items() if n
+            }
+            if not formula:
+                return None
+            try:
+                total += float(self.gas_db.mu_for_delta(formula, T=self.T, P=self.P))
+            except Exception:
+                return None
+        return total
+
+    # ----- energy API -----
+
+    def dG_ads(self, label: str) -> Optional[float]:
+        """Corrected adsorption free energy ΔG_ads (cache-first) or None."""
+        hit, cached = self.energy_cache.get(label)
+        if hit:
+            return cached
+        if "+" in label:
+            vals = [self.dG_ads(c) for c in self._components(label)]
+            value: Optional[float] = (
+                float(sum(vals)) if vals and all(v is not None for v in vals)
+                else None
+            )
+            self.energy_cache.put(label, value)
+            return value
+        if "(g)" in label:
+            # Desorbed state = clean slab + X in the reservoir — exactly
+            # the reference state of the ΔG_ads convention.
+            self.energy_cache.put(label, 0.0)
+            return 0.0
+        est = self.router.estimate_state_free_energy(
+            label, surface_path=self.surface_path, fixed_site=self.fixed_site,
+        )
+        value = est.get("free_energy_eV")
+        if value is None:
+            logger.info(
+                "ΔG_ads unavailable for %s (kept as incomparable): %s",
+                label, (est.get("details") or {}).get("error", "unknown"),
+            )
+        self.energy_cache.put(label, value)
+        self.total_evaluated += 1
+        self._release_gpu()
+        return value
+
+    def step_dG(
+        self,
+        parent_label: str,
+        child_label: str,
+        parent_elements: Optional[Dict[str, int]] = None,
+        child_elements: Optional[Dict[str, int]] = None,
+    ) -> Optional[float]:
+        """Exact step free energy parent → child on the ΔG_ads scale,
+        or None when any required quantity is unavailable."""
+        pG = self.dG_ads(parent_label)
+        cG = self.dG_ads(child_label)
+        if pG is None or cG is None:
+            return None
+        # Composite labels must use the SUMMED composition regardless of
+        # what the caller passed (generators may only carry component 1).
+        if parent_elements is None or "+" in parent_label:
+            parent_elements = self.elements(parent_label)
+        if child_elements is None or "+" in child_label:
+            child_elements = self.elements(child_label)
+        if self.gas_db is None:
+            # Without gas references only same-formula steps (desorption /
+            # isomerisation) are exact; anything else is incomparable.
+            p_f = {e: n for e, n in parent_elements.items() if n}
+            c_f = {e: n for e, n in child_elements.items() if n}
+            return (cG - pG) if p_f == c_f else None
+        # Composite-aware gas references; single-species sides resolve
+        # inside FreeEnergyRouter.step_dG from their element dicts.
+        pgg = self.gas_G(parent_label) if "+" in parent_label else None
+        cgg = self.gas_G(child_label) if "+" in child_label else None
+        return self.router.step_dG(
+            parent_G=pG, child_G=cG,
+            parent_elements=parent_elements,
+            child_elements=child_elements,
+            gas_db=self.gas_db, T=self.T, P=self.P,
+            parent_gas_G=pgg, child_gas_G=cgg,
+        )
+
+    @staticmethod
+    def _release_gpu() -> None:
+        try:
+            import torch
+            if torch.cuda.is_available():
+                torch.cuda.empty_cache()
+        except Exception:
+            pass
+
+
 class MechanismToolsMixin:
     """Mixin providing mechanism search tool methods for CatDTTools."""
 
@@ -140,15 +341,33 @@ class MechanismToolsMixin:
         backend: str = "thermal_uma",
         **kwargs: Any,
     ) -> Dict[str, Any]:
-        """Estimate free energy for a single catalytic state."""
-        from core.pathway.free_energy_router import FreeEnergyRouter
+        """Estimate the corrected adsorption free energy ΔG_ads for a
+        single catalytic state (see ``core.pathway.free_energy_router``
+        for the convention)."""
+        from core.pathway.free_energy_router import (
+            FreeEnergyRouter, ThermalStateEnergyBackend,
+        )
+        from core.pathway.catdt_molecule_db import load_default as _load_db
 
         surface_path = None
+        env: Dict[str, Any] = {}
         if self._mechanism_context:
             surface_path = self._mechanism_context.get("surface_structure_path")
+            env = self._mechanism_context.get("environment", {}) or {}
 
-        from core.pathway.free_energy_router import ThermalStateEnergyBackend
-        thermal_backend = ThermalStateEnergyBackend(tools=self)
+        try:
+            gas_db = _load_db()
+            if not gas_db.molecules:
+                gas_db = None
+        except Exception:
+            gas_db = None
+
+        thermal_backend = ThermalStateEnergyBackend(
+            tools=self,
+            gas_db=gas_db,
+            temperature_K=float(env.get("T", 298.0)),
+            pressure_Pa=float(env.get("P", 1e5)),
+        )
         router = FreeEnergyRouter(thermal_backend=thermal_backend, default_backend=backend)
         return router.estimate_state_free_energy(
             species_label=species_label,
@@ -181,8 +400,9 @@ class MechanismToolsMixin:
                 ``both_sequential`` | ``both_parallel``.
             systematic_strategy: within systematic mode, which Phase-3
                 algorithm to use:
-                * ``quick``  — score Stage-1 paths by max-intermediate
-                  UMA energy with shared cache (fast, no graph traversal).
+                * ``quick``  — score Stage-1 paths by max step ΔG /
+                  max-intermediate ΔG_ads with shared cache (fast, no
+                  graph traversal).
                 * ``pruning`` — layer-by-layer beam BFS over the CRN
                   with per-parent sibling pruning + distance-bucketed
                   round-robin beam (default).
@@ -274,8 +494,6 @@ class MechanismToolsMixin:
         initial = ctx["initial_state"]
         target = ctx["target_state"]
         known = ctx.get("known_intermediates", [])
-        surface_path = ctx.get("surface_structure_path")
-        fixed_site = ctx.get("fixed_adsorption_site")
         surface_id = ctx.get("surface_id", "")
         surface_facet = ctx.get("surface_facet", "")
         constraints = ctx.get("constraints", "")
@@ -298,20 +516,18 @@ class MechanismToolsMixin:
                 return {"pathways": [], "stats": {"error": "LLM returned no pathways"}}
             logger.info("Agent-guided: LLM recommended %d pathway(s)", len(sequences))
 
-        # Evaluate each pathway with UMA
+        # Evaluate each pathway on the shared ΔG_ads convention (one
+        # evaluator = one convention for ALL strategies; gas labels are
+        # 0.0 by definition, composites sum components, unevaluable=None).
         from core.pathway.candidate_generators import AgentGuidedPathwayGenerator
-        from core.pathway.free_energy_router import FreeEnergyRouter, ThermalStateEnergyBackend
 
-        thermal_backend = ThermalStateEnergyBackend(tools=self)
-        router = FreeEnergyRouter(thermal_backend=thermal_backend, default_backend=energy_backend)
+        evaluator = _StepEnergyEvaluator(
+            tools=self, ctx=ctx, energy_backend=energy_backend,
+            energy_cache=energy_cache,
+        )
         generator = AgentGuidedPathwayGenerator()
 
         all_pathways: List[Dict[str, Any]] = []
-        total_evaluated = 0
-        # Shared cache threaded from run_mechanism_search; fall back to local.
-        if energy_cache is None:
-            from core.pathway.energy_cache import EnergyCache
-            energy_cache = EnergyCache(surface_key=surface_path or "default")
 
         for pw_idx, sequence in enumerate(sequences):
             steps = generator.generate_pathway_steps(sequence)
@@ -320,29 +536,9 @@ class MechanismToolsMixin:
 
             states_data = []
             for i, label in enumerate(sequence):
-                hit, cached = energy_cache.get(label)
-                if hit:
-                    energy = cached
-                elif "(g)" in label or "+" in label:
-                    energy = None
-                    energy_cache.put(label, energy)
-                else:
-                    est = router.estimate_state_free_energy(
-                        label, surface_path=surface_path, fixed_site=fixed_site,
-                    )
-                    energy = est.get("free_energy_eV")
-                    energy_cache.put(label, energy)
-                    total_evaluated += 1
-                    try:
-                        import torch
-                        if torch.cuda.is_available():
-                            torch.cuda.empty_cache()
-                    except Exception:
-                        pass
-
                 states_data.append({
                     "species_label": label,
-                    "free_energy_eV": energy,
+                    "free_energy_eV": evaluator.dG_ads(label),
                     "state_id": f"guided_p{pw_idx}_s{i}",
                 })
 
@@ -354,7 +550,7 @@ class MechanismToolsMixin:
                     "bond_changes": step.get("bond_changes", ""),
                 })
 
-            # Compute pathway total energy change for ranking
+            # Worst (highest) ΔG_ads along the pathway, for ranking
             energies = [s["free_energy_eV"] for s in states_data if s["free_energy_eV"] is not None]
             max_energy = max(energies) if energies else None
 
@@ -366,8 +562,14 @@ class MechanismToolsMixin:
                 "max_energy_eV": max_energy,
             })
 
-        # Rank by max intermediate energy (lower = better)
-        all_pathways.sort(key=lambda p: p.get("max_energy_eV") or float("inf"))
+        # Rank by max intermediate ΔG_ads (lower = better). 0.0 is a valid
+        # energy — only None means "no estimate" (sorted last).
+        all_pathways.sort(
+            key=lambda p: (
+                p.get("max_energy_eV")
+                if p.get("max_energy_eV") is not None else float("inf")
+            )
+        )
 
         return {
             "pathways": all_pathways,
@@ -375,7 +577,7 @@ class MechanismToolsMixin:
                 "module": "agent_guided",
                 "n_pathways_proposed": len(sequences),
                 "n_pathways_evaluated": len(all_pathways),
-                "n_states_evaluated": total_evaluated,
+                "n_states_evaluated": evaluator.total_evaluated,
                 "used_llm": len(known) == 0,
             },
         }
@@ -456,10 +658,11 @@ class MechanismToolsMixin:
             try:
                 data = _json.loads(match.group())
                 if isinstance(data, list) and all(isinstance(p, list) for p in data):
-                    # Validate each pathway has at least 3 steps and starts/ends correctly
+                    # Validate each pathway has at least 2 states (a single
+                    # initial→target step is a valid pathway).
                     valid = []
                     for p in data:
-                        if len(p) >= 3 and all(isinstance(s, str) for s in p):
+                        if len(p) >= 2 and all(isinstance(s, str) for s in p):
                             valid.append(p)
                     if valid:
                         return valid
@@ -538,9 +741,10 @@ class MechanismToolsMixin:
                      LLM narrows the CRN to chemically plausible species
                      by filtering the raw DFS-extracted paths.
           Stage 2 / Phase 3 — three strategies:
-            * ``quick``   : score the Stage-1 paths by max-intermediate
-                            UMA energy with a shared cache and return the
-                            sorted list. Fast, no graph re-traversal.
+            * ``quick``   : score the Stage-1 paths by max step ΔG /
+                            max-intermediate ΔG_ads with a shared cache
+                            and return the sorted list. Fast, no graph
+                            re-traversal.
             * ``pruning`` : layer-by-layer beam BFS over the CRN graph
                             with per-parent sibling comparison
                             (delta_keep / delta_prune) and a
@@ -558,12 +762,10 @@ class MechanismToolsMixin:
             CandidateGeneratorRouter, AgentGuidedPathwayGenerator,
             parse_species_elements,
         )
-        from core.pathway.free_energy_router import FreeEnergyRouter, ThermalStateEnergyBackend
+        from core.pathway.free_energy_router import FreeEnergyRouter
 
         initial = ctx["initial_state"]
         target = ctx["target_state"]
-        surface_path = ctx.get("surface_structure_path")
-        fixed_site = ctx.get("fixed_adsorption_site")
 
         logger.info("Systematic Stage 1: build CRN graph (no UMA)")
 
@@ -583,9 +785,11 @@ class MechanismToolsMixin:
             reactant_elements=initial_elements,
             target_elements=target_elements,
         )
+        # Stage 1 never evaluates energies, so the engine gets a bare
+        # router (no UMA tools — estimates would be None/incomparable).
         engine = MechanismSearchEngine(
             generator=router,
-            energy_router=FreeEnergyRouter(default_backend="heuristic"),
+            energy_router=FreeEnergyRouter(),
             policy=PruningPolicy(max_depth=max_depth),
         )
         engine.initialize_root(initial, initial_elements)
@@ -653,6 +857,10 @@ class MechanismToolsMixin:
         # ================================================================
         # Phase 2: LLM chemical plausibility filter (optional, off by default)
         # ================================================================
+        # True only when the LLM actually ranked the pathways; False when
+        # the filter was disabled, skipped, or fell back to a prefix slice
+        # after an LLM failure (surfaced in stats as "llm_filter_applied").
+        llm_filter_applied = False
         if not enable_llm_filter:
             logger.info(
                 "Systematic Phase 2: LLM filter disabled (enable_llm_filter=False); "
@@ -665,7 +873,7 @@ class MechanismToolsMixin:
                 "Systematic Phase 2: LLM filter %d → top %d pathways",
                 len(raw_sequences), llm_filter_top_n,
             )
-            filtered_sequences = self._llm_filter_pathways(
+            filtered_sequences, llm_filter_applied = self._llm_filter_pathways(
                 raw_sequences, initial, target, ctx, top_n=llm_filter_top_n,
             )
         else:
@@ -678,158 +886,18 @@ class MechanismToolsMixin:
         n_filtered = len(filtered_sequences)
         logger.info("Systematic Phase 2 done: %d pathways retained", n_filtered)
 
-        # Shared Phase 3 setup: UMA backend + energy cache + helpers.
-        thermal_backend = ThermalStateEnergyBackend(tools=self)
-        uma_router = FreeEnergyRouter(
-            thermal_backend=thermal_backend, default_backend=energy_backend,
-        )
+        # Shared Phase 3 setup: ONE energy evaluator implements the
+        # ΔG_ads convention for every strategy (quick / pruning; mcts uses
+        # the same class over the same shared cache). See
+        # ``_StepEnergyEvaluator`` for the convention.
         generator = AgentGuidedPathwayGenerator()
-
-        # Use the caller-supplied EnergyCache when available so that
-        # pruning / quick share the same cache as mcts (and persist
-        # across both_sequential runs). Fall back to a fresh one when
-        # called outside the dispatch.
-        from core.pathway.energy_cache import EnergyCache
-        if energy_cache is None:
-            energy_cache = EnergyCache(surface_key=surface_path or "default")
-        total_evaluated = 0
-
-        # Gas-phase free-energy DB: enables stoichiometry-corrected ΔG
-        # for every CRN step. Without it, scoring degrades to absolute
-        # surface G (size-biased, comparison across paths is unfair).
-        from core.pathway.catdt_molecule_db import load_default as _load_db
-        try:
-            gas_db = _load_db()
-            if not gas_db.molecules:
-                gas_db = None
-                logger.warning(
-                    "CatDT molecule DB is empty; ΔG corrections unavailable. "
-                    "Build with `python scripts/build_catdt_molecule_db.py`."
-                )
-        except Exception as exc:
-            logger.warning("Failed to load CatDT molecule DB (%s); using naïve ΔG.", exc)
-            gas_db = None
-
-        env = ctx.get("environment", {}) or {}
-        T_env = float(env.get("T", 298.0))
-        P_env = float(env.get("P", 1e5))
-
-        def _surface_thermal_correction(label: str) -> float:
-            """ZPE + thermal H − TS from the matching gas molecule;
-            zero if no formula match in DB."""
-            if gas_db is None:
-                return 0.0
-            elem = parse_species_elements(label)
-            sp = gas_db.species_for_formula(elem)
-            if sp is None:
-                return 0.0
-            try:
-                return (
-                    gas_db.G(sp, T=T_env, P=P_env)
-                    - gas_db.molecules[sp]["E_elec_eV"]
-                )
-            except Exception:
-                return 0.0
-
-        # UMA's compute_adsorption_energies uses hard-coded per-atom
-        # reference energies internally:
-        #   E_ads_atomic(*X) = E(slab+X) - E(slab) - Σ atomic_ref[e]·n_e
-        # We convert to a molecular reference (UMA-computed gas molecule
-        # E_elec from the CatDT DB) so different species are comparable
-        # on a single thermodynamic scale:
-        #   E_ads_mol(*X) = E_ads_atomic(*X) + (Σ atomic_ref) − E_gas(X)
-        # When no DB match exists (radical fragment), keep atomic ref.
-        SANITY_ABSG_EV = 30.0
-        TYPICAL_ADS_EV = -1.5
-        # OC20 atomic-reference table (mirrors fairchem_predictor.py).
-        ATOMIC_REF_OC20 = {
-            "H": -3.477, "C": -7.282, "N": -8.083,
-            "O": -7.204, "F": -4.891, "S": -4.659,
-        }
-
-        def _atomic_ref_sum(elem: Dict[str, int]) -> float:
-            return sum(n * ATOMIC_REF_OC20.get(e, 0.0) for e, n in elem.items())
-
-        def _molecular_ref_E_elec(label: str) -> Optional[float]:
-            """UMA E_elec of the matching gas-phase molecule from the DB."""
-            if gas_db is None:
-                return None
-            elem = parse_species_elements(label)
-            sp = gas_db.species_for_formula(elem)
-            if sp is None:
-                return None
-            return gas_db.molecules[sp].get("E_elec_eV")
-
-        def _gas_reference_G(label: str) -> Optional[float]:
-            """μ_gas(species formula) + typical surface stabilization."""
-            if gas_db is None:
-                return None
-            try:
-                elem = parse_species_elements(label)
-                return gas_db.mu_for_delta(elem, T=T_env, P=P_env) + TYPICAL_ADS_EV
-            except Exception:
-                return None
-
-        def _eval_energy(label: str) -> Optional[float]:
-            nonlocal total_evaluated
-            hit, cached = energy_cache.get(label)
-            if hit:
-                return cached
-            if "(g)" in label or "+" in label:
-                if gas_db is not None:
-                    try:
-                        elem = parse_species_elements(label)
-                        energy = gas_db.mu_for_delta(elem, T=T_env, P=P_env)
-                    except Exception:
-                        energy = None
-                else:
-                    energy = None
-                energy_cache.put(label, energy)
-                return energy
-            est = uma_router.estimate_state_free_energy(
-                label, surface_path=surface_path, fixed_site=fixed_site,
-            )
-            energy = est.get("free_energy_eV")
-            if energy is None:
-                fb = _gas_reference_G(label)
-                if fb is not None:
-                    energy = fb
-            else:
-                # G_full(slab+X) = E_total(slab+X) + thermal_correction(X)
-                # E_total is the raw UMA energy (typically -200 to
-                # -500 eV for slab+ads). E(slab) is constant and cancels
-                # in ΔG between two surface species, so it doesn't enter
-                # the calculation.
-                energy = energy + _surface_thermal_correction(label)
-            energy_cache.put(label, energy)
-            total_evaluated += 1
-            try:
-                import torch
-                if torch.cuda.is_available():
-                    torch.cuda.empty_cache()
-            except Exception:
-                pass
-            return energy
-
-        def _step_dG(parent_label, child_label, parent_elements, child_elements):
-            """ΔG for the elementary step parent→child (eV).
-
-            Uses stoichiometry-corrected formula when ``gas_db`` is
-            available; otherwise falls back to naïve G(child)−G(parent).
-            """
-            pG = _eval_energy(parent_label)
-            cG = _eval_energy(child_label)
-            if pG is None or cG is None:
-                return None
-            if gas_db is None:
-                return cG - pG
-            dG = uma_router.step_dG(
-                parent_G=pG, child_G=cG,
-                parent_elements=parent_elements,
-                child_elements=child_elements,
-                gas_db=gas_db, T=T_env, P=P_env,
-            )
-            return dG if dG is not None else (cG - pG)
+        evaluator = _StepEnergyEvaluator(
+            tools=self, ctx=ctx, energy_backend=energy_backend,
+            energy_cache=energy_cache,
+        )
+        energy_cache = evaluator.energy_cache
+        _eval_energy = evaluator.dG_ads
+        _step_dG = evaluator.step_dG
 
         target_norm = target.strip().lower().replace("*", "").replace(" ", "")
         for suffix in ("(g)", "(s)", "(l)"):
@@ -849,15 +917,15 @@ class MechanismToolsMixin:
         # Phase 3 — strategy dispatch
         # ================================================================
         if strategy == "quick":
-            # Quick path: just score each Stage-1 path by max-intermediate
-            # energy with shared cache, sort, and return.
+            # Quick path: just score each Stage-1 path by max step ΔG
+            # (ΔG_ads convention) with shared cache, sort, and return.
             logger.info(
                 "Systematic Phase 3 [quick]: UMA evaluation along %d paths",
                 len(filtered_sequences),
             )
             pathways_data: List[Dict[str, Any]] = []
             for seq_id, sequence in enumerate(filtered_sequences):
-                if total_evaluated >= max_state_evaluations:
+                if evaluator.total_evaluated >= max_state_evaluations:
                     logger.info(
                         "Phase 3 halted at path %d/%d: eval budget %d reached.",
                         seq_id, len(filtered_sequences), max_state_evaluations,
@@ -907,8 +975,8 @@ class MechanismToolsMixin:
                     "max_energy_eV": max_energy,     # legacy / debug
                 })
 
-            # Sort by max step ΔG (primary); fall back to max abs G when
-            # ΔG unavailable.
+            # Sort by max step ΔG (primary); pathways without any
+            # computable step ΔG are incomparable and sort last.
             pathways_data.sort(
                 key=lambda p: (
                     p.get("max_step_dG_eV") if p.get("max_step_dG_eV") is not None
@@ -923,9 +991,10 @@ class MechanismToolsMixin:
                     "strategy": "quick",
                     "phase1_raw_paths": n_raw,
                     "phase2_filtered": n_filtered,
-                    "phase3_uma_evaluated": total_evaluated,
+                    "phase3_uma_evaluated": evaluator.total_evaluated,
                     "phase3_goal_paths": len(pathways_data),
                     "llm_filter_enabled": enable_llm_filter,
+                    "llm_filter_applied": llm_filter_applied,
                 },
             }
 
@@ -981,7 +1050,7 @@ class MechanismToolsMixin:
         goal_paths: List[List[str]] = []
 
         for depth_level in range(1, max_depth + 1):
-            if total_evaluated >= max_state_evaluations:
+            if evaluator.total_evaluated >= max_state_evaluations:
                 logger.info(
                     "Pruning halted at depth %d: eval budget %d reached.",
                     depth_level, max_state_evaluations,
@@ -1029,7 +1098,7 @@ class MechanismToolsMixin:
                         "state_id": f"{depth_level}:{parent_id}:{cidx}",
                         "free_energy_eV": dG,   # ΔG_step (kept key name for policy compat)
                     })
-                    if total_evaluated >= max_state_evaluations:
+                    if evaluator.total_evaluated >= max_state_evaluations:
                         break
 
                 none_sibs = [
@@ -1209,12 +1278,13 @@ class MechanismToolsMixin:
                 "strategy": "pruning",
                 "phase1_raw_paths": n_raw,
                 "phase2_filtered": n_filtered if enable_llm_filter else n_raw,
-                "phase3_uma_evaluated": total_evaluated,
+                "phase3_uma_evaluated": evaluator.total_evaluated,
                 "phase3_goal_paths": len(unique_goal_paths),
                 "phase3_pruned_nodes": len(prune_log),
                 "delta_keep_eV": delta_keep,
                 "delta_prune_eV": delta_prune,
                 "llm_filter_enabled": enable_llm_filter,
+                "llm_filter_applied": llm_filter_applied,
             },
         }
 
@@ -1240,27 +1310,20 @@ class MechanismToolsMixin:
 
         Uses UCB1 to balance low-energy exploitation against exploration of
         branches that look bad early but may lead to low barriers later
-        ("hard up front, easy after"). State energies come from UMA and
-        are memoised in ``energy_cache`` so the same intermediate is never
-        evaluated twice across rollouts or pathways.
+        ("hard up front, easy after"). State energies are corrected
+        adsorption free energies ΔG_ads from the shared
+        ``_StepEnergyEvaluator`` (same convention as quick / pruning /
+        agent-guided), memoised in ``energy_cache`` so the same
+        intermediate is never evaluated twice across rollouts or pathways.
         """
         from core.pathway.mcts_search import MCTSSearchEngine
         from core.pathway.candidate_generators import (
-            CandidateGeneratorRouter, AgentGuidedPathwayGenerator,
+            AgentGuidedPathwayGenerator,
             parse_species_elements,
         )
-        from core.pathway.free_energy_router import (
-            FreeEnergyRouter, ThermalStateEnergyBackend,
-        )
-        from core.pathway.energy_cache import EnergyCache
 
         initial = ctx["initial_state"]
         target = ctx["target_state"]
-        surface_path = ctx.get("surface_structure_path")
-        fixed_site = ctx.get("fixed_adsorption_site")
-
-        if energy_cache is None:
-            energy_cache = EnergyCache(surface_key=surface_path or "default")
 
         # MCTS is always invoked via ``_run_systematic_search`` which
         # builds the CRN once and passes it in. Direct invocation
@@ -1277,116 +1340,20 @@ class MechanismToolsMixin:
             len(crn_graph), sum(len(v) for v in crn_graph.values()),
         )
 
-        thermal_backend = ThermalStateEnergyBackend(tools=self)
-        uma_router = FreeEnergyRouter(
-            thermal_backend=thermal_backend, default_backend=energy_backend,
+        # ONE evaluator = ONE energy convention (ΔG_ads) shared with the
+        # other strategies; see ``_StepEnergyEvaluator``.
+        evaluator = _StepEnergyEvaluator(
+            tools=self, ctx=ctx, energy_backend=energy_backend,
+            energy_cache=energy_cache,
         )
-
-        # Gas-phase DB (loaded ONCE up-front so the energy + step-ΔG
-        # functions below can capture it via closure).
-        from core.pathway.catdt_molecule_db import load_default as _load_db
-        try:
-            _gas_db = _load_db()
-            if not _gas_db.molecules:
-                _gas_db = None
-        except Exception:
-            _gas_db = None
-        env = ctx.get("environment", {}) or {}
-        T_env = float(env.get("T", 298.0))
-        P_env = float(env.get("P", 1e5))
-
-        def _surface_thermal_correction_mcts(label: str) -> float:
-            if _gas_db is None:
-                return 0.0
-            elem = parse_species_elements(label)
-            sp = _gas_db.species_for_formula(elem)
-            if sp is None:
-                return 0.0
-            try:
-                return (
-                    _gas_db.G(sp, T=T_env, P=P_env)
-                    - _gas_db.molecules[sp]["E_elec_eV"]
-                )
-            except Exception:
-                return 0.0
-
-        SANITY_ABSG_EV = 30.0
-        TYPICAL_ADS_EV = -1.5
-        ATOMIC_REF_OC20 = {
-            "H": -3.477, "C": -7.282, "N": -8.083,
-            "O": -7.204, "F": -4.891, "S": -4.659,
-        }
-
-        def _atomic_ref_sum_mcts(elem):
-            return sum(n * ATOMIC_REF_OC20.get(e, 0.0) for e, n in elem.items())
-
-        def _molecular_ref_E_elec_mcts(label):
-            if _gas_db is None:
-                return None
-            elem = parse_species_elements(label)
-            sp = _gas_db.species_for_formula(elem)
-            if sp is None:
-                return None
-            return _gas_db.molecules[sp].get("E_elec_eV")
-
-        def _gas_reference_G_mcts(label: str) -> Optional[float]:
-            if _gas_db is None:
-                return None
-            try:
-                elem = parse_species_elements(label)
-                return _gas_db.mu_for_delta(elem, T=T_env, P=P_env) + TYPICAL_ADS_EV
-            except Exception:
-                return None
-
-        def _energy_fn(label: str) -> Optional[float]:
-            try:
-                est = uma_router.estimate_state_free_energy(
-                    label, surface_path=surface_path, fixed_site=fixed_site,
-                )
-                val = est.get("free_energy_eV")
-            except Exception as exc:
-                logger.warning("MCTS energy eval failed for %s: %s", label, exc)
-                val = None
-            if val is None:
-                fb = _gas_reference_G_mcts(label)
-                if fb is not None:
-                    val = fb
-            else:
-                # G_full = E_total(slab+X) + thermal_correction(X). E(slab)
-                # cancels in ΔG between two surface species.
-                val = val + _surface_thermal_correction_mcts(label)
-            try:
-                import torch
-                if torch.cuda.is_available():
-                    torch.cuda.empty_cache()
-            except Exception:
-                pass
-            return val
-
-        def _step_dg_fn(p_label, c_label, p_elem, c_elem):
-            """ΔG_step bottleneck input for MCTS reward."""
-            hit_p, pG = energy_cache.get(p_label)
-            if not hit_p:
-                pG = _energy_fn(p_label); energy_cache.put(p_label, pG)
-            hit_c, cG = energy_cache.get(c_label)
-            if not hit_c:
-                cG = _energy_fn(c_label); energy_cache.put(c_label, cG)
-            if pG is None or cG is None:
-                return None
-            if _gas_db is None:
-                return cG - pG
-            return uma_router.step_dG(
-                parent_G=pG, child_G=cG,
-                parent_elements=p_elem, child_elements=c_elem,
-                gas_db=_gas_db, T=T_env, P=P_env,
-            ) or (cG - pG)
+        energy_cache = evaluator.energy_cache
 
         engine = MCTSSearchEngine(
             generator=router,
             crn_graph=crn_graph,
             energy_cache=energy_cache,
-            energy_fn=_energy_fn,
-            step_dg_fn=_step_dg_fn,
+            energy_fn=evaluator.dG_ads,
+            step_dg_fn=evaluator.step_dG,
             c_uct=mcts_c,
             rollout_depth=mcts_rollout_depth,
             max_depth=max_depth,
@@ -1431,28 +1398,19 @@ class MechanismToolsMixin:
 
             states_data = []
             for i, label in enumerate(sequence):
-                hit, cached = energy_cache.get(label)
-                if hit:
-                    energy = cached
-                elif "(g)" in label or "+" in label:
-                    energy = None
-                    energy_cache.put(label, energy)
-                else:
-                    energy = _energy_fn(label)
-                    energy_cache.put(label, energy)
-
+                # ΔG_ads convention via the shared evaluator (cache-first;
+                # gas labels 0.0 by definition, composites summed,
+                # unevaluable=None — never a placeholder).
                 states_data.append({
                     "species_label": label,
-                    "free_energy_eV": energy,
+                    "free_energy_eV": evaluator.dG_ads(label),
                     "state_id": f"mcts_p{pw_idx}_s{i}",
                 })
 
-            seq_elements = [parse_species_elements(lbl) for lbl in sequence]
             step_dGs: List[Optional[float]] = []
             for i in range(len(sequence) - 1):
-                step_dGs.append(_step_dg_fn(
+                step_dGs.append(evaluator.step_dG(
                     sequence[i], sequence[i + 1],
-                    seq_elements[i], seq_elements[i + 1],
                 ))
             steps_data = []
             for i, step in enumerate(steps):
@@ -1500,10 +1458,15 @@ class MechanismToolsMixin:
         target: str,
         ctx: Dict[str, Any],
         top_n: int = 10,
-    ) -> List[List[str]]:
+    ) -> Tuple[List[List[str]], bool]:
         """Use LLM to rank pathway sequences by chemical plausibility.
 
-        Returns the top-N most promising sequences.
+        Returns ``(sequences, llm_filter_applied)``: the top-N most
+        promising sequences plus a flag that is True only when the LLM
+        actually ranked them. On any LLM failure the fallback is the first
+        ``top_n`` raw sequences with the flag set to False (and a warning
+        logged) so callers can surface that no plausibility filtering
+        happened.
         """
         import json as _json
 
@@ -1571,15 +1534,23 @@ Select up to {top_n} pathways:"""
                                 break
                         if selected:
                             logger.info("LLM filter selected %d/%d pathways", len(selected), len(sequences))
-                            return selected
+                            return selected, True
                 except _json.JSONDecodeError:
                     continue
 
-            logger.warning("LLM filter: could not parse response, returning first %d", top_n)
+            logger.warning(
+                "LLM filter: could not parse response — falling back to the "
+                "first %d sequences UNFILTERED (llm_filter_applied=False).",
+                top_n,
+            )
         except Exception as exc:
-            logger.warning("LLM filter failed: %s, returning first %d", exc, top_n)
+            logger.warning(
+                "LLM filter failed: %s — falling back to the first %d "
+                "sequences UNFILTERED (llm_filter_applied=False).",
+                exc, top_n,
+            )
 
-        return sequences[:top_n]
+        return sequences[:top_n], False
 
     def extract_pathway_shortlist(
         self,

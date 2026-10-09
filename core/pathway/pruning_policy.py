@@ -35,6 +35,14 @@ class PruningPolicy:
     ) -> Dict[str, Any]:
         """Compare sibling candidates and decide keep/prune.
 
+        All numeric ``free_energy_eV`` values are assumed to share ONE
+        convention (corrected adsorption free energy ΔG_ads, or step ΔG
+        derived from it — enforced upstream by the free-energy router).
+        Estimates with ``free_energy_eV=None`` (or whose ``convention``
+        field disagrees with the group's) are INCOMPARABLE: they are never
+        used as the prune reference and are never pruned against numeric
+        values — they are kept with prune_reason ``energy_unavailable_kept``.
+
         Args:
             sibling_estimates: list of dicts, each with at least
                 ``state_id`` and ``free_energy_eV``.
@@ -46,28 +54,63 @@ class PruningPolicy:
         if not sibling_estimates:
             return {"kept": [], "pruned": [], "marginal": [], "decisions": {}}
 
-        # Sort by energy (None → infinity)
-        def _energy(e: Dict) -> float:
-            v = e.get("free_energy_eV")
-            return float(v) if v is not None else float("inf")
-
-        sorted_siblings = sorted(sibling_estimates, key=_energy)
-        best_energy = _energy(sorted_siblings[0])
-
         kept: List[str] = []
         pruned: List[str] = []
         marginal: List[str] = []
         decisions: Dict[str, str] = {}
+
+        # Split incomparable (None-energy or convention-mismatched) siblings
+        # from numeric ones. Incomparable siblings are always kept.
+        conventions = {
+            e.get("convention")
+            for e in sibling_estimates
+            if e.get("free_energy_eV") is not None and e.get("convention") is not None
+        }
+        ref_convention = next(iter(conventions)) if len(conventions) == 1 else None
+
+        numeric: List[Dict[str, Any]] = []
+        for est in sibling_estimates:
+            sid = est.get("state_id", "?")
+            v = est.get("free_energy_eV")
+            conv = est.get("convention")
+            if v is None:
+                kept.append(sid)
+                decisions[sid] = "energy_unavailable_kept"
+                logger.info(
+                    "compare_siblings: %s has no energy estimate — "
+                    "incomparable, kept.", sid,
+                )
+                continue
+            if len(conventions) > 1 and conv != ref_convention:
+                kept.append(sid)
+                decisions[sid] = "energy_unavailable_kept"
+                logger.warning(
+                    "compare_siblings: %s carries convention %r != group %r — "
+                    "incomparable, kept.", sid, conv, ref_convention,
+                )
+                continue
+            numeric.append(est)
+
+        if not numeric:
+            return {
+                "kept": kept,
+                "pruned": pruned,
+                "marginal": marginal,
+                "decisions": decisions,
+            }
+
+        def _energy(e: Dict) -> float:
+            return float(e["free_energy_eV"])
+
+        sorted_siblings = sorted(numeric, key=_energy)
+        best_energy = _energy(sorted_siblings[0])
 
         for est in sorted_siblings:
             sid = est.get("state_id", "?")
             energy = _energy(est)
             gap = energy - best_energy
 
-            if energy == float("inf"):
-                pruned.append(sid)
-                decisions[sid] = "pruned: no energy estimate"
-            elif gap <= self.delta_keep:
+            if gap <= self.delta_keep:
                 kept.append(sid)
                 decisions[sid] = f"kept: gap={gap:.3f} eV <= delta_keep={self.delta_keep}"
             elif gap >= self.delta_prune:
@@ -89,6 +132,10 @@ class PruningPolicy:
         nodes: List[Dict[str, Any]],
     ) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
         """Select the top ``beam_width`` nodes from a frontier.
+
+        This is a capacity cap, not an energy comparison: nodes without an
+        energy estimate (``free_energy_eV=None``) sort last and are only
+        dropped when the beam overflows.
 
         Args:
             nodes: list of dicts with at least ``state_id`` and ``free_energy_eV``.

@@ -4,8 +4,12 @@
 import logging
 import os
 import pickle
+import tempfile
 from pathlib import Path
 from typing import Any, Optional, TYPE_CHECKING
+
+# 势函数的唯一配置入口（CATDT_FAIRCHEM_MODEL / _TASK / _MODEL_PATH）
+from core.fairchem_config import DEFAULT_FAIRCHEM_MODEL
 
 if TYPE_CHECKING:
     from camel_agents.gas_solid_digital_twin import GasSolidDigitalTwin
@@ -15,8 +19,16 @@ if TYPE_CHECKING:
 CATDT_CORE_PATH = Path(__file__).resolve().parents[2] / "core"
 DEPS_BASE_PATH = CATDT_CORE_PATH.parent / "deps"
 
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+# Configure only the package logger — never the root logger of an embedding
+# application (no logging.basicConfig at import time).
 logger = logging.getLogger(__name__)
+logger.addHandler(logging.NullHandler())
+if not logging.getLogger().handlers:
+    # Standalone use: attach a console handler to the package logger only.
+    _handler = logging.StreamHandler()
+    _handler.setFormatter(logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s'))
+    logger.addHandler(_handler)
+    logger.setLevel(logging.INFO)
 
 
 class CatDTToolRuntimeBase:
@@ -67,7 +79,11 @@ class CatDTToolRuntimeBase:
             adsorbdiff_root = str(DEPS_BASE_PATH / "AdsorbDiff")
             surface_sampling_root = str(DEPS_BASE_PATH / "surface-sampling")
             fairchem_root = str(DEPS_BASE_PATH / "fairchem")
-            fairchem_model_path = str(DEPS_BASE_PATH / "fairchem_models/uma-s-1p1.pt")
+            # 默认势函数的本地权重；若 CATDT_FAIRCHEM_MODEL 指定了别的势函数，
+            # core.fairchem_config 会在下游丢弃这个路径（否则会静默加载 UMA）。
+            fairchem_model_path = str(
+                DEPS_BASE_PATH / f"fairchem_models/{DEFAULT_FAIRCHEM_MODEL}.pt"
+            )
 
             # Map config mc_energy_model to VSSRMCPredictor model_type
             vssr_model = "CHGNetNFF"
@@ -157,30 +173,58 @@ class CatDTToolRuntimeBase:
         return repr(obj)
 
     def _save_result_to_pickle(self, result: Any, path: Path) -> str:
-        """Helper to save complex objects to pickle file."""
-        with open(path, 'wb') as f:
+        """Helper to save complex objects to pickle file.
+
+        Pickles to a temporary file in the same directory and atomically
+        replaces the target (os.replace), so a mid-stream pickle failure
+        never leaves a partially written/corrupt pickle behind.
+        """
+        path = Path(path)
+
+        def _atomic_dump(obj: Any) -> None:
+            fd, tmp_name = tempfile.mkstemp(dir=str(path.parent), suffix=".tmp")
             try:
-                pickle.dump(result, f)
-            except Exception as exc:
-                logger.warning("Pickle dump failed for %s, saving sanitized fallback: %s", path, exc)
-                fallback = {
-                    "_pickle_fallback": True,
-                    "error": str(exc),
-                    "result_type": type(result).__name__,
-                    "result": self._make_pickle_safe(result),
-                }
-                pickle.dump(fallback, f)
+                with os.fdopen(fd, "wb") as f:
+                    pickle.dump(obj, f)
+                os.replace(tmp_name, str(path))
+            except Exception:
+                try:
+                    os.unlink(tmp_name)
+                except OSError:
+                    pass
+                raise
+
+        try:
+            _atomic_dump(result)
+        except Exception as exc:
+            logger.warning("Pickle dump failed for %s, saving sanitized fallback: %s", path, exc)
+            fallback = {
+                "_pickle_fallback": True,
+                "error": str(exc),
+                "result_type": type(result).__name__,
+                "result": self._make_pickle_safe(result),
+            }
+            try:
+                _atomic_dump(fallback)
+            except Exception as exc_fallback:
+                logger.error(
+                    "Fallback pickle dump also failed for %s: %s", path, exc_fallback
+                )
+                raise
         return str(path)
 
     def _load_result_from_pickle(self, path: str) -> Any:
         """Helper to load complex objects from pickle file."""
-        with open(path, 'rb') as f:
+        pickle_path = Path(path)
+        if not pickle_path.exists():
+            raise FileNotFoundError(f"Pickle result file not found: {pickle_path}")
+        with open(pickle_path, 'rb') as f:
             return pickle.load(f)
 
     def get_shared_fairchem_predictor(
         self,
         cache_key: str,
-        model_name: str = "uma-s-1p1",
+        model_name: str = DEFAULT_FAIRCHEM_MODEL,
         use_gpu: bool = True,
         device: str = "cuda",
         work_subdir: str = "_shared_fairchem",
@@ -208,3 +252,15 @@ class CatDTToolRuntimeBase:
         self._shared_fairchem_predictors[cache_key] = predictor
         logger.info("Initialized shared FairchemPredictor cache key=%s", cache_key)
         return predictor
+
+    def get_shared_uma_predictor(self) -> Any:
+        """Return the process-wide shared UMA FairchemPredictor (canonical kwargs)."""
+        return self.get_shared_fairchem_predictor(
+            cache_key="uma_shared",
+            model_name=DEFAULT_FAIRCHEM_MODEL,
+            use_gpu=True,
+            device="cuda",
+            work_subdir="_shared_fairchem_global",
+            keep_files=False,
+            verbose=False,
+        )

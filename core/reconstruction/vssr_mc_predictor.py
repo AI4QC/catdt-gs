@@ -43,6 +43,43 @@ from collections import Counter
 import numpy as np
 
 
+def _patch_potcar_spec_accessor() -> bool:
+    """Let pymatgen's PotcarCorrection read emmet's PotcarSpec objects.
+
+    ``PotcarCorrection.get_correction`` does ``{dct.get("titel") ... for dct in potcar_spec}``,
+    which assumes the Materials Project returns ``potcar_spec`` as a list of dicts. Current emmet
+    returns pydantic ``PotcarSpec`` models instead, so the call raises
+    ``AttributeError: 'PotcarSpec' object has no attribute 'get'`` and every Pourbaix reference
+    lookup fails. This adds a dict-style accessor to that model; no value is changed, and the
+    function is a no-op once the upstream versions agree again.
+
+    Returns True when the accessor is present afterwards.
+    """
+    try:
+        from emmet.core.vasp.calculation import PotcarSpec
+    except Exception:
+        return False
+    if not hasattr(PotcarSpec, "get"):
+        PotcarSpec.get = lambda self, key, default=None: getattr(self, key, default)
+    return True
+
+# 势函数的唯一配置入口（CATDT_FAIRCHEM_MODEL / _TASK / _MODEL_PATH）。
+# 该模块也会被 run_vssr_mc_subprocess.py 以脚本方式导入，故留一条路径兜底。
+try:
+    from core.fairchem_config import (
+        local_checkpoint_candidates,
+        resolve_fairchem_model,
+    )
+except ImportError:  # pragma: no cover - fallback for direct-script execution
+    _REPO_ROOT = str(Path(__file__).resolve().parents[2])
+    if _REPO_ROOT not in sys.path:
+        sys.path.insert(0, _REPO_ROOT)
+    from core.fairchem_config import (
+        local_checkpoint_candidates,
+        resolve_fairchem_model,
+    )
+
+
 @dataclass
 class SampledStructure:
     """Information about a sampled structure"""
@@ -161,6 +198,12 @@ class VSSRMCPredictor:
         Whether to keep output files after sampling
     verbose : bool, default=True
         Whether to print progress information
+    bulk_energy_overrides : dict, optional
+        Explicit bulk energies used instead of MP/model lookups during
+        offset_data auto-generation. Keys are formulas/elements; values are
+        eV/atom for elements and eV per formula unit for the reference
+        compound. (Alternatively, pass a complete ``offset_data`` to
+        ``sample()`` to skip auto-generation entirely.)
     """
 
     DEFAULT_CUTOFFS = {
@@ -169,6 +212,10 @@ class VSSRMCPredictor:
         "PaiNN": 5.0,
         "UMA": 12.0,
     }
+
+    # Max distance (Å) from existing surface atoms for locally expanded
+    # virtual sites in _expand_virtual_sites_locally.
+    _VIRTUAL_SITE_NEIGHBOR_CUTOFF = 4.5
 
     def __init__(
         self,
@@ -183,6 +230,7 @@ class VSSRMCPredictor:
         # Electrochemical (Pourbaix) parameters
         potential_she: Optional[float] = None,
         ph: Optional[float] = None,
+        bulk_energy_overrides: Optional[Dict[str, float]] = None,
     ):
         self.surface_sampling_root = os.path.abspath(surface_sampling_root)
         self.model_type = model_type
@@ -193,6 +241,7 @@ class VSSRMCPredictor:
         self.verbose = verbose
         self.potential_she = potential_she
         self.ph = ph
+        self.bulk_energy_overrides = bulk_energy_overrides or {}
 
         # Set up work directory
         if work_dir is None:
@@ -214,6 +263,7 @@ class VSSRMCPredictor:
         self._models = None
         self._calculator = None
         self._logger = None
+        self._uma_predictor = None
 
         if self.verbose:
             print(f"VSSRMCPredictor initialized:")
@@ -381,47 +431,16 @@ class VSSRMCPredictor:
 
         self._log("Loading UMA (FairChem) model...")
 
-        import torch
-        if hasattr(torch.serialization, "add_safe_globals"):
-            torch.serialization.add_safe_globals([slice])
-
-        # Import fairchem components (same pattern as fairchem_predictor.py)
         try:
-            from fairchem.core.calculate import pretrained_mlip, FAIRChemCalculator
+            from fairchem.core.calculate import FAIRChemCalculator
         except ImportError:
-            from fairchem.core import pretrained_mlip, FAIRChemCalculator
-        from fairchem.core.units.mlip_unit import load_predict_unit
+            from fairchem.core import FAIRChemCalculator
 
-        uma_model_name = "uma-s-1p1"
-        uma_model_path = self.model_paths[0] if self.model_paths else None
+        predictor = self._get_uma_predictor()
 
-        # Try local checkpoints first
-        predictor = None
-        local_candidates = [
-            uma_model_path,
-            f"deps/fairchem_models/{uma_model_name}.pt",
-            "deps/fairchem_models/uma-s-1p1.pt",
-        ]
-        for path in local_candidates:
-            if path and os.path.exists(path):
-                try:
-                    predictor = load_predict_unit(
-                        path=path, device=self.device,
-                        overrides={"backbone": {"always_use_pbc": False}},
-                    )
-                    self._log(f"  UMA from local: {path}")
-                    break
-                except Exception as e:
-                    self._log(f"  Local load failed ({path}): {e}")
-
-        # Fallback to HuggingFace
-        if predictor is None:
-            predictor = pretrained_mlip.get_predict_unit(
-                uma_model_name, device=self.device,
-            )
-            self._log(f"  UMA from HuggingFace: {uma_model_name}")
-
-        base_calc = FAIRChemCalculator(predictor, task_name="oc20")
+        base_calc = FAIRChemCalculator(
+            predictor, task_name=self._get_fairchem_config().task_name
+        )
 
         offset_data = (calc_settings or {}).get("offset_data")
         chem_pots = (calc_settings or {}).get("chem_pots")
@@ -464,6 +483,71 @@ class VSSRMCPredictor:
 
         return calc
 
+    def _get_uma_predictor(self):
+        """Load the UMA (FairChem) predict unit once and cache it on self.
+
+        Used by both _load_uma_calculator() and _compute_energy_uma() so the
+        model weights are only loaded a single time per predictor instance.
+        """
+        if self._uma_predictor is not None:
+            return self._uma_predictor
+
+        import torch
+        if hasattr(torch.serialization, "add_safe_globals"):
+            torch.serialization.add_safe_globals([slice])
+
+        # Import fairchem components (same pattern as fairchem_predictor.py)
+        try:
+            from fairchem.core.calculate import pretrained_mlip
+        except ImportError:
+            from fairchem.core import pretrained_mlip
+        from fairchem.core.units.mlip_unit import load_predict_unit
+
+        # 势函数选择统一由 core.fairchem_config 解析（单一配置入口）。
+        # 没有 CATDT_FAIRCHEM_* 时结果仍是 uma-s-1p1 / oc20 与本地 checkpoint。
+        cfg = self._get_fairchem_config()
+        uma_model_name = cfg.model_name
+
+        # Try local checkpoints first. Only checkpoints that really belong to
+        # `uma_model_name` are considered: otherwise asking for another
+        # potential would silently load uma-s-1p1.pt.
+        local_candidates = [cfg.model_path] if cfg.model_path else []
+        local_candidates.extend(
+            local_checkpoint_candidates(uma_model_name, include_legacy=False)
+        )
+        for path in local_candidates:
+            if path and os.path.exists(path):
+                try:
+                    self._uma_predictor = load_predict_unit(
+                        path=path, device=self.device,
+                        overrides={"backbone": {"always_use_pbc": False}},
+                    )
+                    self._log(f"  MLIP from local: {path}")
+                    break
+                except Exception as e:
+                    self._log(f"  Local load failed ({path}): {e}")
+
+        # Fallback to the fairchem pretrained registry / HuggingFace cache.
+        # If that fails it raises - it never substitutes another potential.
+        if self._uma_predictor is None:
+            self._uma_predictor = pretrained_mlip.get_predict_unit(
+                uma_model_name, device=self.device,
+            )
+            self._log(f"  MLIP from fairchem registry: {uma_model_name}")
+
+        return self._uma_predictor
+
+    def _get_fairchem_config(self):
+        """Resolved potential selection for this predictor (cached)."""
+        cfg = getattr(self, "_fairchem_config", None)
+        if cfg is None:
+            cfg = resolve_fairchem_model(
+                model_path=self.model_paths[0] if self.model_paths else None,
+                context="VSSRMCPredictor",
+            )
+            self._fairchem_config = cfg
+        return cfg
+
     def _generate_pourbaix_atoms(self, elements, phi, pH):
         """Generate PourbaixAtom objects using VSSR-MC's native Pourbaix module.
 
@@ -480,6 +564,10 @@ class VSSRMCPredictor:
 
         clean_elements = sorted(set(e for e in elements if len(e) <= 2 and e not in ("X",)))
         self._log(f"  Generating Pourbaix atoms for elements: {clean_elements}")
+
+        # emmet/pymatgen disagree on the shape of potcar_spec; without this the lookup below
+        # raises AttributeError and no Pourbaix reference can be built (see the function's docstring)
+        _patch_potcar_spec_accessor()
 
         try:
             # Try Materials Project API
@@ -504,34 +592,15 @@ class VSSRMCPredictor:
             return pourbaix_atoms
 
         except Exception as e:
-            self._log(f"  MP Pourbaix lookup failed: {e}")
-            self._log(f"  Using fallback pourbaix_atoms (num_e from common oxidation states)")
-
-            # Fallback: construct minimal PourbaixAtom from element data
-            from mcmc.pourbaix.atoms import PourbaixAtom
-            pa = {}
-            for elem in clean_elements:
-                try:
-                    ox_states = Element(elem).common_oxidation_states
-                    ne = max(s for s in ox_states if s > 0) if any(s > 0 for s in ox_states) else 2
-                except Exception:
-                    ne = 2
-                pa[elem] = PourbaixAtom(
-                    symbol=elem,
-                    dominant_species=f"{elem}{ne}+",
-                    num_e=ne, num_H=0,
-                    atom_std_state_energy=0.0,
-                    delta_G2_std=0.0,
-                )
-            # O and H with known electrochemistry
-            if "O" not in pa:
-                pa["O"] = PourbaixAtom("O", "H2O", num_e=2, num_H=2,
-                                       atom_std_state_energy=0.0, delta_G2_std=-2.46)
-            if "H" not in pa:
-                pa["H"] = PourbaixAtom("H", "H+", num_e=1, num_H=1,
-                                       atom_std_state_energy=0.0, delta_G2_std=0.0)
-            self._log(f"  Fallback pourbaix_atoms: { {k: f'n_e={v.num_e}' for k,v in pa.items()} }")
-            return pa
+            # No silent fallback: PourbaixAtom with delta_G2_std=0.0 and
+            # atom_std_state_energy=0.0 would degrade the electrochemistry
+            # to "-n_e*U only" without any warning to the user.
+            raise RuntimeError(
+                f"Could not generate Pourbaix atoms from Materials Project "
+                f"for elements {clean_elements}: {e}. Provide a Materials "
+                f"Project API key (MP_API_KEY) or pass explicit "
+                f"'pourbaix_atoms' via calc_settings."
+            ) from e
 
     def _convert_surface(self, surface) -> "ase.Atoms":
         """Convert input surface to ASE Atoms"""
@@ -589,6 +658,15 @@ class VSSRMCPredictor:
         -------
         float
             Bulk energy in eV
+
+        Raises
+        ------
+        RuntimeError
+            If no bulk structure can be obtained or the energy calculation
+            fails. A silent 0.0 fallback would corrupt offset_data (every
+            surface excess energy would be shifted by N x E_bulk), so the
+            caller must either fix the environment (e.g. MP API key) or
+            supply explicit values via ``bulk_energy_overrides``.
         """
         from ase.build import bulk as ase_bulk
         import warnings
@@ -623,11 +701,21 @@ class VSSRMCPredictor:
                     atoms = ase_bulk(formula)
                     self._log(f"  Using ASE bulk structure for {formula}")
                 else:
-                    self._log(f"  Cannot create bulk structure for compound {formula}")
-                    return 0.0
+                    raise RuntimeError(
+                        f"Could not obtain a bulk structure for compound "
+                        f"{formula}: Materials Project lookup failed and no "
+                        f"elemental ASE bulk fallback exists for compounds. "
+                        f"Provide an MP API key (MP_API_KEY) or pass explicit "
+                        f"bulk energies via bulk_energy_overrides / offset_data."
+                    )
+            except RuntimeError:
+                raise
             except Exception as e2:
-                self._log(f"  Warning: Could not get bulk structure for {formula}: {e2}")
-                return 0.0
+                raise RuntimeError(
+                    f"Could not obtain a bulk structure for {formula}: {e2}. "
+                    f"Provide an MP API key (MP_API_KEY) or pass explicit "
+                    f"bulk energies via bulk_energy_overrides / offset_data."
+                ) from e2
 
         atoms.pbc = [True, True, True]
 
@@ -636,13 +724,17 @@ class VSSRMCPredictor:
                 energy = self._compute_energy_uma(atoms)
             else:
                 energy = self._compute_energy_nff(atoms)
-
-            if per_atom:
-                return energy / len(atoms)
-            return energy
         except Exception as e:
-            self._log(f"  Warning: Energy calculation failed for {formula}: {e}")
-            return 0.0
+            raise RuntimeError(
+                f"Bulk energy calculation failed for {formula} with model "
+                f"{self.model_type}: {e}. Pass explicit bulk energies via "
+                f"bulk_energy_overrides / offset_data to bypass the "
+                f"calculation."
+            ) from e
+
+        if per_atom:
+            return energy / len(atoms)
+        return energy
 
     def _compute_energy_nff(self, atoms) -> float:
         """Compute energy using NFF model (CHGNet/PaiNN/MACE)."""
@@ -667,39 +759,15 @@ class VSSRMCPredictor:
 
     def _compute_energy_uma(self, atoms) -> float:
         """Compute energy using UMA (FairChem) model."""
-        import torch
-        if hasattr(torch.serialization, "add_safe_globals"):
-            torch.serialization.add_safe_globals([slice])
-
         try:
-            from fairchem.core.calculate import pretrained_mlip, FAIRChemCalculator
+            from fairchem.core.calculate import FAIRChemCalculator
         except ImportError:
-            from fairchem.core import pretrained_mlip, FAIRChemCalculator
-        from fairchem.core.units.mlip_unit import load_predict_unit
+            from fairchem.core import FAIRChemCalculator
 
-        # Reuse cached predictor if available
-        if not hasattr(self, '_uma_predictor') or self._uma_predictor is None:
-            uma_model_path = self.model_paths[0] if self.model_paths else None
-            local_candidates = [
-                uma_model_path,
-                "deps/fairchem_models/uma-s-1p1.pt",
-            ]
-            for path in local_candidates:
-                if path and os.path.exists(path):
-                    try:
-                        self._uma_predictor = load_predict_unit(
-                            path=path, device=self.device,
-                            overrides={"backbone": {"always_use_pbc": False}},
-                        )
-                        break
-                    except Exception:
-                        pass
-            if not hasattr(self, '_uma_predictor') or self._uma_predictor is None:
-                self._uma_predictor = pretrained_mlip.get_predict_unit(
-                    "uma-s-1p1", device=self.device,
-                )
-
-        calc = FAIRChemCalculator(self._uma_predictor, task_name="oc20")
+        calc = FAIRChemCalculator(
+            self._get_uma_predictor(),
+            task_name=self._get_fairchem_config().task_name,
+        )
         atoms_copy = atoms.copy()
         atoms_copy.calc = calc
         return float(atoms_copy.get_potential_energy())
@@ -757,6 +825,8 @@ class VSSRMCPredictor:
         reduced_comp = Composition(ref_formula)
         el_amt = reduced_comp.get_el_amt_dict()
         stoics = {str(el): int(amt) for el, amt in el_amt.items()}
+        for el in elements:
+            stoics.setdefault(str(el), 0)
 
         self._log(f"  Reference formula: {ref_formula}")
         self._log(f"  Stoichiometry: {stoics}")
@@ -775,30 +845,32 @@ class VSSRMCPredictor:
         # Calculate bulk energies
         bulk_energies = {}
 
-        # First, try to compute bulk energy for the reference compound
-        self._log(f"  Computing bulk energy for {ref_formula}...")
-        try:
-            ref_energy = self._compute_bulk_energy(ref_formula, per_atom=False)
-            # Scale to per formula unit
+        # First, compute bulk energy for the reference compound.
+        # The consumer (UMASurfaceCalculator._compute_surface_energy /
+        # EnsembleNFFSurface) multiplies bulk_energies[ref_formula] by the
+        # number of reference-element atoms, so it must be stored per
+        # formula unit — not as the total energy of whatever MP cell matched.
+        if ref_formula in self.bulk_energy_overrides:
+            bulk_energies[ref_formula] = float(self.bulk_energy_overrides[ref_formula])
+            self._log(f"    {ref_formula}: {bulk_energies[ref_formula]:.4f} eV/f.u. (override)")
+        else:
+            self._log(f"  Computing bulk energy for {ref_formula}...")
+            ref_energy_per_atom = self._compute_bulk_energy(ref_formula, per_atom=True)
             n_atoms_per_fu = sum(stoics.values())
-            atoms_in_calc = len(slab)  # Approximate
-            bulk_energies[ref_formula] = ref_energy
-            self._log(f"    {ref_formula}: {ref_energy:.4f} eV")
-        except Exception as e:
-            self._log(f"    Warning: Could not compute bulk energy for {ref_formula}: {e}")
-            bulk_energies[ref_formula] = 0.0
+            bulk_energies[ref_formula] = ref_energy_per_atom * n_atoms_per_fu
+            self._log(f"    {ref_formula}: {bulk_energies[ref_formula]:.4f} eV/f.u.")
 
         # Compute bulk energies for individual elements
         for el in elements:
             if el not in bulk_energies:
+                if el in self.bulk_energy_overrides:
+                    bulk_energies[el] = float(self.bulk_energy_overrides[el])
+                    self._log(f"    {el}: {bulk_energies[el]:.4f} eV/atom (override)")
+                    continue
                 self._log(f"  Computing bulk energy for {el}...")
-                try:
-                    el_energy = self._compute_bulk_energy(el, per_atom=True)
-                    bulk_energies[el] = el_energy
-                    self._log(f"    {el}: {el_energy:.4f} eV/atom")
-                except Exception as e:
-                    self._log(f"    Warning: Could not compute bulk energy for {el}: {e}")
-                    bulk_energies[el] = 0.0
+                el_energy = self._compute_bulk_energy(el, per_atom=True)
+                bulk_energies[el] = el_energy
+                self._log(f"    {el}: {el_energy:.4f} eV/atom")
 
         offset_data = {
             "bulk_energies": bulk_energies,
@@ -856,6 +928,7 @@ class VSSRMCPredictor:
         adsorbates: Optional[List[str]] = None,
         canonical: bool = False,
         num_adsorbates: int = 0,
+        adsorbate_counts: Optional[Dict[str, int]] = None,
         total_sweeps: int = 100,
         sweep_size: int = 20,
         temperature: float = 1.0,
@@ -891,6 +964,9 @@ class VSSRMCPredictor:
             If False, perform semi-grand canonical sampling with variable composition.
         num_adsorbates : int, default=0
             Number of adsorbate atoms (required if canonical=True)
+        adsorbate_counts : dict, optional
+            Fixed canonical composition for virtual-site adsorbates. When
+            provided, the total count is inferred from this map.
         total_sweeps : int, default=100
             Number of MC sweeps to perform
         sweep_size : int, default=20
@@ -1053,6 +1129,72 @@ class VSSRMCPredictor:
                     f"{n_before} -> {len(ads_coords)} "
                     f"(radius={overlayer_radius:.2f} Å)"
                 )
+            min_site_distance = float(
+                _system_settings.get("min_virtual_site_distance_A", 0.0) or 0.0
+            )
+            if min_site_distance > 0:
+                n_before = len(ads_coords)
+                ads_coords = self._filter_virtual_sites_by_site_spacing(
+                    np.asarray(ads_coords, dtype=float),
+                    cell=surface_atoms.cell,
+                    pbc=surface_atoms.pbc,
+                    min_site_distance=min_site_distance,
+                )
+                self._log(
+                    f"  Filtered virtual sites by site-site spacing: "
+                    f"{n_before} -> {len(ads_coords)} "
+                    f"(min={min_site_distance:.2f} Å)"
+                )
+            max_surface_distance = float(
+                _system_settings.get("max_virtual_site_distance_to_surface_A", 0.0) or 0.0
+            )
+            if max_surface_distance > 0:
+                excluded = set(int(i) for i in adsorbate_indices or [])
+                reference_indices = [
+                    idx for idx in range(len(surface_atoms))
+                    if idx not in excluded
+                ]
+                n_before = len(ads_coords)
+                ads_coords = self._filter_virtual_sites_by_max_distance_to_atoms(
+                    np.asarray(ads_coords, dtype=float),
+                    reference_atoms=surface_atoms,
+                    reference_indices=reference_indices,
+                    max_distance=max_surface_distance,
+                )
+                self._log(
+                    f"  Filtered virtual sites far from existing surface: "
+                    f"{n_before} -> {len(ads_coords)} "
+                    f"(max={max_surface_distance:.2f} Å)"
+                )
+            min_virtual_site_count = int(
+                _system_settings.get("virtual_site_min_count", 0) or 0
+            )
+            local_expansion_radius = float(
+                _system_settings.get("virtual_site_local_expansion_radius_A", 0.0)
+                or 0.0
+            )
+            if (
+                min_virtual_site_count > 0
+                and local_expansion_radius > 0
+                and len(ads_coords) < min_virtual_site_count
+            ):
+                excluded = set(int(i) for i in adsorbate_indices or [])
+                reference_indices = [
+                    idx for idx in range(len(surface_atoms))
+                    if idx not in excluded
+                ]
+                n_before = len(ads_coords)
+                ads_coords = self._expand_virtual_sites_locally(
+                    np.asarray(ads_coords, dtype=float),
+                    reference_atoms=surface_atoms,
+                    reference_indices=reference_indices,
+                    radius=local_expansion_radius,
+                    min_count=min_virtual_site_count,
+                )
+                self._log(
+                    f"  Expanded local virtual sites: {n_before} -> {len(ads_coords)} "
+                    f"(radius={local_expansion_radius:.2f} Å, min={min_virtual_site_count})"
+                )
             exclusion_radius = float(
                 _system_settings.get("adsorbate_exclusion_radius_A", 0.0) or 0.0
             )
@@ -1109,6 +1251,7 @@ class VSSRMCPredictor:
             adsorbates=adsorbates,
             canonical=canonical,
             num_ads_atoms=num_adsorbates if canonical else 0,
+            adsorbate_counts=adsorbate_counts if canonical else None,
         )
 
         # Run sampling
@@ -1247,24 +1390,152 @@ class VSSRMCPredictor:
         if not valid_ref:
             return coords
 
-        keep: list[np.ndarray] = []
-        probe = reference_atoms.copy()
+        from ase.geometry import get_distances
+
+        ref_positions = reference_atoms.get_positions()[valid_ref]
+        _, dists = get_distances(
+            coords,
+            ref_positions,
+            cell=reference_atoms.cell,
+            pbc=reference_atoms.pbc,
+        )
+        min_dists = dists.min(axis=1)
+        return coords[min_dists >= exclusion_radius]
+
+    @staticmethod
+    def _filter_virtual_sites_by_site_spacing(
+        ads_coords: np.ndarray,
+        cell: Any,
+        pbc: Any,
+        min_site_distance: float,
+    ) -> np.ndarray:
+        """Greedily keep virtual sites separated by at least min_site_distance."""
+        coords = np.asarray(ads_coords, dtype=float)
+        if len(coords) == 0 or min_site_distance <= 0:
+            return coords
+
+        from ase import Atoms
+
+        kept: list[np.ndarray] = []
         for coord in coords:
-            trial = probe.copy()
-            trial.append("H")
-            site_idx = len(trial) - 1
-            positions = trial.get_positions()
-            positions[site_idx] = coord
-            trial.set_positions(positions)
-            min_dist = min(
-                float(trial.get_distance(site_idx, ref_idx, mic=True))
-                for ref_idx in valid_ref
+            if not kept:
+                kept.append(coord)
+                continue
+            trial = Atoms(
+                "H" * (len(kept) + 1),
+                positions=np.vstack([kept, coord]),
+                cell=cell,
+                pbc=pbc,
             )
-            if min_dist >= exclusion_radius:
-                keep.append(coord)
-        if not keep:
-            return np.empty((0, 3), dtype=float)
-        return np.asarray(keep, dtype=float)
+            site_idx = len(trial) - 1
+            min_dist = min(
+                float(trial.get_distance(site_idx, idx, mic=True))
+                for idx in range(len(kept))
+            )
+            if min_dist >= min_site_distance:
+                kept.append(coord)
+
+        return np.asarray(kept, dtype=float)
+
+    @staticmethod
+    def _filter_virtual_sites_by_max_distance_to_atoms(
+        ads_coords: np.ndarray,
+        reference_atoms: "ase.Atoms",
+        reference_indices: List[int],
+        max_distance: float,
+    ) -> np.ndarray:
+        """Remove virtual sites farther than max_distance from selected atoms."""
+        coords = np.asarray(ads_coords, dtype=float)
+        if len(coords) == 0 or max_distance <= 0 or not reference_indices:
+            return coords
+
+        valid_ref = [
+            int(i) for i in reference_indices
+            if 0 <= int(i) < len(reference_atoms)
+        ]
+        if not valid_ref:
+            return coords
+
+        from ase.geometry import get_distances
+
+        ref_positions = reference_atoms.get_positions()[valid_ref]
+        _, dists = get_distances(
+            coords,
+            ref_positions,
+            cell=reference_atoms.cell,
+            pbc=reference_atoms.pbc,
+        )
+        min_dists = dists.min(axis=1)
+        return coords[min_dists <= max_distance]
+
+    @staticmethod
+    def _expand_virtual_sites_locally(
+        ads_coords: np.ndarray,
+        reference_atoms: "ase.Atoms",
+        reference_indices: List[int],
+        radius: float,
+        min_count: int,
+    ) -> np.ndarray:
+        """Add local tangential neighbors around real near-surface virtual sites."""
+        coords = np.asarray(ads_coords, dtype=float)
+        if len(coords) == 0 or radius <= 0 or min_count <= 0:
+            return coords
+        if len(coords) >= min_count:
+            return coords
+
+        valid_ref = [
+            int(i) for i in reference_indices
+            if 0 <= int(i) < len(reference_atoms)
+        ]
+        if not valid_ref:
+            return coords
+
+        ref_positions = reference_atoms.get_positions()[valid_ref]
+        center = ref_positions.mean(axis=0)
+        expanded: list[np.ndarray] = []
+        for coord in coords:
+            radial = np.asarray(coord, dtype=float) - center
+            norm = float(np.linalg.norm(radial))
+            normal = radial / norm if norm > 1e-8 else np.array([0.0, 0.0, 1.0])
+            ref_axis = np.array([0.0, 0.0, 1.0])
+            if abs(float(np.dot(normal, ref_axis))) > 0.9:
+                ref_axis = np.array([1.0, 0.0, 0.0])
+            tangent_u = np.cross(normal, ref_axis)
+            tangent_u /= max(float(np.linalg.norm(tangent_u)), 1e-12)
+            tangent_v = np.cross(normal, tangent_u)
+            tangent_v /= max(float(np.linalg.norm(tangent_v)), 1e-12)
+            # Build offsets fresh for each coordinate (a shared list would
+            # leak tangents from the previous iteration).
+            offsets = [
+                np.array([0.0, 0.0, 0.0]),
+                radius * tangent_u,
+                -radius * tangent_u,
+                radius * tangent_v,
+                -radius * tangent_v,
+                radius * (tangent_u + tangent_v) / np.sqrt(2.0),
+                radius * (tangent_u - tangent_v) / np.sqrt(2.0),
+            ]
+            for offset in offsets:
+                candidate = np.asarray(coord, dtype=float) + np.asarray(offset, dtype=float)
+                if any(
+                    float(np.linalg.norm(candidate - existing)) < 1e-8
+                    for existing in expanded
+                ):
+                    continue
+                trial = reference_atoms.copy()
+                trial.append("H")
+                site_idx = len(trial) - 1
+                positions = trial.get_positions()
+                positions[site_idx] = candidate
+                trial.set_positions(positions)
+                min_dist = min(
+                    float(trial.get_distance(site_idx, ref_idx, mic=True))
+                    for ref_idx in valid_ref
+                )
+                if min_dist <= VSSRMCPredictor._VIRTUAL_SITE_NEIGHBOR_CUTOFF:
+                    expanded.append(candidate)
+
+        return np.asarray(expanded, dtype=float) if expanded else coords
 
     def __del__(self):
         """Clean up temporary directory"""
@@ -1340,7 +1611,7 @@ if __name__ == "__main__":
                        default="deps/surface-sampling",
                        help="Path to surface-sampling repository")
     parser.add_argument("--model-type", default="CHGNetNFF",
-                       choices=["CHGNetNFF", "PaiNN", "NffScaleMACE"],
+                       choices=["CHGNetNFF", "PaiNN", "NffScaleMACE", "UMA"],
                        help="NFF model type")
     parser.add_argument("--adsorbates", nargs="*", default=None,
                        help="Adsorbate elements (e.g., O H)")

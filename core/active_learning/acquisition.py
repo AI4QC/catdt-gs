@@ -50,26 +50,42 @@ def rank_candidates(
     if any(c.descriptor is None for c in shortlist) or diversity_lambda <= 0.0:
         return shortlist[:top_k]
 
-    selected: list[CandidateScore] = [shortlist[0]]
-    while len(selected) < min(top_k, len(shortlist)):
+    # Track selections by shortlist index: `cand in selected` would invoke
+    # the dataclass __eq__ on ndarray fields and raise ValueError.
+    selected_indices: list[int] = [0]
+    while len(selected_indices) < min(top_k, len(shortlist)):
+        selected_set = set(selected_indices)
+        remaining = [i for i in range(len(shortlist)) if i not in selected_set]
+        if not remaining:
+            break
+        dists = np.array(
+            [
+                min(
+                    _pairwise_distance(
+                        shortlist[i].descriptor,  # type: ignore[arg-type]
+                        shortlist[j].descriptor,  # type: ignore[arg-type]
+                    )
+                    for j in selected_indices
+                )
+                for i in remaining
+            ],
+            dtype=float,
+        )
+        # Normalize distances over the current shortlist so they are on the
+        # same [0, 1] scale as the min-max-normalized uncertainty score.
+        dists_norm = _minmax(dists)
         best_idx = -1
         best_score = -1.0
-        for idx, cand in enumerate(shortlist):
-            if cand in selected:
-                continue
+        for pos, idx in enumerate(remaining):
             unc_component = float(score_unc[int(shortlist_indices[idx])])
-            dist = min(
-                _pairwise_distance(cand.descriptor, chosen.descriptor)  # type: ignore[arg-type]
-                for chosen in selected
-            )
             combined = (
                 1.0 - diversity_lambda
-            ) * unc_component + diversity_lambda * dist
+            ) * unc_component + diversity_lambda * float(dists_norm[pos])
             if combined > best_score:
                 best_score = combined
                 best_idx = idx
         if best_idx < 0:
             break
-        selected.append(shortlist[best_idx])
+        selected_indices.append(best_idx)
 
-    return selected
+    return [shortlist[i] for i in selected_indices]

@@ -46,11 +46,25 @@ class EvolvablePolicy:
                     self.q_values[name] = float(q_values[name])
                 if name in visits:
                     self.visits[name] = int(visits[name])
-            rng_state = str(payload.get("rng_state", "") or "").strip()
-            if rng_state:
-                self._rng.setstate(pickle.loads(base64.b64decode(rng_state.encode("ascii"))))
+            rng_state = payload.get("rng_state")
+            if isinstance(rng_state, list):
+                # New JSON-native format: nested lists of ints (see _save).
+                self._rng.setstate(self._rng_state_from_json(rng_state))
+            elif isinstance(rng_state, str) and rng_state.strip():
+                # Legacy base64-pickle format (older policy files).
+                self._rng.setstate(pickle.loads(base64.b64decode(rng_state.strip().encode("ascii"))))
         except Exception as exc:
             logger.warning("Failed to load evolvable policy: %s", exc)
+
+    @staticmethod
+    def _rng_state_to_json(state):
+        """Convert random.Random.getstate() (nested tuples of ints) to lists."""
+        return [list(item) if isinstance(item, tuple) else item for item in state]
+
+    @staticmethod
+    def _rng_state_from_json(state):
+        """Inverse of _rng_state_to_json: lists back to the tuples setstate expects."""
+        return tuple(tuple(item) if isinstance(item, list) else item for item in state)
 
     def _save(self) -> None:
         self.policy_path.parent.mkdir(parents=True, exist_ok=True)
@@ -61,9 +75,7 @@ class EvolvablePolicy:
             "learning_rate": self.learning_rate,
             "available_strategies": self.available_strategies,
             "seed": self.seed,
-            "rng_state": base64.b64encode(
-                pickle.dumps(self._rng.getstate(), protocol=pickle.HIGHEST_PROTOCOL)
-            ).decode("ascii"),
+            "rng_state": self._rng_state_to_json(self._rng.getstate()),
         }
         self.policy_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
 

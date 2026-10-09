@@ -42,13 +42,10 @@ def get_adsorbate_indices(surface: SurfaceSystem) -> dict[str, list[int]]:
         dict: A dictionary of adsorbate indices grouped by elemental identity.
     """
     adsorbed_idx = surface.filled_occ_idx
-    # Group adsorbates present in slab
-    adsorbates = {
-        k: list(g)
-        for k, g in itertools.groupby(
-            adsorbed_idx, key=lambda x: surface.real_atoms[surface.occ[x]].symbol
-        )
-    }
+    adsorbates = {}
+    for site_idx in adsorbed_idx:
+        adsorbate_type = surface.real_atoms[surface.occ[site_idx]].symbol
+        adsorbates.setdefault(adsorbate_type, []).append(site_idx)
     # Add virtual sites only if there are empty ones
     empty_idx = surface.empty_occ_idx
     if len(empty_idx) > 0:
@@ -67,6 +64,11 @@ def choose_adsorbate_type(adsorbates: dict) -> tuple[str, str]:
         tuple: A tuple containing the two chosen adsorbate types.
     """
     types = list(adsorbates.keys())
+    if len(types) < 2:
+        raise ValueError(
+            "Need at least two adsorbate types for a canonical exchange move; "
+            f"got {types}"
+        )
     type1, type2 = random.sample(types, 2)
     return type1, type2
 

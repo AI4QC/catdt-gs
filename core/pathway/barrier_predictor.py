@@ -11,8 +11,7 @@ CatTSunami 使用 Nudged Elastic Band (NEB) 方法来寻找反应过渡态和计
 
     # 初始化预测器（共享 Fairchem 模型）
     fairchem = FairchemPredictor(
-        fairchem_root="/path/to/fairchem",
-        model_name="uma-s-1p1",
+        fairchem_root="/path/to/fairchem",  # 势函数见 core/fairchem_config.py
     )
 
     barrier_predictor = BarrierPredictor(
@@ -63,6 +62,92 @@ from ase.optimize import BFGS, FIRE
 from .llm_neb_controller import LLMNEBController, NEBStructurePlan
 from .neb_frame_prep import prepare_endpoint_pair_for_interpolation
 
+_MODULE_LOGGER = logging.getLogger(__name__)
+
+
+def _fmt_energy(value: Optional[float], spec: str = ".4f") -> str:
+    """格式化可能为 None 的能量值。"""
+    return format(value, spec) if value is not None else "N/A"
+
+
+def _extract_barrier_indices(
+    energies,
+    logger: Optional[logging.Logger] = None,
+) -> Dict[str, Any]:
+    """从 NEB 路径能量提取过渡态索引与能垒（集中实现，供所有调用方使用）。
+
+    - TS 仅在 interior images 中寻找（与 ASE NEBState.imax 一致:
+      ts_index = 1 + argmax(energies[1:-1])），端点是固定的初末态
+    - Ea_fwd / Ea_rev 钳制为非负
+    - NaN 守卫：任一帧能量为 NaN 时返回 valid=False（调用方必须将该步
+      标记为失败，不得静默输出 NaN 能垒）
+    - 端点能量高于 TS 时发出警告（端点可能不是局部极小）
+    """
+    log = logger or _MODULE_LOGGER
+    energies = np.asarray(energies, dtype=float)
+
+    if energies.size < 2 or np.any(np.isnan(energies)):
+        return {
+            "valid": False,
+            "ts_index": None,
+            "ts_energy": None,
+            "activation_energy_forward": None,
+            "activation_energy_reverse": None,
+            "reaction_energy": None,
+        }
+
+    reactant_energy = float(energies[0])
+    product_energy = float(energies[-1])
+
+    if len(energies) > 2:
+        ts_index = int(1 + np.argmax(energies[1:-1]))
+    else:
+        ts_index = int(np.argmax(energies))
+    ts_energy = float(energies[ts_index])
+
+    # 警告：端点能量高于 TS → 端点可能不是局部极小
+    if reactant_energy > ts_energy:
+        log.warning(
+            f"  WARNING: Reactant energy ({reactant_energy:.3f}) > TS energy ({ts_energy:.3f}). "
+            f"Reactant may not be a local minimum — staged atoms may be in gas phase!"
+        )
+    if product_energy > ts_energy:
+        log.warning(
+            f"  WARNING: Product energy ({product_energy:.3f}) > TS energy ({ts_energy:.3f}). "
+            f"Product may not be a local minimum — staged atoms may be in gas phase!"
+        )
+
+    return {
+        "valid": True,
+        "ts_index": ts_index,
+        "ts_energy": ts_energy,
+        "activation_energy_forward": max(0.0, ts_energy - reactant_energy),
+        "activation_energy_reverse": max(0.0, ts_energy - product_energy),
+        "reaction_energy": product_energy - reactant_energy,
+    }
+
+
+def _is_cuda_out_of_memory(exc: BaseException) -> bool:
+    """判断异常是否为 CUDA OOM（torch 可能未安装，需守卫导入/属性）。"""
+    try:
+        import torch
+        oom_cls = getattr(torch.cuda, "OutOfMemoryError", None)
+        if oom_cls is not None and isinstance(exc, oom_cls):
+            return True
+    except ImportError:
+        pass
+    return "CUDA out of memory" in str(exc)
+
+
+def _empty_cuda_cache() -> None:
+    """释放 CUDA 缓存（torch 不可用时静默跳过）。"""
+    try:
+        import torch
+        if torch.cuda.is_available():
+            torch.cuda.empty_cache()
+    except Exception:
+        pass
+
 
 @dataclass
 class NEBResult:
@@ -73,39 +158,48 @@ class NEBResult:
     neb_frames: List[Atoms]
     n_frames: int
     energies: List[float]  # eV
-    activation_energy_forward: float  # eV (reactant -> product)
-    activation_energy_reverse: float  # eV (product -> reactant)
-    reaction_energy: float  # eV (E_product - E_reactant)
-    transition_state_index: int
-    transition_state: Atoms
+    activation_energy_forward: Optional[float]  # eV (reactant -> product); None 表示能垒不可用
+    activation_energy_reverse: Optional[float]  # eV (product -> reactant); None 表示能垒不可用
+    reaction_energy: Optional[float]  # eV (E_product - E_reactant); None 表示不可用
+    transition_state_index: Optional[int]
+    transition_state: Optional[Atoms]
     converged: bool
     fmax_final: float
     optimization_steps: int
     trajectory_file: Optional[str] = None
+    status: str = "ok"  # "ok" 或失败原因（如 "failed: NaN frame energies"）
 
     def __repr__(self):
         return (f"NEBResult(reaction={self.reaction_name}, "
-                f"E_act_forward={self.activation_energy_forward:.3f} eV, "
-                f"E_act_reverse={self.activation_energy_reverse:.3f} eV, "
-                f"converged={self.converged})")
+                f"E_act_forward={_fmt_energy(self.activation_energy_forward, '.3f')} eV, "
+                f"E_act_reverse={_fmt_energy(self.activation_energy_reverse, '.3f')} eV, "
+                f"converged={self.converged}, status={self.status})")
 
     def summary(self) -> str:
         """生成结果摘要"""
+        reactant_energy = self.energies[0] if self.energies else None
+        product_energy = self.energies[-1] if self.energies else None
+        ts_energy = (
+            self.energies[self.transition_state_index]
+            if (self.transition_state_index is not None and self.energies)
+            else None
+        )
         lines = [
             "NEB Barrier Prediction Results",
             "=" * 60,
             f"Reaction: {self.reaction_name}",
             f"Number of frames: {self.n_frames}",
             f"Converged: {self.converged}",
+            f"Status: {self.status}",
             "",
             "Energetics:",
-            f"  Reactant energy: {self.energies[0]:.4f} eV",
-            f"  Product energy: {self.energies[-1]:.4f} eV",
-            f"  Transition state energy: {self.energies[self.transition_state_index]:.4f} eV",
+            f"  Reactant energy: {_fmt_energy(reactant_energy)} eV",
+            f"  Product energy: {_fmt_energy(product_energy)} eV",
+            f"  Transition state energy: {_fmt_energy(ts_energy)} eV",
             "",
-            f"  Reaction energy (ΔE): {self.reaction_energy:.4f} eV",
-            f"  Forward barrier (E_act): {self.activation_energy_forward:.4f} eV",
-            f"  Reverse barrier: {self.activation_energy_reverse:.4f} eV",
+            f"  Reaction energy (ΔE): {_fmt_energy(self.reaction_energy)} eV",
+            f"  Forward barrier (E_act): {_fmt_energy(self.activation_energy_forward)} eV",
+            f"  Reverse barrier: {_fmt_energy(self.activation_energy_reverse)} eV",
             "",
             f"Transition state at frame {self.transition_state_index}/{self.n_frames}",
             f"Final fmax: {self.fmax_final:.4f} eV/Å",
@@ -137,16 +231,28 @@ class ReactionBarriersResult:
             "Activation energies:",
         ]
 
-        # 按正向能垒排序
+        # 按正向能垒排序（能垒不可用的排到最后）
         sorted_reactions = sorted(
             self.barriers.items(),
-            key=lambda x: x[1].activation_energy_forward
+            key=lambda x: (
+                x[1].activation_energy_forward
+                if x[1].activation_energy_forward is not None
+                else float("inf")
+            )
         )
 
         for reaction, result in sorted_reactions:
+            ea_str = (
+                f"{result.activation_energy_forward:6.3f}"
+                if result.activation_energy_forward is not None else "   N/A"
+            )
+            de_str = (
+                f"{result.reaction_energy:6.3f}"
+                if result.reaction_energy is not None else "   N/A"
+            )
             lines.append(
-                f"  {reaction:30s}: E_act = {result.activation_energy_forward:6.3f} eV "
-                f"(ΔE = {result.reaction_energy:6.3f} eV)"
+                f"  {reaction:30s}: E_act = {ea_str} eV "
+                f"(ΔE = {de_str} eV)"
             )
 
         lines.append("")
@@ -958,9 +1064,22 @@ Return ONLY the JSON array, no other text."""
             new_product.set_tags(new_tags)
             self.logger.info(f"  Recalculated tags for aligned product: {np.unique(new_tags)} (counts: {np.bincount(new_tags)})")
 
-        # 保留constraints
+        # 保留constraints — 必须把索引映射到重排后的顺序
+        # （new_product[j] 来自 product[col_ind[j]]，直接挂回原始约束会让
+        # FixAtoms 等索引指向错误的原子）。使用 ASE 的 index_shuffle 重映射。
         if product.constraints:
-            new_product.set_constraint(product.constraints)
+            import copy as _copy
+            remapped_constraints = []
+            for constraint in _copy.deepcopy(product.constraints):
+                try:
+                    constraint.index_shuffle(product, col_ind)
+                    remapped_constraints.append(constraint)
+                except (IndexError, NotImplementedError) as exc:
+                    self.logger.warning(
+                        "  Dropping constraint %r: cannot remap indices after atom reordering (%s)",
+                        constraint, exc,
+                    )
+            new_product.set_constraint(remapped_constraints)
 
         self.logger.info(f"  Aligned atoms for NEB (max cost: {cost_matrix[row_ind, col_ind].max():.2f} Å)")
 
@@ -1197,6 +1316,38 @@ Return ONLY the JSON array, no other text."""
 
         return [base_calc for _ in range(int(n_images))], True
 
+    def _build_failed_neb_result(
+        self,
+        reaction_name: str,
+        frames: List[Atoms],
+        trajectory_file: Optional[str],
+        optimization_steps: int,
+        status: str,
+    ) -> NEBResult:
+        """构造失败的 NEBResult（不提取帧能量，能垒标记为 None）。"""
+        for frame in frames:
+            if hasattr(frame, 'calc') and frame.calc is not None:
+                frame.calc.results = {}
+                frame.calc = None
+        return NEBResult(
+            reaction_name=reaction_name,
+            reactant=frames[0],
+            product=frames[-1],
+            neb_frames=frames,
+            n_frames=len(frames),
+            energies=[],
+            activation_energy_forward=None,
+            activation_energy_reverse=None,
+            reaction_energy=None,
+            transition_state_index=None,
+            transition_state=None,
+            converged=False,
+            fmax_final=float("nan"),
+            optimization_steps=optimization_steps,
+            trajectory_file=trajectory_file,
+            status=status,
+        )
+
     def run_neb(
         self,
         initial_frames: List[Atoms],
@@ -1279,6 +1430,10 @@ Return ONLY the JSON array, no other text."""
             if step_limit <= 0:
                 return False
 
+            # 同一 FIRE 实例跨阶段复用，get_number_of_steps() 是累计值；
+            # 收敛回退判断必须用本阶段的步数增量
+            steps_before_phase = int(optimizer.get_number_of_steps())
+
             monitor_interval = 2
             min_steps_for_stagnation = min(500, max(100, step_limit // 3))
             stagnant_checks_limit = 50
@@ -1342,7 +1497,8 @@ Return ONLY the JSON array, no other text."""
             if isinstance(run_result, bool):
                 return run_result
             # Fallback for optimizer implementations that don't return bool
-            return optimizer.get_number_of_steps() < max(1, int(step_limit))
+            steps_this_phase = int(optimizer.get_number_of_steps()) - steps_before_phase
+            return steps_this_phase < max(1, int(step_limit))
 
         if use_two_phase:
             # 两阶段优化：先不用climbing，再用climbing
@@ -1360,6 +1516,14 @@ Return ONLY the JSON array, no other text."""
                     phase_name="phase1",
                 )
             except Exception as e:
+                if _is_cuda_out_of_memory(e):
+                    self.logger.error(f"CUDA out of memory during Phase 1 NEB optimization: {e}")
+                    _empty_cuda_cache()
+                    return self._build_failed_neb_result(
+                        reaction_name, frames, trajectory_file,
+                        optimization_steps=int(optimizer.get_number_of_steps()),
+                        status="failed: CUDA out of memory",
+                    )
                 self.logger.warning(f"Phase 1 optimization failed: {e}")
                 converged_phase1 = False
 
@@ -1382,6 +1546,14 @@ Return ONLY the JSON array, no other text."""
                     )
                     converged = converged_phase2
                 except Exception as e:
+                    if _is_cuda_out_of_memory(e):
+                        self.logger.error(f"CUDA out of memory during Phase 2 NEB optimization: {e}")
+                        _empty_cuda_cache()
+                        return self._build_failed_neb_result(
+                            reaction_name, frames, trajectory_file,
+                            optimization_steps=int(optimizer.get_number_of_steps()),
+                            status="failed: CUDA out of memory",
+                        )
                     self.logger.warning(f"Phase 2 optimization failed: {e}")
                     converged = False
 
@@ -1396,6 +1568,14 @@ Return ONLY the JSON array, no other text."""
                     phase_name="single_phase",
                 )
             except Exception as e:
+                if _is_cuda_out_of_memory(e):
+                    self.logger.error(f"CUDA out of memory during CI-NEB optimization: {e}")
+                    _empty_cuda_cache()
+                    return self._build_failed_neb_result(
+                        reaction_name, frames, trajectory_file,
+                        optimization_steps=int(optimizer.get_number_of_steps()),
+                        status="failed: CUDA out of memory",
+                    )
                 self.logger.warning(f"CI-NEB optimization failed: {e}")
                 converged = False
 
@@ -1418,48 +1598,48 @@ Return ONLY the JSON array, no other text."""
 
         # 打印NEB路径能量用于诊断
         self.logger.info(f"NEB path energies: {energies}")
-        self.logger.info(f"  Energy range: {energies.min():.3f} to {energies.max():.3f} eV")
+        self.logger.info(f"  Energy range: {np.nanmin(energies):.3f} to {np.nanmax(energies):.3f} eV")
 
-        # 找到过渡态 — 仅在 interior images 中寻找（排除端点）
-        # 与 ASE 的 NEBState.imax 一致: 1 + argmax(energies[1:-1])
-        # 端点是固定的初末态，不应作为过渡态候选
-        reactant_energy = energies[0]
-        product_energy = energies[-1]
+        # 集中提取过渡态与能垒（interior-only TS + 非负钳制 + NaN 守卫 + 端点警告）
+        barrier_info = _extract_barrier_indices(energies, logger=self.logger)
+        ts_index = barrier_info["ts_index"]
+        ts_energy = barrier_info["ts_energy"]
+        activation_energy_forward = barrier_info["activation_energy_forward"]
+        activation_energy_reverse = barrier_info["activation_energy_reverse"]
+        reaction_energy = barrier_info["reaction_energy"]
+        status = "ok"
 
-        if len(energies) > 2:
-            ts_index = 1 + np.argmax(energies[1:-1])
+        if not barrier_info["valid"]:
+            # NaN 帧能量 → 显式标记失败，绝不静默输出 NaN 能垒
+            status = "failed: NaN frame energies"
+            converged = False
+            self.logger.error(
+                "NEB produced NaN frame energies — marking step as failed "
+                "(converged=False, no barrier extracted)."
+            )
         else:
-            ts_index = np.argmax(energies)
-        ts_energy = energies[ts_index]
+            self.logger.info(f"  Reactant (frame 0) energy = {energies[0]:.3f} eV")
+            self.logger.info(f"  Product (frame {len(energies)-1}) energy = {energies[-1]:.3f} eV")
+            self.logger.info(f"  Transition state at frame {ts_index} (interior), energy = {ts_energy:.3f} eV")
+            self.logger.info(f"  Ea_fwd = {activation_energy_forward:.3f} eV, Ea_rev = {activation_energy_reverse:.3f} eV")
 
-        self.logger.info(f"  Reactant (frame 0) energy = {reactant_energy:.3f} eV")
-        self.logger.info(f"  Product (frame {len(energies)-1}) energy = {product_energy:.3f} eV")
-        self.logger.info(f"  Transition state at frame {ts_index} (interior), energy = {ts_energy:.3f} eV")
-
-        # 计算能垒和反应能
-        activation_energy_forward = max(0.0, ts_energy - reactant_energy)
-        activation_energy_reverse = max(0.0, ts_energy - product_energy)
-        reaction_energy = product_energy - reactant_energy
-
-        self.logger.info(f"  Ea_fwd = {activation_energy_forward:.3f} eV, Ea_rev = {activation_energy_reverse:.3f} eV")
-
-        # 警告：端点能量高于所有 interior images → 端点可能不是局部极小
-        if reactant_energy > ts_energy:
+        # 计算最终 NEB fmax.  This must use the NEB projected forces, not
+        # the raw atomic forces of the transition-state image.
+        try:
+            neb_forces = np.array(neb.get_forces(), dtype=float)
+            fmax_final = float(np.max(np.linalg.norm(neb_forces, axis=1)))
+        except Exception as exc:
             self.logger.warning(
-                f"  WARNING: Reactant energy ({reactant_energy:.3f}) > TS energy ({ts_energy:.3f}). "
-                f"Reactant may not be a local minimum — staged atoms may be in gas phase!"
+                "Failed to get final NEB projected forces; falling back to TS atomic forces: %s",
+                exc,
             )
-        if product_energy > ts_energy:
-            self.logger.warning(
-                f"  WARNING: Product energy ({product_energy:.3f}) > TS energy ({ts_energy:.3f}). "
-                f"Product may not be a local minimum — staged atoms may be in gas phase!"
-            )
+            if ts_index is not None:
+                forces = frames[ts_index].get_forces()
+                fmax_final = float(np.max(np.linalg.norm(forces, axis=1)))
+            else:
+                fmax_final = float("nan")
 
-        # 计算最终 fmax
-        forces = frames[ts_index].get_forces()
-        fmax_final = np.max(np.linalg.norm(forces, axis=1))
-
-        self.logger.info(f"DyNEB completed. E_act = {activation_energy_forward:.3f} eV")
+        self.logger.info(f"DyNEB completed. E_act = {_fmt_energy(activation_energy_forward, '.3f')} eV")
 
         # Release CUDA memory held by per-frame calculators.
         # NEBResult keeps the Atoms objects but we clear their calc references
@@ -1480,11 +1660,12 @@ Return ONLY the JSON array, no other text."""
             activation_energy_reverse=activation_energy_reverse,
             reaction_energy=reaction_energy,
             transition_state_index=ts_index,
-            transition_state=frames[ts_index],
+            transition_state=frames[ts_index] if ts_index is not None else None,
             converged=converged,
             fmax_final=fmax_final,
             optimization_steps=optimization_steps,
             trajectory_file=trajectory_file,
+            status=status,
         )
 
     def predict_from_structures(
@@ -1522,7 +1703,7 @@ Return ONLY the JSON array, no other text."""
             CI-NEB 力收敛标准 (eV/Å)
         max_steps : int, default=300
             最大优化步数
-        relax_endpoints : bool, default=True
+        relax_endpoints : bool, default=False
             是否先优化反应物和产物
         reaction_name : str, optional
             反应名称
@@ -1567,9 +1748,6 @@ Return ONLY the JSON array, no other text."""
         else:
             product_atoms = product.copy()
 
-        # 保存原始结构用于能量校正
-        reactant_atoms_original = reactant_atoms.copy()
-        product_atoms_original = product_atoms.copy()
         adjusted_reactant = None
         adjusted_product = None
         reactant_result = None
@@ -1754,6 +1932,7 @@ Return ONLY the JSON array, no other text."""
                     fmax_final=np.nan,
                     optimization_steps=0,
                     trajectory_file=None,
+                    status="failed: atom adjustment failed (reaction energy only)",
                 )
 
         # NOTE: Pre-relaxation of endpoints is intentionally DISABLED.
@@ -1824,80 +2003,10 @@ Return ONLY the JSON array, no other text."""
             reaction_name=reaction_name,
         )
 
-        # 能量校正：处理虚拟原子导致的能量偏移
-        # 当使用LLM控制器添加虚拟原子时，NEB的反应物能量会改变
-        # 需要应用能量偏移以使E_act与吸附能量系统一致
-        if (
-            adjusted_reactant is not None
-            and adjusted_product is not None
-            and len(adjusted_reactant) != len(reactant_atoms_original)
-        ):
-            n_virtual_reactant = len(adjusted_reactant) - len(reactant_atoms_original)
-            n_virtual_product = (
-                len(adjusted_product) - len(product_atoms_original)
-                if len(adjusted_product) != len(product_atoms_original)
-                else 0
-            )
-
-            if n_virtual_reactant > 0:
-                # 虚拟原子添加到反应物
-                # 从NEB能量减去虚拟原子的贡献（大约每个H原子-2到-4eV）
-                # 更精确的做法：使用原始反应物能量作为参考
-
-                # 获取原始反应物的DFT能量（从relax_endpoints的结果）
-                if hasattr(reactant_result, 'energy'):
-                    original_reactant_energy = reactant_result.energy
-                else:
-                    original_reactant_energy = self.fairchem.predict_energy(reactant_atoms_original, relax=False).energy
-
-                # NEB Frame 0 的虚拟原子能量贡献
-                virtual_energy_contribution = neb_result.energies[0] - (original_reactant_energy + (product_result.energy if hasattr(product_result, 'energy') else 0))
-
-                # 实际的修正：使用原始反应物能量替代Frame 0
-                # 然后重新计算能垒
-                self.logger.info(f"Applying energy correction for {n_virtual_reactant} virtual atoms in reactant")
-
-                # 从NEB能量中移除虚拟原子的贡献
-                # Frame 0应该对应原始反应物的能量
-                energies_corrected = np.array(neb_result.energies, dtype=float)
-
-                # 简单的校正：保持所有帧相对关系，但重新基准化Frame 0
-                energy_shift = original_reactant_energy - energies_corrected[0]
-                energies_corrected = energies_corrected + energy_shift
-
-                self.logger.info(f"  Energy shift applied: {energy_shift:+.3f} eV")
-                self.logger.info(f"  Corrected reactant energy: {original_reactant_energy:.3f} eV (was {neb_result.energies[0]:.3f})")
-
-                # 重新计算能垒
-                ts_index = np.argmax(energies_corrected)
-                ts_energy = energies_corrected[ts_index]
-
-                activation_energy_forward = ts_energy - energies_corrected[0]
-                activation_energy_reverse = ts_energy - energies_corrected[-1]
-                reaction_energy = energies_corrected[-1] - energies_corrected[0]
-
-                self.logger.info(f"  Corrected E_act: {activation_energy_forward:+.3f} eV (was {neb_result.activation_energy_forward:.3f})")
-                self.logger.info(f"  Corrected ΔE: {reaction_energy:+.3f} eV (was {neb_result.reaction_energy:.3f})")
-
-                # 返回校正后的结果
-                return NEBResult(
-                    reaction_name=reaction_name,
-                    reactant=neb_result.reactant,
-                    product=neb_result.product,
-                    neb_frames=neb_result.neb_frames,
-                    n_frames=neb_result.n_frames,
-                    energies=energies_corrected.tolist(),
-                    activation_energy_forward=activation_energy_forward,
-                    activation_energy_reverse=activation_energy_reverse,
-                    reaction_energy=reaction_energy,
-                    transition_state_index=ts_index,
-                    transition_state=neb_result.neb_frames[ts_index],
-                    converged=neb_result.converged,
-                    fmax_final=neb_result.fmax_final,
-                    optimization_steps=neb_result.optimization_steps,
-                    trajectory_file=neb_result.trajectory_file,
-                )
-
+        # 注意：曾经此处对“虚拟原子”做过统一能量平移校正。能垒对整体平移
+        # 不变（Ea = E_TS - E_endpoint），该校正除了引入端点参与的
+        # argmax(ts_index) 错误和误导性的 "Corrected E_act" 日志外没有任何
+        # 实际效果，因此已删除。
         return neb_result
 
     def predict_from_reaction(
@@ -2151,7 +2260,7 @@ Return ONLY the JSON array, no other text."""
                     shutil.copy(result.trajectory_file, traj_file)
 
                 self.logger.info(
-                    f"  E_act = {result.activation_energy_forward:.3f} eV"
+                    f"  E_act = {_fmt_energy(result.activation_energy_forward, '.3f')} eV"
                 )
 
             except Exception as e:

@@ -92,8 +92,7 @@ class EquiformerV2ForcesTrainer(ForcesTrainer):
 
         if distutils.is_master():
             logging.info(
-                f"Loaded {self.model.__class__.__name__} with "
-                f"{self.model.num_params} parameters."
+                f"Loaded {self.model.__class__.__name__}."
             )
 
         if self.logger is not None:

@@ -117,13 +117,18 @@ class GeneralizedLinearScaler(ScalerBase):
             :TODO:
         """
         self.get_transition_state_scaling_matrix()
-        if self.transition_state_scaling_matrix is not None:
+        ts_matrix = self.transition_state_scaling_matrix
+        if ts_matrix is not None and np.asarray(ts_matrix).size > 0:
+            ts_matrix = np.asarray(ts_matrix)
+            if ts_matrix.ndim == 1:
+                ts_matrix = ts_matrix.reshape(1, -1)
+                self.transition_state_scaling_matrix = ts_matrix
+
             if self.adsorbate_coefficient_matrix is None:
                 self.get_adsorbate_coefficient_matrix()
 
-            coeffs =  np.dot(self.transition_state_scaling_matrix[:,:-1],
-                    self.adsorbate_coefficient_matrix)
-            coeffs[:,-1] += self.transition_state_scaling_matrix[:,-1]
+            coeffs = np.dot(ts_matrix[:, :-1], self.adsorbate_coefficient_matrix)
+            coeffs[:, -1] += ts_matrix[:, -1]
             self.transition_state_coefficient_matrix = coeffs
         else:
             coeffs = np.array([])
@@ -334,7 +339,15 @@ class GeneralizedLinearScaler(ScalerBase):
                 raise NotImplementedError(
                         'Invalid transition-state scaling mode specified')
 
+        if len(TS_matrix) == 0:
+            self.transition_state_scaling_matrix = None
+            self.transition_state_scaling_coefficients = []
+            return None
+
         TS_matrix = np.array(TS_matrix)
+        if TS_matrix.ndim == 1:
+            TS_matrix = TS_matrix.reshape(1, -1)
+
         self.transition_state_scaling_matrix = TS_matrix
         self.transition_state_scaling_coefficients = TS_coeffs
         return TS_matrix

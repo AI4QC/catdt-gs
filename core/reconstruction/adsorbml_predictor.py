@@ -18,8 +18,7 @@ AdsorbML Predictor — 基于 fairchem AdsorbML 算法的吸附位点预测封�
     from core.reconstruction.adsorbml_predictor import AdsorbMLPredictor
 
     predictor = AdsorbMLPredictor(
-        fairchem_model="uma-s-1p1",
-        use_gpu=True,
+        use_gpu=True,  # 势函数见 core/fairchem_config.py (CATDT_FAIRCHEM_MODEL)
         num_sites=20,
         placement_mode="random_site_heuristic_placement",
     )
@@ -44,6 +43,13 @@ from core.reconstruction.adsorbdiff_predictor import (
     AdsorptionResult,
     AdsorptionSite,
     PredictionOutput,
+)
+
+# 势函数的唯一配置入口（CATDT_FAIRCHEM_MODEL / _TASK / _MODEL_PATH）
+from core.fairchem_config import (
+    DEFAULT_FAIRCHEM_MODEL,
+    DEFAULT_FAIRCHEM_TASK,
+    resolve_fairchem_model,
 )
 
 
@@ -79,11 +85,16 @@ class AdsorbMLPredictor:
     Parameters
     ----------
     fairchem_model : str, default="uma-s-1p1"
-        fairchem 预训练 MLFF 模型名 (``uma-s-1p1``, ``uma-m-1p1`` 等)。
+        fairchem 预训练 MLFF 模型名 (``uma-s-1p1``, ``uma-m-1p1``,
+        ``esen-sm-conserving-all-oc25`` 等)。环境变量 ``CATDT_FAIRCHEM_MODEL``
+        会覆盖此参数（单一配置入口，见 core/fairchem_config.py）。
     fairchem_model_path : str, optional
         本地 checkpoint 路径；若提供则优先于 ``fairchem_model``。
+        ``CATDT_FAIRCHEM_MODEL_PATH`` 会覆盖此参数；若只设置了
+        ``CATDT_FAIRCHEM_MODEL``，此参数会被忽略以避免静默加载旧势函数。
     task_name : str, default="oc20"
-        UMA 多任务头选择。气固界面用 ``oc20``；其它任务参考 fairchem 文档。
+        UMA 多任务头选择。气固界面用 ``oc20``；OC25 系列用 ``oc25``。
+        环境变量 ``CATDT_FAIRCHEM_TASK`` 会覆盖此参数。
     use_gpu : bool, default=True
     num_sites : int, default=20
         采样位点数量。heuristic 模式下实际数量由 slab 对称性决定。
@@ -105,9 +116,9 @@ class AdsorbMLPredictor:
 
     def __init__(
         self,
-        fairchem_model: str = "uma-s-1p1",
+        fairchem_model: str = DEFAULT_FAIRCHEM_MODEL,
         fairchem_model_path: Optional[str] = None,
-        task_name: str = "oc20",
+        task_name: str = DEFAULT_FAIRCHEM_TASK,
         use_gpu: bool = True,
         device: Optional[str] = None,
         num_sites: int = 20,
@@ -121,11 +132,17 @@ class AdsorbMLPredictor:
         keep_files: bool = False,
         verbose: bool = True,
     ):
-        self.fairchem_model = fairchem_model
-        self.fairchem_model_path = (
-            os.path.abspath(fairchem_model_path) if fairchem_model_path else None
+        # 势函数选择统一由 core.fairchem_config 解析（单一配置入口）。
+        # 未设置任何 CATDT_FAIRCHEM_* 时，等价于原来的直接赋值。
+        self._model_config = resolve_fairchem_model(
+            model_name=fairchem_model,
+            task_name=task_name,
+            model_path=fairchem_model_path,
+            context="AdsorbMLPredictor",
         )
-        self.task_name = task_name
+        self.fairchem_model = self._model_config.model_name
+        self.fairchem_model_path = self._model_config.model_path
+        self.task_name = self._model_config.task_name
         self.device = _resolve_device(use_gpu=use_gpu, requested_device=device)
         self.use_gpu = self.device == "cuda"
         self.num_sites = num_sites
@@ -155,8 +172,9 @@ class AdsorbMLPredictor:
             self.work_dir = os.path.abspath(work_dir)
             os.makedirs(self.work_dir, exist_ok=True)
 
-        if seed is not None:
-            np.random.seed(seed)
+        # Instance-local RNG; never reseed the global NumPy RNG, which would
+        # affect the whole process.
+        self._rng = np.random.default_rng(seed)
 
         self._calculator = None
 
@@ -177,7 +195,9 @@ class AdsorbMLPredictor:
         if self._calculator is not None:
             return self._calculator
 
-        self._log("Loading fairchem MLFF calculator...")
+        self._log(
+            f"Loading fairchem MLFF calculator: {self._model_config.describe()}"
+        )
         from fairchem.core import FAIRChemCalculator, pretrained_mlip
 
         if self.fairchem_model_path:
@@ -277,15 +297,29 @@ class AdsorbMLPredictor:
         return atoms
 
     def _build_slab(self, slab_atoms: "ase.Atoms"):
-        """Bypass fairchem Slab validation to accept arbitrary ASE slabs."""
+        """Bypass fairchem Slab validation to accept arbitrary ASE slabs.
+
+        NOTE: this relies on fairchem.data.oc.core.Slab being a plain
+        attribute container (true as of fairchem-data-oc 1.x). object.__new__
+        skips __init__, so the placeholder millers/shift are NOT real surface
+        metadata; any new required attribute in a future fairchem version
+        must be added here.
+        """
         from fairchem.data.oc.core import Slab
 
-        slab = object.__new__(Slab)
-        slab.atoms = slab_atoms
-        slab.bulk = None
-        slab.millers = (1, 1, 1)
-        slab.shift = 0.0
-        slab.top = True
+        try:
+            slab = object.__new__(Slab)
+            slab.atoms = slab_atoms
+            slab.bulk = None
+            slab.millers = (1, 1, 1)
+            slab.shift = 0.0
+            slab.top = True
+        except Exception as e:  # noqa: BLE001
+            raise RuntimeError(
+                "Failed to build fairchem Slab via the object.__new__ "
+                "constructor bypass; the installed fairchem version may have "
+                f"changed the Slab class layout: {e}"
+            ) from e
         return slab
 
     def _extract_adsorbate_from_surface(
@@ -305,6 +339,7 @@ class AdsorbMLPredictor:
         self,
         slab_atoms: "ase.Atoms",
         adsorbate: Any,
+        num_sites: Optional[int] = None,
     ) -> Tuple[List["ase.Atoms"], List[Dict]]:
         from fairchem.data.oc.core import AdsorbateSlabConfig
 
@@ -312,7 +347,7 @@ class AdsorbMLPredictor:
         cfg = AdsorbateSlabConfig(
             slab=slab,
             adsorbate=adsorbate,
-            num_sites=self.num_sites,
+            num_sites=num_sites if num_sites is not None else self.num_sites,
             num_augmentations_per_site=self.num_augmentations_per_site,
             interstitial_gap=self.interstitial_gap,
             mode=self.placement_mode,
@@ -337,7 +372,9 @@ class AdsorbMLPredictor:
         if bulk_idx and not any(
             isinstance(c, FixAtoms) for c in adslab.constraints
         ):
-            adslab.set_constraint(FixAtoms(indices=bulk_idx))
+            constraints = list(adslab.constraints or [])
+            constraints.append(FixAtoms(indices=bulk_idx))
+            adslab.set_constraint(constraints)
 
         adslab.calc = calc
         opt = BFGS(adslab, trajectory=traj_path, logfile=None)
@@ -386,8 +423,8 @@ class AdsorbMLPredictor:
         """
         预测最优吸附位点 (API 与 ``AdsorbDiffPredictor.predict`` 一致)。
         """
-        if num_samples is not None:
-            self.num_sites = num_samples
+        # Local override only; do not permanently mutate self.num_sites
+        num_sites = num_samples if num_samples is not None else self.num_sites
 
         if output_dir is None:
             output_dir = os.path.join(self.work_dir, "prediction")
@@ -428,11 +465,11 @@ class AdsorbMLPredictor:
             self._log(f"Adsorbate: {ads_formula}")
 
             self._log(
-                f"\nGenerating up to {self.num_sites} placements "
+                f"\nGenerating up to {num_sites} placements "
                 f"(mode={self.placement_mode})..."
             )
             adslab_list, metadata_list = self._create_adslab_config(
-                slab_atoms, adsorbate_obj
+                slab_atoms, adsorbate_obj, num_sites=num_sites
             )
             self._log(f"  Created {len(adslab_list)} configurations")
 
@@ -660,7 +697,6 @@ class AdsorbMLPredictor:
 
         tags = atoms.get_tags()
         symbols = atoms.get_chemical_symbols()
-        positions = atoms.get_positions()
 
         ads_mask = tags == 2
         surf_mask = ~ads_mask
@@ -674,7 +710,9 @@ class AdsorbMLPredictor:
             for s in surf_idx:
                 rs = covalent_radii[atomic_numbers[symbols[s]]]
                 cutoff = cov_scale * (ra + rs)
-                d = float(np.linalg.norm(positions[a] - positions[s]))
+                # mic=True: respect PBC, consistent with
+                # _adsorbate_internal_bonds
+                d = float(atoms.get_distance(a, s, mic=True))
                 if d < cutoff:
                     return True
         return False
@@ -718,7 +756,7 @@ class AdsorbMLPredictor:
 def predict_adsorption_site_adsorbml(
     surface: Union[str, "ase.Atoms"],
     adsorbate: Union[str, int, "ase.Atoms"],
-    fairchem_model: str = "uma-s-1p1",
+    fairchem_model: str = DEFAULT_FAIRCHEM_MODEL,
     use_gpu: bool = True,
     num_samples: int = 20,
     output_dir: Optional[str] = None,
@@ -745,7 +783,11 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="AdsorbML Adsorption Site Predictor")
     parser.add_argument("surface", help="Path to surface structure file")
     parser.add_argument("--adsorbate", default="*CO", help="Adsorbate SMILES")
-    parser.add_argument("--model", default="uma-s-1p1", help="fairchem model name")
+    parser.add_argument(
+        "--model",
+        default=DEFAULT_FAIRCHEM_MODEL,
+        help="fairchem model name (overridden by CATDT_FAIRCHEM_MODEL)",
+    )
     parser.add_argument("--num-samples", type=int, default=20)
     parser.add_argument(
         "--mode",
